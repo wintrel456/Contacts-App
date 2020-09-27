@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Empty</string>
+    <string name="user_name">AasD DAssad</string>
+    <string name="user_number">+7922 153 2145</string>
+    <string name="avatar">avatar</string>
+    <string name="end_line">endLine</string>
+    <string name="birth_date">Birth Date</string>
+    <string name="date_of_BD">DATE</string>
+    <string name="annotation_for_switcher">You can turn on/off notification</string>
+    <string name="address">Address</string>
+    <string name="residence_address">Residence Address</string>
+    <string name="emails">E-Mails</string>
+    <string name="email1">First e-mail</string>
+    <string name="email2">Second e-mail</string>
+    <string name="first_email">first_email</string>
+    <string name="second_email">second_email</string>
+    <string name="button_add">Add</string>
+
+</resources>
