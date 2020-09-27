@@ -25,12 +25,8 @@ public class Container extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        replaceFragment();
-    }
-    private void replaceFragment(){
         Details details = new Details();
         FragmentManager fragmentManager = getFragmentManager();
-        assert fragmentManager != null;
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.mainFrame, details)
                 .addToBackStack(null)

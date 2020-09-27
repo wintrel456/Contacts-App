@@ -24,15 +24,14 @@ public class Details extends Fragment implements CompoundButton.OnCheckedChangeL
         return  view;
     }
 
-
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if(b){
-            Toast toast = Toast.makeText(getContext(),"JOPA", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getContext(), "JOPA", Toast.LENGTH_SHORT);
             toast.show();
         }
         else{
-            Toast toast = Toast.makeText(getContext(),"NOT JOPA", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getContext(), "NOT JOPA", Toast.LENGTH_SHORT);
             toast.show();
         }
     }
