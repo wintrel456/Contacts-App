@@ -57,7 +57,6 @@ public class ContactListFragment extends ListFragment {
     public void openDetails(int position) {
         ContactDetailsFragment contactDetailsFragment = new ContactDetailsFragment();
         Bundle id = new Bundle();
-        id.putInt("id", position);
         id.putParcelable("listItem", contacts[position]);
         contactDetailsFragment.setArguments(id);
         FragmentManager fragmentManager = getFragmentManager();

@@ -1,12 +1,10 @@
 package com.gmail.l2t45s7e9.empty;
 
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,9 +14,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 public class ContactDetailsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
-    private int position;
     private Contact contact;
-    private int color;
 
     @Nullable
     @Override
@@ -31,9 +27,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         super.onViewCreated(view, savedInstanceState);
         Bundle id = getArguments();
         if (id != null) {
-            position = id.getInt("id");
             contact = id.getParcelable("listItem");
-            color = id.getInt("color");
         }
         TextView name = view.findViewById(R.id.userName);
         name.setText(contact.getName());
@@ -47,8 +41,6 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         secondEmail.setText(contact.getSecondEmail());
         TextView address = view.findViewById(R.id.address);
         address.setText(contact.getContactAddress());
-        ImageView avatar = view.findViewById(R.id.avatar);
-        avatar.setBackgroundTintList(ColorStateList.valueOf(color));
         SwitchCompat switchCompat = view.findViewById(R.id.notificationSwitch);
         if (switchCompat != null) {
             switchCompat.setOnCheckedChangeListener(this);
