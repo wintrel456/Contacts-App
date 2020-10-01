@@ -6,7 +6,7 @@
         <item name="colorPrimaryDark">@color/bottom_panel</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:navigationBarColor">@color/bottom_panel</item>
-        <item name="colorControlActivated">@color/avatar1</item>
+        <item name="colorControlActivated">@color/red</item>
         <item name="colorSwitchThumbNormal">@color/side_color</item>
         <item name="android:colorForeground">@color/second_side_color</item>
     </style>

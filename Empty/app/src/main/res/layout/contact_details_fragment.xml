@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/detailsContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,18 +8,18 @@
     android:backgroundTint="#FFFFFF">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/avatar"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="48dp"
         android:contentDescription="@string/avatar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/avatar" />
 
     <TextView
-        android:id="@+id/textView13"
+        android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -29,51 +28,53 @@
         android:text="@string/user_name"
         android:textColor="@color/Font"
         android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/imageView" />
+        app:layout_constraintStart_toEndOf="@+id/avatar"
+        app:layout_constraintTop_toTopOf="@+id/avatar" />
 
     <TextView
-        android:id="@+id/textView14"
+        android:id="@+id/userNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/segoe"
-        android:text="@string/user_number"
+        android:text="@string/first_user_number"
         android:textColor="@color/Font"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView15"
-        app:layout_constraintStart_toStartOf="@+id/textView13"
-        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+        app:layout_constraintBottom_toTopOf="@+id/secondUserNumber"
+        app:layout_constraintStart_toStartOf="@+id/userName"
+        app:layout_constraintTop_toBottomOf="@+id/userName" />
 
     <TextView
-        android:id="@+id/textView15"
+        android:id="@+id/secondUserNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:fontFamily="@font/segoe"
-        android:text="@string/user_number"
+        android:text="@string/second_user_number"
         android:textColor="@color/side_color"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="@+id/textView13" />
+        app:layout_constraintBottom_toBottomOf="@+id/avatar"
+        app:layout_constraintStart_toStartOf="@+id/userNumber"
+        app:layout_constraintTop_toBottomOf="@id/userNumber" />
 
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/scroll_view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView">
+        app:layout_constraintTop_toBottomOf="@+id/avatar">
 
         <LinearLayout
             android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView16"
+                android:id="@+id/birtDateInscription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -89,7 +90,7 @@
                 android:background="@drawable/details_fields">
 
                 <TextView
-                    android:id="@+id/textView18"
+                    android:id="@+id/birhDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -102,7 +103,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switch1"
+                    android:id="@+id/notificationSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -113,7 +114,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView19"
+                    android:id="@+id/notificationInscription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -124,16 +125,16 @@
                     android:textSize="12sp"
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/switch1"
-                    app:layout_constraintTop_toBottomOf="@+id/switch1" />
+                    app:layout_constraintEnd_toEndOf="@+id/notificationSwitch"
+                    app:layout_constraintTop_toBottomOf="@+id/notificationSwitch" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/textView21"
+                android:id="@+id/addressInscription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/segoe"
                 android:text="@string/residence_address"
@@ -146,20 +147,20 @@
                 android:background="@drawable/details_fields">
 
                 <TextView
-                    android:id="@+id/textView20"
+                    android:id="@+id/address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/segoe"
-                    android:text="@string/address"
+                    android:text="@string/address_label"
                     android:textColor="@color/Font"
                     android:textSize="12sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView27"
+                    android:id="@+id/addButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -179,14 +180,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/textView22"
+                android:id="@+id/emailInscription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/segoe"
-                android:text="@string/emails"
+                android:text="@string/emails_label"
                 android:textColor="@color/Font"
                 android:textSize="18sp" />
 
@@ -196,7 +197,7 @@
                 android:background="@drawable/fields">
 
                 <TextView
-                    android:id="@+id/textView23"
+                    android:id="@+id/firstEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -209,13 +210,13 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView24"
+                    android:id="@+id/firstEmailInscription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="32dp"
                     android:fontFamily="@font/segoe"
-                    android:text="@string/email1"
+                    android:text="@string/email1_label"
                     android:textColor="@color/side_color"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -228,13 +229,13 @@
                     android:background="@drawable/end_line"
                     android:contentDescription="@string/button_add"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/textView24"
-                    app:layout_constraintStart_toStartOf="@+id/textView23"
+                    app:layout_constraintEnd_toEndOf="@+id/firstEmailInscription"
+                    app:layout_constraintStart_toStartOf="@+id/firstEmail"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/end_line" />
 
                 <TextView
-                    android:id="@+id/textView25"
+                    android:id="@+id/secondEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -249,16 +250,16 @@
                     app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
                 <TextView
-                    android:id="@+id/textView26"
+                    android:id="@+id/secondEmailInscription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
                     android:fontFamily="@font/segoe"
-                    android:text="@string/email2"
+                    android:text="@string/email2_label"
                     android:textColor="@color/side_color"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/textView25" />
+                    app:layout_constraintTop_toTopOf="@+id/secondEmail" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>

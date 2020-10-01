@@ -12,10 +12,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if(savedInstanceState == null){
-            Container container = new Container();
+            ContactListFragment contactListFragment = new ContactListFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.mainFrame, container)
+            fragmentTransaction.add(R.id.mainFrame, contactListFragment)
                     .commit();
         }
     }
