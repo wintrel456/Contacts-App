@@ -21,7 +21,7 @@ public class Contact implements Parcelable {
     private final String firstEmail;
     private final String secondEmail;
     private final String contactAddress;
-    private int contactColor;
+    private final int contactColor;
 
     public Contact(String name, String firstNumber, String secondNumber, String firstEmail, String secondEmail, String contactAddress, int contactColor) {
         this.name = name;
@@ -71,9 +71,6 @@ public class Contact implements Parcelable {
         return contactColor;
     }
 
-    public void setContactColor(int contactColor) {
-        this.contactColor = contactColor;
-    }
 
     @Override
     public int describeContents() {
@@ -84,5 +81,6 @@ public class Contact implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeStringArray(new String[]{name, firstNumber, secondNumber, firstEmail, secondEmail, String.valueOf(contactColor)});
     }
+
 
 }

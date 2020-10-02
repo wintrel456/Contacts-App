@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class ContactListAdapter extends ArrayAdapter<Contact> {
-    private final int[] colors = getContext().getResources().getIntArray(R.array.colors_list);
+
     private LayoutInflater inflater;
     private Contact[] contacts;
     private int layout;
@@ -34,9 +34,6 @@ public class ContactListAdapter extends ArrayAdapter<Contact> {
         TextView number = row.findViewById(R.id.userNumber);
         number.setText(contacts[position].getFirstNumber());
         ImageView avatar = row.findViewById(R.id.avatar);
-        if (contacts[position].getContactColor() == 0) {
-            contacts[position].setContactColor(colors[(int) (Math.random() * colors.length)]);
-        }
         avatar.setBackgroundTintList(ColorStateList.valueOf(contacts[position].getContactColor()));
         return row;
     }

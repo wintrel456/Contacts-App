@@ -14,24 +14,34 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.ListFragment;
 
 public class ContactListFragment extends ListFragment {
-    private Contact contact1 = new Contact(
-            "Debil",
-            "+795131351",
-            "+7561516",
-            "email1",
-            "email2",
-            "Улица подзалупово дом 112",
-            0);
-    private Contact contact2 = new Contact(
-            "Eblan",
-            "+795641516",
-            "+76161568",
-            "email1",
-            "email2",
-            "Улица говна дом 0",
-            0);
 
-    private Contact[] contacts = new Contact[]{contact1, contact2};
+    private Contact[] contacts;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        int[] colors = getContext().getResources().getIntArray(R.array.colors_list);
+        Contact contact1 = new Contact(
+                "Debil",
+                "+795131351",
+                "+7561516",
+                "email1",
+                "email2",
+                "Улица подзалупово дом 112",
+                colors[(int) (Math.random() * colors.length)]);
+        Contact contact2 = new Contact(
+                "Eblan",
+                "+795641516",
+                "+76161568",
+                "email1",
+                "email2",
+                "Улица говна дом 0",
+                colors[(int) (Math.random() * colors.length)]);
+
+        contacts = new Contact[]{contact1, contact2};
+
+    }
+
 
     @Nullable
     @Override
@@ -43,6 +53,7 @@ public class ContactListFragment extends ListFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TextView count = view.findViewById(R.id.contactCount);
+        int[] rainbow = getContext().getResources().getIntArray(R.array.colors_list);
         count.setText(String.valueOf(contacts.length));
         ContactListAdapter adapter = new ContactListAdapter(getActivity(), R.layout.element_of_contact_list, contacts);
         setListAdapter(adapter);
