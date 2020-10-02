@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,17 +20,18 @@ public class ContactListFragment extends ListFragment {
             "+7561516",
             "email1",
             "email2",
-            "Улица подзалупово дом 112");
+            "Улица подзалупово дом 112",
+            0);
     private Contact contact2 = new Contact(
             "Eblan",
             "+795641516",
             "+76161568",
             "email1",
             "email2",
-            "Улица говна дом 0");
+            "Улица говна дом 0",
+            0);
 
     private Contact[] contacts = new Contact[]{contact1, contact2};
-    private ImageView avatar;
 
     @Nullable
     @Override

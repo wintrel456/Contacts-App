@@ -15,20 +15,22 @@ public class Contact implements Parcelable {
             return new Contact[size];
         }
     };
-    private String name;
-    private String firstNumber;
-    private String secondNumber;
-    private String firstEmail;
-    private String secondEmail;
-    private String contactAddress;
+    private final String name;
+    private final String firstNumber;
+    private final String secondNumber;
+    private final String firstEmail;
+    private final String secondEmail;
+    private final String contactAddress;
+    private int contactColor;
 
-    public Contact(String name, String firstNumber, String secondNumber, String firstEmail, String secondEmail, String contactAddress) {
+    public Contact(String name, String firstNumber, String secondNumber, String firstEmail, String secondEmail, String contactAddress, int contactColor) {
         this.name = name;
         this.firstNumber = firstNumber;
         this.secondNumber = secondNumber;
         this.firstEmail = firstEmail;
         this.secondEmail = secondEmail;
         this.contactAddress = contactAddress;
+        this.contactColor = contactColor;
     }
 
     protected Contact(Parcel in) {
@@ -38,6 +40,7 @@ public class Contact implements Parcelable {
         firstEmail = in.readString();
         secondEmail = in.readString();
         contactAddress = in.readString();
+        contactColor = in.readInt();
     }
 
     public String getName() {
@@ -64,6 +67,14 @@ public class Contact implements Parcelable {
         return contactAddress;
     }
 
+    public int getContactColor() {
+        return contactColor;
+    }
+
+    public void setContactColor(int contactColor) {
+        this.contactColor = contactColor;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -71,7 +82,7 @@ public class Contact implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeStringArray(new String[]{name, firstNumber, secondNumber, firstEmail, secondEmail});
+        parcel.writeStringArray(new String[]{name, firstNumber, secondNumber, firstEmail, secondEmail, String.valueOf(contactColor)});
     }
 
 }

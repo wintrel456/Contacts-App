@@ -34,7 +34,11 @@ public class ContactListAdapter extends ArrayAdapter<Contact> {
         TextView number = row.findViewById(R.id.userNumber);
         number.setText(contacts[position].getFirstNumber());
         ImageView avatar = row.findViewById(R.id.avatar);
-        avatar.setBackgroundTintList(ColorStateList.valueOf(colors[(int) (Math.random() * colors.length)]));
+        if (contacts[position].getContactColor() == 0) {
+            contacts[position].setContactColor(colors[(int) (Math.random() * colors.length)]);
+        }
+        avatar.setBackgroundTintList(ColorStateList.valueOf(contacts[position].getContactColor()));
         return row;
     }
+
 }

@@ -194,7 +194,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/fields">
+                android:background="@drawable/details_fields">
 
                 <TextView
                     android:id="@+id/firstEmail"

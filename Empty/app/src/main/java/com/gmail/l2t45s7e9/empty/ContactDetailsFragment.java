@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,8 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         secondEmail.setText(contact.getSecondEmail());
         TextView address = view.findViewById(R.id.address);
         address.setText(contact.getContactAddress());
+        ImageView avatar = view.findViewById(R.id.avatar);
+        avatar.setColorFilter(contact.getContactColor());
         SwitchCompat switchCompat = view.findViewById(R.id.notificationSwitch);
         if (switchCompat != null) {
             switchCompat.setOnCheckedChangeListener(this);
