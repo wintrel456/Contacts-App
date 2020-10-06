@@ -20,10 +20,10 @@ import androidx.fragment.app.Fragment;
 
 public class ContactDetailsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
 
-    private static int position;
     private ContactService contactService;
     private SwitchCompat switchCompat;
     private int color;
+    private int position;
     private TextView name;
     private TextView firstNumber;
     private TextView secondNumber;
@@ -36,10 +36,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         contactService = ((ContactService.PublicServiceInterface) context).getService();
-    }
-
-    public static void setPosition(int bundle) {
-        position = bundle;
+        position = getArguments().getInt("id");
     }
 
     @Nullable
