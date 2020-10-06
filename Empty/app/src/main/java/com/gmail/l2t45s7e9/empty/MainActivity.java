@@ -12,9 +12,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity implements ContactService.PublicServiceInterface {
-    ContactService contactService;
+    private ContactService contactService;
     boolean isBound = false;
-    ServiceConnection serviceConnection;
+    private ServiceConnection serviceConnection;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements ContactService.Pu
                             .commit();
                 }
             }
-
             @Override
             public void onServiceDisconnected(ComponentName componentName) {
                 isBound = false;
@@ -47,11 +46,11 @@ public class MainActivity extends AppCompatActivity implements ContactService.Pu
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (isBound) {
             unbindService(serviceConnection);
             isBound = false;
         }
+        super.onDestroy();
     }
 
     @Override

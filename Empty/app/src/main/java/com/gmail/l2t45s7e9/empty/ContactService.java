@@ -81,7 +81,6 @@ public class ContactService extends Service {
         });
     }
 
-
     interface PublicServiceInterface {
         ContactService getService();
     }
@@ -90,5 +89,11 @@ public class ContactService extends Service {
         ContactService getService() {
             return ContactService.this;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        executorService.shutdown();
+        super.onDestroy();
     }
 }

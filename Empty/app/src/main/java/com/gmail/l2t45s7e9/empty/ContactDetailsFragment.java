@@ -19,7 +19,8 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 public class ContactDetailsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
-    ContactService contactService;
+
+    private ContactService contactService;
     private SwitchCompat switchCompat;
     private int color;
     private int position;
@@ -37,13 +38,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         contactService = ((ContactService.PublicServiceInterface) context).getService();
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        Bundle id = getArguments();
-        if (id != null) {
-            position = id.getInt("id");
-        }
+    public void initViewsForDetails(View view) {
         name = view.findViewById(R.id.userName);
         firstNumber = view.findViewById(R.id.userNumber);
         secondNumber = view.findViewById(R.id.secondUserNumber);
@@ -51,7 +46,16 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         secondEmail = view.findViewById(R.id.secondEmail);
         address = view.findViewById(R.id.address);
         avatar = view.findViewById(R.id.avatar);
-        TextView add = view.findViewById(R.id.addButton);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Bundle id = getArguments();
+        if (id != null) {
+            position = id.getInt("id");
+        }
+        initViewsForDetails(view);
         final GradientDrawable drawable = (GradientDrawable) ResourcesCompat.getDrawable(getResources(), R.drawable.button, null);
         DetailsInformation callback = new DetailsInformation() {
             @Override
@@ -68,9 +72,10 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
             }
         };
         contactService.getDetailsInformation(callback, position);
+        switchCompat = view.findViewById(R.id.notificationSwitch);
+        TextView add = view.findViewById(R.id.addButton);
         name.setSelected(true);
         add.setBackground(drawable);
-        switchCompat = view.findViewById(R.id.notificationSwitch);
         if (switchCompat != null) {
             switchCompat.setOnCheckedChangeListener(this);
         }
@@ -97,7 +102,6 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         switchCompat = null;
         name = null;
         firstNumber = null;
@@ -106,7 +110,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         secondEmail = null;
         address = null;
         avatar = null;
-
+        super.onDestroyView();
     }
 
     interface DetailsInformation {

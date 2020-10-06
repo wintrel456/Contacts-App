@@ -16,9 +16,8 @@ import androidx.fragment.app.ListFragment;
 
 public class ContactListFragment extends ListFragment {
 
-    ContactService contactService;
-    ContactListAdapter adapter;
-    private Contact[] contacts;
+    private ContactService contactService;
+    private ContactListAdapter adapter;
 
     @Override
     public void onAttach(@NonNull Context context) {
