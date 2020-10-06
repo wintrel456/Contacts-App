@@ -25,6 +25,12 @@ public class ContactListFragment extends ListFragment {
         contactService = ((ContactService.PublicServiceInterface) context).getService();
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.contact_list_fragment, null);
+    }
+
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -40,28 +46,21 @@ public class ContactListFragment extends ListFragment {
         contactService.getShortInformation(callback);
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.contact_list_fragment, null);
-    }
-
-    public void openDetails(int position) {
-        ContactDetailsFragment contactDetailsFragment = new ContactDetailsFragment();
-        Bundle id = new Bundle();
-        id.putInt("id", position);
-        contactDetailsFragment.setArguments(id);
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.mainFrame, contactDetailsFragment)
-                .addToBackStack(null)
-                .commit();
-    }
 
     @Override
     public void onListItemClick(@NonNull ListView l, @NonNull View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         openDetails(position);
+    }
+
+    public void openDetails(int position) {
+        ContactDetailsFragment contactDetailsFragment = new ContactDetailsFragment();
+        ContactDetailsFragment.setPosition(position);
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.mainFrame, contactDetailsFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     interface ShortInformation {
