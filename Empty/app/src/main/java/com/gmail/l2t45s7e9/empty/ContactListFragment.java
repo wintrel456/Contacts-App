@@ -54,10 +54,7 @@ public class ContactListFragment extends ListFragment {
     }
 
     public void openDetails(int position) {
-        ContactDetailsFragment contactDetailsFragment = new ContactDetailsFragment();
-        Bundle id = new Bundle();
-        id.putInt("id", position);
-        contactDetailsFragment.setArguments(id);
+        ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(position);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.mainFrame, contactDetailsFragment)

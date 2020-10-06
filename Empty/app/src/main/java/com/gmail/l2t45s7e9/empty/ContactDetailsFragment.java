@@ -32,11 +32,20 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
     private TextView address;
     private ImageView avatar;
 
+
+    public static ContactDetailsFragment newInstance(int index) {
+        ContactDetailsFragment contactDetailsFragment = new ContactDetailsFragment();
+        Bundle id = new Bundle();
+        id.putInt("id", index);
+        contactDetailsFragment.setArguments(id);
+        return contactDetailsFragment;
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
+        position = getArguments().getInt("id");
         super.onAttach(context);
         contactService = ((ContactService.PublicServiceInterface) context).getService();
-        position = getArguments().getInt("id");
     }
 
     @Nullable
@@ -114,4 +123,5 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
     interface DetailsInformation {
         void getDetails(Contact contact);
     }
+
 }
