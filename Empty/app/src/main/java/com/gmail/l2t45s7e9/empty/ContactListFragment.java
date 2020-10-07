@@ -1,5 +1,6 @@
 package com.gmail.l2t45s7e9.empty;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,33 +16,14 @@ import androidx.fragment.app.ListFragment;
 
 public class ContactListFragment extends ListFragment {
 
-    private Contact[] contacts;
+    private ContactService contactService;
+    private ContactListAdapter adapter;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        int[] colors = getContext().getResources().getIntArray(R.array.colors_list);
-        Contact contact1 = new Contact(
-                "Debil",
-                "+795131351",
-                "+7561516",
-                "email1",
-                "email2",
-                "Улица подзалупово дом 112",
-                colors[(int) (Math.random() * colors.length)]);
-        Contact contact2 = new Contact(
-                "Eblan",
-                "+795641516",
-                "+76161568",
-                "email1",
-                "email2",
-                "Улица говна дом 0",
-                colors[(int) (Math.random() * colors.length)]);
-
-        contacts = new Contact[]{contact1, contact2};
-
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        contactService = ((ContactService.PublicServiceInterface) context).getService();
     }
-
 
     @Nullable
     @Override
@@ -50,14 +32,20 @@ public class ContactListFragment extends ListFragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TextView count = view.findViewById(R.id.contactCount);
-        int[] rainbow = getContext().getResources().getIntArray(R.array.colors_list);
-        count.setText(String.valueOf(contacts.length));
-        ContactListAdapter adapter = new ContactListAdapter(getActivity(), R.layout.element_of_contact_list, contacts);
-        setListAdapter(adapter);
+        final TextView count = view.findViewById(R.id.contactCount);
+        ShortInformation callback = new ShortInformation() {
+            @Override
+            public void getContactList(Contact[] result) {
+                count.setText(String.valueOf(result.length));
+                adapter = new ContactListAdapter(getActivity(), R.layout.contact_list_item, result);
+                setListAdapter(adapter);
+            }
+        };
+        contactService.getShortInformation(callback);
     }
+
 
     @Override
     public void onListItemClick(@NonNull ListView l, @NonNull View v, int position, long id) {
@@ -66,14 +54,16 @@ public class ContactListFragment extends ListFragment {
     }
 
     public void openDetails(int position) {
-        ContactDetailsFragment contactDetailsFragment = new ContactDetailsFragment();
-        Bundle id = new Bundle();
-        id.putParcelable("listItem", contacts[position]);
-        contactDetailsFragment.setArguments(id);
+        ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(position);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.mainFrame, contactDetailsFragment)
                 .addToBackStack(null)
                 .commit();
     }
+
+    interface ShortInformation {
+        void getContactList(Contact[] contacts);
+    }
+
 }
