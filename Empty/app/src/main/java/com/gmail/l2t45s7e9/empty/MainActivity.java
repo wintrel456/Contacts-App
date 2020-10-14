@@ -28,11 +28,17 @@ public class MainActivity extends AppCompatActivity implements ContactService.Pu
                 ContactService.LocalBinder localBinder = (ContactService.LocalBinder) iBinder;
                 contactService = localBinder.getService();
                 isBound = true;
-                if (savedInstanceState == null) {
+                int position = getIntent().getIntExtra("id", -1);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                if (savedInstanceState == null && position == -1) {
                     ContactListFragment contactListFragment = new ContactListFragment();
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.add(R.id.mainFrame, contactListFragment)
+                            .commit();
+                }
+                if (position != -1) {
+                    ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(position);
+                    fragmentTransaction.replace(R.id.mainFrame, contactDetailsFragment)
                             .commit();
                 }
             }

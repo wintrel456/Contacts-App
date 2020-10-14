@@ -6,6 +6,7 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import java.lang.ref.WeakReference;
+import java.util.GregorianCalendar;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,6 +19,7 @@ public class ContactService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        GregorianCalendar gregorianCalendar = new GregorianCalendar();
         Random random = new Random();
         int[] colors = getApplicationContext().getResources().getIntArray(R.array.colors_list);
         Contact contact1 = new Contact(
@@ -27,6 +29,7 @@ public class ContactService extends Service {
                 "email1",
                 "email2",
                 "г Ижевск Улица Пушкинская дом 112",
+                new GregorianCalendar(0, 9, 11),
                 colors[random.nextInt(colors.length)]);
         Contact contact2 = new Contact(
                 "Иван Иванов",
@@ -35,6 +38,7 @@ public class ContactService extends Service {
                 "email1",
                 "email2",
                 "г Ижевск Улица Ленина дом 0",
+                new GregorianCalendar(0, 9, 12),
                 colors[random.nextInt(colors.length)]);
         Contact contact3 = new Contact(
                 "Иван Иванов 2",
@@ -43,6 +47,7 @@ public class ContactService extends Service {
                 "email1",
                 "email2",
                 "г Ижевск Улица Ленина дом 0",
+                new GregorianCalendar(0, 9, 14),
                 colors[random.nextInt(colors.length)]);
 
         contacts = new Contact[]{contact1, contact2, contact3};

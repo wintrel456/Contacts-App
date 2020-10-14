@@ -9,13 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver
+            android:name=".ContactNotificationsReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
 
-    <service
+        <service
             android:name=".ContactService"
             android:enabled="true"
-            android:exported="true">
-
-        </service>
+            android:exported="false"></service>
 
         <activity
             android:name=".MainActivity"
