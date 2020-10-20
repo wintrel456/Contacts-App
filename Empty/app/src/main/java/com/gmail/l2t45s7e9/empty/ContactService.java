@@ -47,7 +47,7 @@ public class ContactService extends Service {
                 "email1",
                 "email2",
                 "г Ижевск Улица Ленина дом 0",
-                new GregorianCalendar(0, 9, 14),
+                new GregorianCalendar(0, 9, 20),
                 colors[random.nextInt(colors.length)]);
 
         contacts = new Contact[]{contact1, contact2, contact3};

@@ -29,7 +29,7 @@ public class ContactNotificationsReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         int id = intent.getIntExtra("id", -1);
         Intent notificationIntent = new Intent(context, MainActivity.class);
-        notificationIntent.putExtra("id", id);
+        notificationIntent.putExtra("notificationId", id);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, id, notificationIntent, 0);
         String text = String.format("Today %s birthday!", intent.getStringExtra("name"));
         //Toast.makeText(context, String.valueOf(i), Toast.LENGTH_SHORT).show();
