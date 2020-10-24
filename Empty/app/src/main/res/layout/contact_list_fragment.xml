@@ -4,7 +4,7 @@
     android:id="@+id/mainContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/back_white">
+    android:background="@drawable/gradient">
 
     <ImageView
         android:id="@+id/logo"
@@ -36,8 +36,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/fields"
         android:divider="@color/back_white"
+        android:foreground="@drawable/foreground_corners"
         android:transitionName="@android:string/unknownName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

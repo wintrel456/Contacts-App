@@ -9,11 +9,10 @@ import android.os.IBinder;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity implements ContactService.PublicServiceInterface {
     private ContactService contactService;
-    boolean isBound = false;
+    private boolean isBound = false;
     private ServiceConnection serviceConnection;
 
     @Override
@@ -28,13 +27,20 @@ public class MainActivity extends AppCompatActivity implements ContactService.Pu
                 ContactService.LocalBinder localBinder = (ContactService.LocalBinder) iBinder;
                 contactService = localBinder.getService();
                 isBound = true;
-                if (savedInstanceState == null) {
-                    ContactListFragment contactListFragment = new ContactListFragment();
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.add(R.id.mainFrame, contactListFragment)
+                int position = getIntent().getIntExtra("notificationId", -1);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                if (savedInstanceState == null && position == -1) {
+                    openContactList(fragmentManager);
+                }
+                if (position != -1) {
+                    openContactList(fragmentManager);
+                    ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(position);
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.mainFrame, contactDetailsFragment)
+                            .addToBackStack(null)
                             .commit();
                 }
+
             }
             @Override
             public void onServiceDisconnected(ComponentName componentName) {
@@ -60,5 +66,12 @@ public class MainActivity extends AppCompatActivity implements ContactService.Pu
         } else {
             return null;
         }
+    }
+
+    public void openContactList(FragmentManager fragmentManager) {
+        ContactListFragment contactListFragment = new ContactListFragment();
+        fragmentManager.beginTransaction()
+                .add(R.id.mainFrame, contactListFragment)
+                .commit();
     }
 }

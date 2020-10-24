@@ -18,5 +18,8 @@
     <string name="button_add">Add</string>
     <string name="contact_count">0</string>
     <string name="logo_image">logoImage</string>
+    <string name="channel_name">channel_name</string>
+    <string name="channel_description">channel_description</string>
+    <string name="birthday_notification">Today is %s birthday!</string>
 
 </resources>
