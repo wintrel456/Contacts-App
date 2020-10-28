@@ -1,25 +1,38 @@
 package com.gmail.l2t45s7e9.empty;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 public class MainActivity extends AppCompatActivity implements ContactService.PublicServiceInterface {
     private ContactService contactService;
     private boolean isBound = false;
     private ServiceConnection serviceConnection;
+    private boolean contactsIsRead = false;
+    private Bundle savedInstanceState;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.savedInstanceState = savedInstanceState;
+        setPermission();
+    }
+
+    public void loadContacts() {
         Intent intent = new Intent(this, ContactService.class);
         serviceConnection = new ServiceConnection() {
             @Override
@@ -42,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements ContactService.Pu
                 }
 
             }
+
             @Override
             public void onServiceDisconnected(ComponentName componentName) {
                 isBound = false;
@@ -73,5 +87,32 @@ public class MainActivity extends AppCompatActivity implements ContactService.Pu
         fragmentManager.beginTransaction()
                 .add(R.id.mainFrame, contactListFragment)
                 .commit();
+    }
+
+    public void setPermission() {
+        int hasReadContactPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
+        if (hasReadContactPermission == PackageManager.PERMISSION_GRANTED) {
+            contactsIsRead = true;
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+        }
+        if (contactsIsRead) {
+            loadContacts();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                contactsIsRead = true;
+            }
+        }
+        if (contactsIsRead) {
+            loadContacts();
+        } else {
+            Toast.makeText(this, "Требуется установить разрешения", Toast.LENGTH_LONG).show();
+        }
     }
 }

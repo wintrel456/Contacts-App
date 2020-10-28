@@ -25,7 +25,16 @@ public class Contact {
         this.contactColor = contactColor;
     }
 
-
+    public Contact(String name, String firstNumber, int contactColor) {
+        this.name = name;
+        this.firstNumber = firstNumber;
+        this.contactColor = contactColor;
+        this.secondNumber = null;
+        this.firstEmail = null;
+        this.secondEmail = null;
+        this.contactAddress = null;
+        this.birthDate = null;
+    }
 
     public String getName() {
         return name;

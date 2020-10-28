@@ -12,11 +12,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+
 public class ContactListAdapter extends ArrayAdapter<Contact> {
     private LayoutInflater inflater;
-    private Contact[] contacts;
+    private ArrayList<Contact> contacts;
     private int layout;
-    public ContactListAdapter(@NonNull Context context, int resource, @NonNull Contact[] objects) {
+
+    public ContactListAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Contact> objects) {
         super(context, resource, objects);
         this.inflater = LayoutInflater.from(context);
         this.contacts = objects;
@@ -28,11 +31,11 @@ public class ContactListAdapter extends ArrayAdapter<Contact> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View row = inflater.inflate(this.layout, parent, false);
         TextView name = row.findViewById(R.id.userName);
-        name.setText(contacts[position].getName());
+        name.setText(contacts.get(position).getName());
         TextView number = row.findViewById(R.id.userNumber);
-        number.setText(contacts[position].getFirstNumber());
+        number.setText(contacts.get(position).getFirstNumber());
         ImageView avatar = row.findViewById(R.id.avatar);
-        avatar.setBackgroundTintList(ColorStateList.valueOf(contacts[position].getContactColor()));
+        avatar.setBackgroundTintList(ColorStateList.valueOf(contacts.get(position).getContactColor()));
         return row;
     }
 

@@ -14,10 +14,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.ListFragment;
 
+import java.util.ArrayList;
+
 public class ContactListFragment extends ListFragment {
 
     private ContactService contactService;
-    private ContactListAdapter adapter;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -32,14 +33,14 @@ public class ContactListFragment extends ListFragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final TextView count = view.findViewById(R.id.contactCount);
         ShortInformation callback = new ShortInformation() {
             @Override
-            public void getContactList(Contact[] result) {
-                count.setText(String.valueOf(result.length));
-                adapter = new ContactListAdapter(getActivity(), R.layout.contact_list_item, result);
+            public void getContactList(ArrayList<Contact> result) {
+                count.setText(String.valueOf(result.size()));
+                ContactListAdapter adapter = new ContactListAdapter(getActivity(), R.layout.contact_list_item, result);
                 setListAdapter(adapter);
             }
         };
@@ -63,7 +64,7 @@ public class ContactListFragment extends ListFragment {
     }
 
     interface ShortInformation {
-        void getContactList(Contact[] contacts);
+        void getContactList(ArrayList<Contact> result);
     }
 
 }
