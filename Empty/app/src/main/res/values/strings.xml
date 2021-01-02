@@ -21,5 +21,6 @@
     <string name="channel_name">channel_name</string>
     <string name="channel_description">channel_description</string>
     <string name="birthday_notification">Today is %s birthday!</string>
+    <string name="empty_date">Date not set</string>
 
 </resources>

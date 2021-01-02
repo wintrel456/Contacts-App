@@ -14,11 +14,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.ListFragment;
 
+import java.util.List;
+
 public class ContactListFragment extends ListFragment {
 
     private ContactService contactService;
-    private ContactListAdapter adapter;
-
+    private List<Contact> contacts;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -37,15 +38,20 @@ public class ContactListFragment extends ListFragment {
         final TextView count = view.findViewById(R.id.contactCount);
         ShortInformation callback = new ShortInformation() {
             @Override
-            public void getContactList(Contact[] result) {
-                count.setText(String.valueOf(result.length));
-                adapter = new ContactListAdapter(getActivity(), R.layout.contact_list_item, result);
-                setListAdapter(adapter);
+            public void getContactList(final List<Contact> result) {
+                view.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        contacts = result;
+                        count.setText(String.valueOf(result.size()));
+                        ContactListAdapter adapter = new ContactListAdapter(getActivity(), R.layout.contact_list_item, result);
+                        setListAdapter(adapter);
+                    }
+                });
             }
         };
         contactService.getShortInformation(callback);
     }
-
 
     @Override
     public void onListItemClick(@NonNull ListView l, @NonNull View v, int position, long id) {
@@ -54,7 +60,9 @@ public class ContactListFragment extends ListFragment {
     }
 
     public void openDetails(int position) {
-        ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(position);
+        String id = contacts.get(position).getId();
+        int color = contacts.get(position).getContactColor();
+        ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(id, color);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.mainFrame, contactDetailsFragment)
@@ -63,7 +71,7 @@ public class ContactListFragment extends ListFragment {
     }
 
     interface ShortInformation {
-        void getContactList(Contact[] contacts);
+        void getContactList(List<Contact> result);
     }
 
 }
