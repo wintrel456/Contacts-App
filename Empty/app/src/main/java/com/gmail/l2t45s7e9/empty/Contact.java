@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class Contact {
-
+    private final String id;
     private final String name;
     private final String firstNumber;
     private final String secondNumber;
@@ -14,7 +14,8 @@ public class Contact {
     private final int contactColor;
     private final GregorianCalendar birthDate;
 
-    public Contact(String name, String firstNumber, String secondNumber, String firstEmail, String secondEmail, String contactAddress, GregorianCalendar birthDate, int contactColor) {
+    public Contact(String id, String name, String firstNumber, String secondNumber, String firstEmail, String secondEmail, String contactAddress, GregorianCalendar birthDate, int contactColor) {
+        this.id = id;
         this.name = name;
         this.firstNumber = firstNumber;
         this.secondNumber = secondNumber;
@@ -25,7 +26,8 @@ public class Contact {
         this.contactColor = contactColor;
     }
 
-    public Contact(String name, String firstNumber, int contactColor) {
+    public Contact(String id, String name, String firstNumber, int contactColor) {
+        this.id = id;
         this.name = name;
         this.firstNumber = firstNumber;
         this.contactColor = contactColor;
@@ -34,6 +36,10 @@ public class Contact {
         this.secondEmail = null;
         this.contactAddress = null;
         this.birthDate = null;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {

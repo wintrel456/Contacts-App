@@ -29,11 +29,11 @@ public class MainActivity extends AppCompatActivity implements ContactService.Pu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.savedInstanceState = savedInstanceState;
-        setPermission();
+        requestPermission(savedInstanceState);
     }
 
-    public void loadContacts() {
-        Intent intent = new Intent(this, ContactService.class);
+    public void loadContacts(final Bundle savedInstanceState) {
+        final Intent intent = new Intent(this, ContactService.class);
         serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -41,21 +41,17 @@ public class MainActivity extends AppCompatActivity implements ContactService.Pu
                 contactService = localBinder.getService();
                 isBound = true;
                 int position = getIntent().getIntExtra("notificationId", -1);
+                String color = getIntent().getStringExtra("notificationColor");
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                if (savedInstanceState == null && position == -1) {
-                    openContactList(fragmentManager);
-                }
                 if (position != -1) {
-                    openContactList(fragmentManager);
-                    ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(position);
+                    ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(String.valueOf(position), Integer.parseInt(color));
                     fragmentManager.beginTransaction()
-                            .replace(R.id.mainFrame, contactDetailsFragment)
-                            .addToBackStack(null)
+                            .add(R.id.mainFrame, contactDetailsFragment)
                             .commit();
+                } else if (savedInstanceState == null) {
+                    openContactList(fragmentManager);
                 }
-
             }
-
             @Override
             public void onServiceDisconnected(ComponentName componentName) {
                 isBound = false;
@@ -89,7 +85,14 @@ public class MainActivity extends AppCompatActivity implements ContactService.Pu
                 .commit();
     }
 
-    public void setPermission() {
+    public void openNotification(FragmentManager fragmentManager) {
+        ContactListFragment contactListFragment = new ContactListFragment();
+        fragmentManager.beginTransaction()
+                .add(R.id.mainFrame, contactListFragment)
+                .commit();
+    }
+
+    public void requestPermission(Bundle savedInstanceState) {
         int hasReadContactPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
         if (hasReadContactPermission == PackageManager.PERMISSION_GRANTED) {
             contactsIsRead = true;
@@ -97,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements ContactService.Pu
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
         }
         if (contactsIsRead) {
-            loadContacts();
+            loadContacts(savedInstanceState);
         }
     }
 
@@ -110,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements ContactService.Pu
             }
         }
         if (contactsIsRead) {
-            loadContacts();
+            loadContacts(savedInstanceState);
         } else {
             Toast.makeText(this, "Требуется установить разрешения", Toast.LENGTH_LONG).show();
         }

@@ -12,14 +12,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ContactListAdapter extends ArrayAdapter<Contact> {
     private LayoutInflater inflater;
-    private ArrayList<Contact> contacts;
+    private List<Contact> contacts;
     private int layout;
 
-    public ContactListAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Contact> objects) {
+    public ContactListAdapter(@NonNull Context context, int resource, @NonNull List<Contact> objects) {
         super(context, resource, objects);
         this.inflater = LayoutInflater.from(context);
         this.contacts = objects;

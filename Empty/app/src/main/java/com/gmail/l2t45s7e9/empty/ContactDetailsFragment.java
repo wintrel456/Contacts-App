@@ -30,7 +30,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
     private ContactService contactService;
     private SwitchCompat switchCompat;
     private int color;
-    private int position;
+    private String position;
     private TextView name;
     private TextView firstNumber;
     private TextView secondNumber;
@@ -45,17 +45,19 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
     private Intent intent;
     private boolean isAlarmUp;
 
-    public static ContactDetailsFragment newInstance(int index) {
+    public static ContactDetailsFragment newInstance(String id, int color) {
         ContactDetailsFragment contactDetailsFragment = new ContactDetailsFragment();
-        Bundle id = new Bundle();
-        id.putInt("id", index);
-        contactDetailsFragment.setArguments(id);
+        Bundle bundle = new Bundle();
+        bundle.putString("id", id);
+        bundle.putInt("color", color);
+        contactDetailsFragment.setArguments(bundle);
         return contactDetailsFragment;
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
-        position = getArguments().getInt("id");
+        position = getArguments().getString("id");
+        color = getArguments().getInt("color");
         super.onAttach(context);
         contactService = ((ContactService.PublicServiceInterface) context).getService();
     }
@@ -67,34 +69,44 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-        final GradientDrawable drawable = (GradientDrawable) ResourcesCompat.getDrawable(getResources(), R.drawable.button, null);
         DetailsInformation callback = new DetailsInformation() {
             @Override
-            public void getDetails(Contact result) {
-                name.setText(result.getName());
-                firstNumber.setText(result.getFirstNumber());
-                secondNumber.setText(result.getSecondNumber());
-                firstEmail.setText(result.getFirstEmail());
-                secondEmail.setText(result.getSecondEmail());
-                address.setText(result.getContactAddress());
-                avatar.setColorFilter(result.getContactColor());
-                date = (GregorianCalendar) result.getBirthDate();
-                birthDate.setText(String.format(Locale.getDefault(), "%d %s",
-                        date.get(Calendar.DATE), date.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())).toUpperCase());
-                color = result.getContactColor();
-                drawable.setStroke(2, color);
+            public void getDetails(final Contact result) {
+                view.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        avatar.setColorFilter(result.getContactColor());
+                        name.setText(result.getName());
+                        firstNumber.setText(result.getFirstNumber());
+                        secondNumber.setText(result.getSecondNumber());
+                        firstEmail.setText(result.getFirstEmail());
+                        secondEmail.setText(result.getSecondEmail());
+                        address.setText(result.getContactAddress());
+                        date = (GregorianCalendar) result.getBirthDate();
+                        if (date != null) {
+                            birthDate.setText(String.format(Locale.getDefault(), "%d %s",
+                                    date.get(Calendar.DATE), date.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())).toUpperCase());
+                        }
+
+                    }
+                });
+
             }
         };
-        contactService.getDetailsInformation(callback, position);
+        contactService.getDetailsInformation(callback, position, color);
+
+        GradientDrawable drawable = (GradientDrawable) ResourcesCompat.getDrawable(getResources(), R.drawable.button, null);
         switchCompat = view.findViewById(R.id.notificationSwitch);
         TextView add = view.findViewById(R.id.addButton);
+
+        drawable.setStroke(2, color);
         name.setSelected(true);
         add.setBackground(drawable);
         intent = new Intent(getContext(), ContactNotificationsReceiver.class);
-        isAlarmUp = PendingIntent.getBroadcast(getContext(), position, intent, PendingIntent.FLAG_NO_CREATE) != null;
+        isAlarmUp = PendingIntent.getBroadcast(getContext(), Integer.parseInt(position), intent, PendingIntent.FLAG_NO_CREATE) != null;
         if (switchCompat != null) {
             switchCompat.setOnCheckedChangeListener(this);
             if (isAlarmUp) {
@@ -117,13 +129,13 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         birthDate = view.findViewById(R.id.birhDate);
     }
 
-
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
         alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         intent.putExtra("name", name.getText());
         intent.putExtra("id", position);
-        alarmIntent = PendingIntent.getBroadcast(getContext(), position, intent, 0);
+        intent.putExtra("color", color);
+        alarmIntent = PendingIntent.getBroadcast(getContext(), Integer.parseInt(position), intent, 0);
         if (isChecked) {
             if (!isAlarmUp) {
                 setRepeating();
@@ -133,7 +145,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
             switchCompat.setTrackTintList(ColorStateList.valueOf(color).withAlpha(100));
 
         } else {
-            if (PendingIntent.getBroadcast(getContext(), position, intent, PendingIntent.FLAG_NO_CREATE) != null) {
+            if (PendingIntent.getBroadcast(getContext(), Integer.parseInt(position), intent, PendingIntent.FLAG_NO_CREATE) != null) {
                 alarmManager.cancel(alarmIntent);
                 alarmIntent.cancel();
                 Toast.makeText(getContext(), "Notification is OFF", Toast.LENGTH_SHORT).show();

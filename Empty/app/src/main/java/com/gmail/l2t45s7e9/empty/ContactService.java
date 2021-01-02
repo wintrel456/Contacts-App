@@ -9,7 +9,9 @@ import android.provider.ContactsContract;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -18,46 +20,11 @@ import java.util.concurrent.Executors;
 public class ContactService extends Service {
     private final IBinder mBinder = new LocalBinder();
     private ExecutorService executorService = Executors.newCachedThreadPool();
-
+    private List<Contact> arrayList;// = new ArrayList<>();
     @Override
     public void onCreate() {
         super.onCreate();
-
-        /*
-        /*Cursor cursor = null;
-        try {
-            cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    null,
-                    ContactsContract.Contacts.HAS_PHONE_NUMBER,
-                    null,
-                    ContactsContract.Contacts.DISPLAY_NAME);
-            while (cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
-                String firstNumber = getNumbers(id)[0];
-                String secondNumber = getNumbers(id)[1];
-                String firstEmail = getEmails(id)[0];
-                String secondEmail = getEmails(id)[1];
-                String address = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
-                Contact contact = new Contact(name,
-                        firstNumber,
-                        secondNumber,
-                        firstEmail,
-                        secondEmail,
-                        address,
-                        new GregorianCalendar(0, 9, 11),
-                        colors[random.nextInt(colors.length)]);
-                if(!set.contains(firstNumber)){
-                    contacts.add(contact);
-                    set.add(firstNumber);
-                }
-            }
-        }
-        finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }*/
+        arrayList = loadShortInformation();
     }
 
 
@@ -71,21 +38,21 @@ public class ContactService extends Service {
         executorService.submit(new Runnable() {
             @Override
             public void run() {
-                ArrayList<Contact> result = loadShortInformation();
+                List<Contact> result = arrayList;
                 ContactListFragment.ShortInformation local = ref.get();
                 if (local != null) {
-                    local.getContactList(result);
+                    local.getContactList((ArrayList<Contact>) result);
                 }
             }
         });
     }
 
-    public void getDetailsInformation(ContactDetailsFragment.DetailsInformation callback, final int position) {
+    public void getDetailsInformation(ContactDetailsFragment.DetailsInformation callback, final String id, final int color) {
         final WeakReference<ContactDetailsFragment.DetailsInformation> ref = new WeakReference<>(callback);
         executorService.submit(new Runnable() {
             @Override
             public void run() {
-                Contact result = loadShortInformation().get(position);
+                Contact result = loadDetailsInformation(id, color);
                 ContactDetailsFragment.DetailsInformation local = ref.get();
                 if (local != null) {
                     local.getDetails(result);
@@ -171,8 +138,8 @@ public class ContactService extends Service {
         return email;
     }
 
-    private ArrayList<Contact> loadShortInformation() {
-        ArrayList<Contact> contacts = new ArrayList<>();
+    private List<Contact> loadShortInformation() {
+        List<Contact> contacts = new ArrayList<>();
         Set<String> set = new HashSet<>();
         Random random = new Random();
         int[] colors = getApplicationContext().getResources().getIntArray(R.array.colors_list);
@@ -187,7 +154,8 @@ public class ContactService extends Service {
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
                 String firstNumber = getNumbers(id)[0];
-                Contact contact = new Contact(name,
+                Contact contact = new Contact(id,
+                        name,
                         firstNumber,
                         colors[random.nextInt(colors.length)]);
 
@@ -204,40 +172,38 @@ public class ContactService extends Service {
         return contacts;
     }
 
-    /*public void loadDetailsInformation(){
+    public Contact loadDetailsInformation(String id, int color) {
         Random random = new Random();
-        int[] colors = getApplicationContext().getResources().getIntArray(R.array.colors_list);
-        contacts = new ArrayList<>();
-        Set<String> set = new HashSet<>();
+        Contact contact = null;
         Cursor cursor = null;
         try {
             cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     null,
-                    ContactsContract.Contacts.HAS_PHONE_NUMBER,
+                    ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
                     null,
                     ContactsContract.Contacts.DISPLAY_NAME);
             while (cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
                 String firstNumber = getNumbers(id)[0];
-                Contact contact = new Contact(name,
+                String secondNumber = getNumbers(id)[1];
+                String firstEmail = getEmails(id)[0];
+                String secondEmail = getEmails(id)[1];
+                String address = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
+                contact = new Contact(id,
+                        name,
                         firstNumber,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        colors[random.nextInt(colors.length)]);
-                if(!set.contains(firstNumber)){
-                    contacts.add(contact);
-                    set.add(firstNumber);
-                }
+                        secondNumber,
+                        firstEmail,
+                        secondEmail,
+                        address,
+                        new GregorianCalendar(1999, 0, 1),//(random.nextInt(2000), random.nextInt(12), random.nextInt(31)),
+                        color);
             }
-        }
-        finally {
+        } finally {
             if (cursor != null) {
                 cursor.close();
             }
         }
-    }*/
+        return contact;
+    }
 }
