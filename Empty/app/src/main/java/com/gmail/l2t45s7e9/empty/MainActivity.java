@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements ContactService.Pu
     }
 
     public void loadContacts(final Bundle savedInstanceState) {
-        final Intent intent = new Intent(this, ContactService.class);
+        Intent intent = new Intent(this, ContactService.class);
         serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -41,10 +41,10 @@ public class MainActivity extends AppCompatActivity implements ContactService.Pu
                 contactService = localBinder.getService();
                 isBound = true;
                 int position = getIntent().getIntExtra("notificationId", -1);
-                String color = getIntent().getStringExtra("notificationColor");
+                int color = getIntent().getIntExtra("notificationColor", R.color.Font);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 if (position != -1) {
-                    ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(String.valueOf(position), Integer.parseInt(color));
+                    ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(String.valueOf(position), color);
                     fragmentManager.beginTransaction()
                             .add(R.id.mainFrame, contactDetailsFragment)
                             .commit();

@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 public class ContactService extends Service {
     private final IBinder mBinder = new LocalBinder();
     private ExecutorService executorService = Executors.newCachedThreadPool();
-    private List<Contact> arrayList;// = new ArrayList<>();
+    private List<Contact> arrayList;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -41,7 +41,7 @@ public class ContactService extends Service {
                 List<Contact> result = arrayList;
                 ContactListFragment.ShortInformation local = ref.get();
                 if (local != null) {
-                    local.getContactList((ArrayList<Contact>) result);
+                    local.getContactList(result);
                 }
             }
         });
@@ -82,7 +82,8 @@ public class ContactService extends Service {
         int count = 0;
         Cursor cursor = null;
         try {
-            cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            cursor = getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     null,
                     ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
                     null,
@@ -117,7 +118,8 @@ public class ContactService extends Service {
         int count = 0;
         Cursor cursor = null;
         try {
-            cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+            cursor = getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Email.CONTENT_URI,
                     null,
                     ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
                     null,
@@ -173,11 +175,11 @@ public class ContactService extends Service {
     }
 
     public Contact loadDetailsInformation(String id, int color) {
-        Random random = new Random();
         Contact contact = null;
         Cursor cursor = null;
         try {
-            cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            cursor = getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     null,
                     ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
                     null,
@@ -196,9 +198,10 @@ public class ContactService extends Service {
                         firstEmail,
                         secondEmail,
                         address,
-                        new GregorianCalendar(1999, 0, 1),//(random.nextInt(2000), random.nextInt(12), random.nextInt(31)),
+                        new GregorianCalendar(1999, 0, 2),
                         color);
             }
+
         } finally {
             if (cursor != null) {
                 cursor.close();

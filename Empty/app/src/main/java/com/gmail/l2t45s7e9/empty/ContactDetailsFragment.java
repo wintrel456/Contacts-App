@@ -85,12 +85,13 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
                         firstEmail.setText(result.getFirstEmail());
                         secondEmail.setText(result.getSecondEmail());
                         address.setText(result.getContactAddress());
-                        date = (GregorianCalendar) result.getBirthDate();
+                        date = result.getBirthDate();
                         if (date != null) {
                             birthDate.setText(String.format(Locale.getDefault(), "%d %s",
                                     date.get(Calendar.DATE), date.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())).toUpperCase());
+                        } else {
+                            birthDate.setText(R.string.empty_date);
                         }
-
                     }
                 });
 

@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,12 +20,6 @@ public class ContactNotificationsReceiver extends BroadcastReceiver {
 
     private static final String CHANNEL_ID = "CHANNEL_ID";
 
-    public static void createChannel(NotificationManager manager) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
-            manager.createNotificationChannel(notificationChannel);
-        }
-    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -32,10 +27,12 @@ public class ContactNotificationsReceiver extends BroadcastReceiver {
         int color = intent.getIntExtra("color", -1);
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.putExtra("notificationId", id);
-        notificationIntent.putExtra("notificationColor", String.valueOf(color));
+        notificationIntent.putExtra("notificationColor", color);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, id, notificationIntent, 0);
         String text = String.format("Today %s birthday!", intent.getStringExtra("name"));
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        taskStackBuilder.addNextIntent(notificationIntent);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle(String.valueOf(id))
@@ -47,6 +44,13 @@ public class ContactNotificationsReceiver extends BroadcastReceiver {
         createChannel(notificationManager);
         notificationManager.notify(1, builder.build());
         setRepeating(intent, context, id);
+    }
+
+    private void createChannel(NotificationManager manager) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
+            manager.createNotificationChannel(notificationChannel);
+        }
     }
 
     public void setRepeating(Intent intent, Context context, int id) {
