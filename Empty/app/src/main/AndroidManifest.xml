@@ -12,19 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <receiver
-            android:name=".ContactNotificationsReceiver"
+            android:name=".presentation.reciever.ContactNotificationsReceiver"
             android:enabled="true"
             android:exported="true" />
 
-        <service
-            android:name=".ContactService"
-            android:enabled="true"
-            android:exported="false" />
-
         <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait"
+            android:name=".presentation.activitiy.MainActivity"
             android:theme="@style/splash_screen">
+            <nav-graph android:value="@navigation/nav_graph" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

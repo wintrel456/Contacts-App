@@ -1,4 +1,4 @@
-package com.gmail.l2t45s7e9.empty;
+package com.gmail.l2t45s7e9.empty.presentation.screens;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -20,6 +20,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.gmail.l2t45s7e9.empty.R;
+import com.gmail.l2t45s7e9.empty.domain.ContactDetailsViewModel;
+import com.gmail.l2t45s7e9.empty.domain.factories.DetailsFactory;
+import com.gmail.l2t45s7e9.empty.presentation.reciever.ContactNotificationsReceiver;
+import com.gmail.l2t45s7e9.empty.repository.entity.Contact;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -27,7 +35,6 @@ import java.util.Locale;
 
 public class ContactDetailsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
 
-    private ContactService contactService;
     private SwitchCompat switchCompat;
     private int color;
     private String position;
@@ -45,23 +52,12 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
     private Intent intent;
     private boolean isAlarmUp;
 
-    public static ContactDetailsFragment newInstance(String id, int color) {
-        ContactDetailsFragment contactDetailsFragment = new ContactDetailsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("id", id);
-        bundle.putInt("color", color);
-        contactDetailsFragment.setArguments(bundle);
-        return contactDetailsFragment;
-    }
-
     @Override
     public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
         position = getArguments().getString("id");
         color = getArguments().getInt("color");
-        super.onAttach(context);
-        contactService = ((ContactService.PublicServiceInterface) context).getService();
     }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,12 +68,14 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-        DetailsInformation callback = new DetailsInformation() {
+        ContactDetailsViewModel contactDetailsViewModel = new ViewModelProvider(this, new DetailsFactory(getActivity().getApplication(), position, color)).get(ContactDetailsViewModel.class);
+        contactDetailsViewModel.getContactDetails().observe(getViewLifecycleOwner(), new Observer<Contact>() {
             @Override
-            public void getDetails(final Contact result) {
+            public void onChanged(final Contact result) {
                 view.post(new Runnable() {
                     @Override
                     public void run() {
+                        position = result.getId();
                         avatar.setColorFilter(result.getContactColor());
                         name.setText(result.getName());
                         firstNumber.setText(result.getFirstNumber());
@@ -92,13 +90,11 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
                         } else {
                             birthDate.setText(R.string.empty_date);
                         }
+                        color = result.getContactColor();
                     }
                 });
-
             }
-        };
-        contactService.getDetailsInformation(callback, position, color);
-
+        });
         GradientDrawable drawable = (GradientDrawable) ResourcesCompat.getDrawable(getResources(), R.drawable.button, null);
         switchCompat = view.findViewById(R.id.notificationSwitch);
         TextView add = view.findViewById(R.id.addButton);
@@ -157,23 +153,6 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        switchCompat = null;
-        name = null;
-        firstNumber = null;
-        secondNumber = null;
-        firstEmail = null;
-        secondEmail = null;
-        address = null;
-        avatar = null;
-        super.onDestroyView();
-    }
-
-    interface DetailsInformation {
-        void getDetails(Contact contact);
-    }
-
     public void setRepeating() {
         GregorianCalendar calendar = (GregorianCalendar) Calendar.getInstance();
         if (date.get(Calendar.DATE) == 29 && date.get(Calendar.MONTH) == Calendar.FEBRUARY) {
@@ -186,5 +165,18 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         calendar.set(Calendar.MONTH, date.get(Calendar.MONTH));
         calendar.set(Calendar.DATE, date.get(Calendar.DATE));
         alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), alarmIntent);
+    }
+
+    @Override
+    public void onDestroyView() {
+        switchCompat = null;
+        name = null;
+        firstNumber = null;
+        secondNumber = null;
+        firstEmail = null;
+        secondEmail = null;
+        address = null;
+        avatar = null;
+        super.onDestroyView();
     }
 }

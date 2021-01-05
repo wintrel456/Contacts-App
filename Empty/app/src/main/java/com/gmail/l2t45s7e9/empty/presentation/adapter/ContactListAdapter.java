@@ -1,4 +1,4 @@
-package com.gmail.l2t45s7e9.empty;
+package com.gmail.l2t45s7e9.empty.presentation.adapter;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.gmail.l2t45s7e9.empty.R;
+import com.gmail.l2t45s7e9.empty.repository.entity.Contact;
 
 import java.util.List;
 

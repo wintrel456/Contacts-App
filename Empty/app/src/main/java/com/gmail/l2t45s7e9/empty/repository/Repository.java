@@ -1,11 +1,14 @@
-package com.gmail.l2t45s7e9.empty;
+package com.gmail.l2t45s7e9.empty.repository;
 
-import android.app.Service;
-import android.content.Intent;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
-import android.os.Binder;
-import android.os.IBinder;
 import android.provider.ContactsContract;
+
+import com.gmail.l2t45s7e9.empty.R;
+import com.gmail.l2t45s7e9.empty.domain.ContactDetailsViewModel;
+import com.gmail.l2t45s7e9.empty.domain.ContactListViewModel;
+import com.gmail.l2t45s7e9.empty.repository.entity.Contact;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -14,75 +17,65 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ContactService extends Service {
-    private final IBinder mBinder = new LocalBinder();
+public class Repository {
+    private ContentResolver contentResolver;
+    private Context context;
+
+    public Repository(ContentResolver contentResolver, Context context) {
+        this.contentResolver = contentResolver;
+        this.context = context;
+    }
+
     private ExecutorService executorService = Executors.newCachedThreadPool();
-    private List<Contact> arrayList;
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        arrayList = loadShortInformation();
-    }
 
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
-    public void getShortInformation(ContactListFragment.ShortInformation callback) {
-        final WeakReference<ContactListFragment.ShortInformation> ref = new WeakReference<>(callback);
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                List<Contact> result = arrayList;
-                ContactListFragment.ShortInformation local = ref.get();
-                if (local != null) {
-                    local.getContactList(result);
+    public void getShortInformation(ContactListViewModel.ShortInformation callback) {
+        final WeakReference<ContactListViewModel.ShortInformation> ref = new WeakReference<>(callback);
+        try {
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    List<Contact> result = loadShortInformation();
+                    ContactListViewModel.ShortInformation local = ref.get();
+                    if (local != null) {
+                        local.getContactList(result);
+                    }
                 }
-            }
-        });
-    }
-
-    public void getDetailsInformation(ContactDetailsFragment.DetailsInformation callback, final String id, final int color) {
-        final WeakReference<ContactDetailsFragment.DetailsInformation> ref = new WeakReference<>(callback);
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                Contact result = loadDetailsInformation(id, color);
-                ContactDetailsFragment.DetailsInformation local = ref.get();
-                if (local != null) {
-                    local.getDetails(result);
-                }
-            }
-        });
-    }
-
-    interface PublicServiceInterface {
-        ContactService getService();
-    }
-
-    public class LocalBinder extends Binder {
-        ContactService getService() {
-            return ContactService.this;
+            }).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onDestroy() {
         executorService.shutdown();
-        super.onDestroy();
     }
 
-    public String[] getNumbers(String id) {
+    public void getDetailsInformation(ContactDetailsViewModel.DetailsInformation callback, final String id, final int color) {
+        final WeakReference<ContactDetailsViewModel.DetailsInformation> ref = new WeakReference<>(callback);
+        try {
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    Contact result = loadDetailsInformation(id, color);
+                    ContactDetailsViewModel.DetailsInformation local = ref.get();
+                    if (local != null) {
+                        local.getDetails(result);
+                    }
+                }
+            }).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        executorService.shutdown();
+    }
+
+    private String[] getNumbers(String id) {
         String[] number = new String[2];
         int count = 0;
         Cursor cursor = null;
         try {
-            cursor = getContentResolver().query(
+            cursor = contentResolver.query(
                     ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     null,
                     ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
@@ -113,12 +106,12 @@ public class ContactService extends Service {
         return number;
     }
 
-    public String[] getEmails(String id) {
+    private String[] getEmails(String id) {
         String[] email = new String[2];
         int count = 0;
         Cursor cursor = null;
         try {
-            cursor = getContentResolver().query(
+            cursor = contentResolver.query(
                     ContactsContract.CommonDataKinds.Email.CONTENT_URI,
                     null,
                     ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
@@ -144,10 +137,10 @@ public class ContactService extends Service {
         List<Contact> contacts = new ArrayList<>();
         Set<String> set = new HashSet<>();
         Random random = new Random();
-        int[] colors = getApplicationContext().getResources().getIntArray(R.array.colors_list);
+        int[] colors = context.getResources().getIntArray(R.array.colors_list);
         Cursor cursor = null;
         try {
-            cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     null,
                     ContactsContract.Contacts.HAS_PHONE_NUMBER,
                     null,
@@ -174,11 +167,11 @@ public class ContactService extends Service {
         return contacts;
     }
 
-    public Contact loadDetailsInformation(String id, int color) {
+    private Contact loadDetailsInformation(String id, int color) {
         Contact contact = null;
         Cursor cursor = null;
         try {
-            cursor = getContentResolver().query(
+            cursor = contentResolver.query(
                     ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     null,
                     ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
@@ -198,7 +191,7 @@ public class ContactService extends Service {
                         firstEmail,
                         secondEmail,
                         address,
-                        new GregorianCalendar(1999, 0, 2),
+                        new GregorianCalendar(1999, 0, 5),
                         color);
             }
 
