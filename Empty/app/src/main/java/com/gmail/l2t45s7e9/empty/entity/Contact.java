@@ -1,8 +1,7 @@
-package com.gmail.l2t45s7e9.empty;
+package com.gmail.l2t45s7e9.empty.entity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import java.util.GregorianCalendar;
 
 
