@@ -7,8 +7,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.gmail.l2t45s7e9.empty.repository.Repository;
-import com.gmail.l2t45s7e9.empty.repository.entity.Contact;
+import com.gmail.l2t45s7e9.empty.entity.Contact;
+import com.gmail.l2t45s7e9.empty.repository.ContactListRepository;
 
 import java.util.List;
 
@@ -17,33 +17,24 @@ public class ContactListViewModel extends AndroidViewModel {
         void getContactList(List<Contact> result);
     }
 
-    private Repository repository;
-    private MutableLiveData<List<Contact>> contactListMutableLiveData;
-
+    private ContactListRepository contactListRepository;
+    private MutableLiveData<List<Contact>> contactListMutableLiveData = new MutableLiveData<>();
+    public LiveData<List<Contact>> listLiveData;
 
     public ContactListViewModel(@NonNull Application application) {
         super(application);
-        repository = new Repository(application.getContentResolver(), application.getApplicationContext());
+        contactListRepository = new ContactListRepository(application.getContentResolver(), application.getApplicationContext());
+        listLiveData = loadContactList();
     }
 
-    public LiveData<List<Contact>> getContactsList() {
-        if (contactListMutableLiveData == null) {
-            contactListMutableLiveData = new MutableLiveData<List<Contact>>();
-            loadContactList();
-        }
-        return contactListMutableLiveData;
-    }
-
-
-    private void loadContactList() {
+    private LiveData<List<Contact>> loadContactList() {
         ShortInformation callback = new ShortInformation() {
             @Override
             public void getContactList(List<Contact> result) {
                 contactListMutableLiveData.postValue(result);
             }
         };
-        repository.getShortInformation(callback);
+        contactListRepository.getShortInformation(callback);
+        return contactListMutableLiveData;
     }
-
-
 }

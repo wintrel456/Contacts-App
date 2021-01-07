@@ -1,4 +1,4 @@
-package com.gmail.l2t45s7e9.empty.repository.entity;
+package com.gmail.l2t45s7e9.empty.entity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

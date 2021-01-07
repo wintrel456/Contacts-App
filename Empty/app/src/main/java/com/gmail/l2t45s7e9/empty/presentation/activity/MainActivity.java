@@ -1,4 +1,4 @@
-package com.gmail.l2t45s7e9.empty.presentation.activitiy;
+package com.gmail.l2t45s7e9.empty.presentation.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -25,10 +25,10 @@ public class MainActivity extends AppCompatActivity {
         requestPermission();
     }
 
-    public void loadContacts() {
+    private void loadContacts() {
         String position = getIntent().getStringExtra("notificationId");
         int color = getIntent().getIntExtra("notificationColor", R.color.Font);
-        NavController navController = Navigation.findNavController(this, R.id.nav_host);
+        NavController navController = Navigation.findNavController(this, R.id.navHost);
         if (position != null) {
             Bundle bundle = new Bundle();
             bundle.putString("id", position);
@@ -48,16 +48,24 @@ public class MainActivity extends AppCompatActivity {
         if (contactsIsRead) {
             loadContacts();
         } else {
-            Toast.makeText(this, "Требуется установить разрешения", Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                    this,
+                    "Требуется установить разрешения",
+                    Toast.LENGTH_LONG
+            ).show();
         }
     }
 
-    public void requestPermission() {
+    private void requestPermission() {
         int hasReadContactPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
         if (hasReadContactPermission == PackageManager.PERMISSION_GRANTED) {
             contactsIsRead = true;
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.READ_CONTACTS},
+                    1
+            );
         }
         if (contactsIsRead) {
             loadContacts();

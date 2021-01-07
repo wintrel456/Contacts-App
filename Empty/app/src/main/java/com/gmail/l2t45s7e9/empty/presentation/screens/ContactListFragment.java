@@ -17,14 +17,15 @@ import androidx.navigation.Navigation;
 import com.gmail.l2t45s7e9.empty.R;
 import com.gmail.l2t45s7e9.empty.domain.ContactListViewModel;
 import com.gmail.l2t45s7e9.empty.domain.factories.ListFactory;
+import com.gmail.l2t45s7e9.empty.entity.Contact;
 import com.gmail.l2t45s7e9.empty.presentation.adapter.ContactListAdapter;
-import com.gmail.l2t45s7e9.empty.repository.entity.Contact;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContactListFragment extends ListFragment {
 
-    private List<Contact> contacts;
+    private List<Contact> contacts = new ArrayList<>();
 
     @Nullable
     @Override
@@ -36,16 +37,20 @@ public class ContactListFragment extends ListFragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final TextView count = view.findViewById(R.id.contactCount);
-        ContactListViewModel contactListViewModel = new ViewModelProvider(this, new ListFactory(getActivity().getApplication())).get(ContactListViewModel.class);
-        contactListViewModel.getContactsList().observe(getViewLifecycleOwner(), new Observer<List<Contact>>() {
+        final ContactListAdapter adapter = new ContactListAdapter(getContext(), contacts);
+        ContactListViewModel contactListViewModel = new ViewModelProvider(
+                this,
+                new ListFactory(getActivity().getApplication())).get(ContactListViewModel.class
+        );
+        contactListViewModel.listLiveData.observe(getViewLifecycleOwner(), new Observer<List<Contact>>() {
             @Override
             public void onChanged(final List<Contact> result) {
                 view.post(new Runnable() {
                     @Override
                     public void run() {
                         contacts = result;
-                        count.setText(String.valueOf(result.size()));
-                        ContactListAdapter adapter = new ContactListAdapter(getActivity(), R.layout.contact_list_item, result);
+                        count.setText(String.valueOf(contacts.size()));
+                        adapter.updateData(contacts);
                         setListAdapter(adapter);
                     }
                 });

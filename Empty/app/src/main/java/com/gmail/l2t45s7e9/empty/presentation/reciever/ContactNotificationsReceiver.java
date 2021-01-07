@@ -13,7 +13,7 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 
 import com.gmail.l2t45s7e9.empty.R;
-import com.gmail.l2t45s7e9.empty.presentation.activitiy.MainActivity;
+import com.gmail.l2t45s7e9.empty.presentation.activity.MainActivity;
 
 import java.util.Calendar;
 import java.util.Objects;

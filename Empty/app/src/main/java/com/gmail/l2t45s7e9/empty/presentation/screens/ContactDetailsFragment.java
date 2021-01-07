@@ -26,8 +26,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.gmail.l2t45s7e9.empty.R;
 import com.gmail.l2t45s7e9.empty.domain.ContactDetailsViewModel;
 import com.gmail.l2t45s7e9.empty.domain.factories.DetailsFactory;
+import com.gmail.l2t45s7e9.empty.entity.Contact;
 import com.gmail.l2t45s7e9.empty.presentation.reciever.ContactNotificationsReceiver;
-import com.gmail.l2t45s7e9.empty.repository.entity.Contact;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -69,7 +69,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
         ContactDetailsViewModel contactDetailsViewModel = new ViewModelProvider(this, new DetailsFactory(getActivity().getApplication(), position, color)).get(ContactDetailsViewModel.class);
-        contactDetailsViewModel.getContactDetails().observe(getViewLifecycleOwner(), new Observer<Contact>() {
+        contactDetailsViewModel.contactLiveData.observe(getViewLifecycleOwner(), new Observer<Contact>() {
             @Override
             public void onChanged(final Contact result) {
                 view.post(new Runnable() {
@@ -177,6 +177,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         secondEmail = null;
         address = null;
         avatar = null;
+        birthDate = null;
         super.onDestroyView();
     }
 }

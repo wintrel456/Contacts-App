@@ -10,7 +10,7 @@ import com.gmail.l2t45s7e9.empty.domain.ContactDetailsViewModel;
 
 public class DetailsFactory extends ViewModelProvider.AndroidViewModelFactory {
 
-    private ContactDetailsViewModel contactDetailsViewModel;
+    private final ContactDetailsViewModel contactDetailsViewModel;
 
     public DetailsFactory(@NonNull Application application, String id, int color) {
         super(application);

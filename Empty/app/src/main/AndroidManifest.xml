@@ -17,7 +17,7 @@
             android:exported="true" />
 
         <activity
-            android:name=".presentation.activitiy.MainActivity"
+            android:name=".presentation.activity.MainActivity"
             android:theme="@style/splash_screen">
             <nav-graph android:value="@navigation/nav_graph" />
             <intent-filter>
