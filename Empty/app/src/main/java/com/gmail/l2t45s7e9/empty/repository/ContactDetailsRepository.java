@@ -14,12 +14,12 @@ import java.util.concurrent.Executors;
 public class ContactDetailsRepository {
     private final ContentResolver contentResolver;
     private final ContactsRepositoryDelegate contactsRepositoryDelegate = new ContactsRepositoryDelegate();
+    private ExecutorService executorService = Executors.newCachedThreadPool();
 
     public ContactDetailsRepository(ContentResolver contentResolver) {
         this.contentResolver = contentResolver;
     }
 
-    private ExecutorService executorService = Executors.newCachedThreadPool();
 
     public void getDetailsInformation(ContactDetailsViewModel.DetailsInformation callback, final String id, final int color) {
         final WeakReference<ContactDetailsViewModel.DetailsInformation> ref = new WeakReference<>(callback);

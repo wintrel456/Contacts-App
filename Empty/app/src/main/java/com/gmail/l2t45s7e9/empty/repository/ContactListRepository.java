@@ -22,13 +22,13 @@ public class ContactListRepository {
     private ContentResolver contentResolver;
     private Context context;
     private final ContactsRepositoryDelegate contactsRepositoryDelegate = new ContactsRepositoryDelegate();
+    private ExecutorService executorService = Executors.newCachedThreadPool();
 
     public ContactListRepository(ContentResolver contentResolver, Context context) {
         this.contentResolver = contentResolver;
         this.context = context;
     }
 
-    private ExecutorService executorService = Executors.newCachedThreadPool();
 
     public void getShortInformation(ContactListViewModel.ShortInformation callback) {
         final WeakReference<ContactListViewModel.ShortInformation> ref = new WeakReference<>(callback);
