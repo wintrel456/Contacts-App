@@ -3,26 +3,15 @@ package com.gmail.l2t45s7e9.empty.repository;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
-public class NumbersAndEmailsRepository {
+public class ContactsRepositoryDelegate {
 
-    private final ContentResolver contentResolver;
-    private final String id;
-
-    public NumbersAndEmailsRepository(ContentResolver contentResolver, String id) {
-        this.contentResolver = contentResolver;
-        this.id = id;
-    }
-
-    public String[] loadNumbers() {
-        return getNumbers();
-    }
-
-    public String[] loadEmails() {
-        return getEmails();
-    }
-
-    private String[] getNumbers() {
+    public String[] getNumbers(ContentResolver contentResolver, String id) {
         String[] number = new String[2];
         int count = 0;
         Cursor cursor = null;
@@ -32,7 +21,8 @@ public class NumbersAndEmailsRepository {
                     null,
                     ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
                     null,
-                    null);
+                    null
+            );
             while (cursor.moveToNext()) {
                 if (count < 2) {
                     if (count == 0) {
@@ -58,7 +48,7 @@ public class NumbersAndEmailsRepository {
         return number;
     }
 
-    private String[] getEmails() {
+    public String[] getEmails(ContentResolver contentResolver, String id) {
         String[] email = new String[2];
         int count = 0;
         Cursor cursor = null;
@@ -68,7 +58,8 @@ public class NumbersAndEmailsRepository {
                     null,
                     ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
                     null,
-                    null);
+                    null
+            );
             while (cursor.moveToNext()) {
                 if (count < 2) {
                     email[count] = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
@@ -84,5 +75,40 @@ public class NumbersAndEmailsRepository {
         }
         return email;
     }
+
+    public GregorianCalendar getBirthDate(ContentResolver contentResolver, String id) {
+        GregorianCalendar gregorianCalendar = null;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM dd", Locale.getDefault());
+        String birthDate = null;
+        Cursor cursor = null;
+        try {
+            cursor = contentResolver.query(
+                    ContactsContract.Data.CONTENT_URI,
+                    null,
+                    ContactsContract.CommonDataKinds.Event.TYPE + "=" +
+                            ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY,
+                    null,
+                    null
+            );
+            while (cursor.moveToNext()) {
+                birthDate = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE));
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        try {
+            if (birthDate != null) {
+                Date date = simpleDateFormat.parse(birthDate);
+                gregorianCalendar.setTime(date);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return gregorianCalendar;
+    }
+
 }
 

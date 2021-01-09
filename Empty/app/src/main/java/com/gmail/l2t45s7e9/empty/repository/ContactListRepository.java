@@ -4,11 +4,9 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-
 import com.gmail.l2t45s7e9.empty.R;
 import com.gmail.l2t45s7e9.empty.domain.ContactListViewModel;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,6 +21,7 @@ public class ContactListRepository {
 
     private ContentResolver contentResolver;
     private Context context;
+    private final ContactsRepositoryDelegate contactsRepositoryDelegate = new ContactsRepositoryDelegate();
 
     public ContactListRepository(ContentResolver contentResolver, Context context) {
         this.contentResolver = contentResolver;
@@ -68,7 +67,7 @@ public class ContactListRepository {
             while (cursor.moveToNext()) {
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
-                String firstNumber = new NumbersAndEmailsRepository(contentResolver, id).loadNumbers()[0];
+                String firstNumber = contactsRepositoryDelegate.getNumbers(contentResolver, id)[0];
                 Contact contact = new Contact(id,
                         name,
                         firstNumber,

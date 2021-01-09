@@ -4,14 +4,12 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
 import com.gmail.l2t45s7e9.empty.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(
                     this,
-                    "Требуется установить разрешения",
+                    R.string.permission_toast_message,
                     Toast.LENGTH_LONG
             ).show();
         }

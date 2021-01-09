@@ -14,7 +14,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
@@ -22,13 +21,11 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.gmail.l2t45s7e9.empty.R;
 import com.gmail.l2t45s7e9.empty.domain.ContactDetailsViewModel;
-import com.gmail.l2t45s7e9.empty.domain.factories.DetailsFactory;
+import com.gmail.l2t45s7e9.empty.domain.factories.ViewModelDetailsFactory;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
 import com.gmail.l2t45s7e9.empty.presentation.reciever.ContactNotificationsReceiver;
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -58,6 +55,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         position = getArguments().getString("id");
         color = getArguments().getInt("color");
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,7 +66,12 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-        ContactDetailsViewModel contactDetailsViewModel = new ViewModelProvider(this, new DetailsFactory(getActivity().getApplication(), position, color)).get(ContactDetailsViewModel.class);
+        ContactDetailsViewModel contactDetailsViewModel = new ViewModelProvider(
+                this,
+                new ViewModelDetailsFactory(getActivity().getApplication(),
+                        position,
+                        color)
+        ).get(ContactDetailsViewModel.class);
         contactDetailsViewModel.contactLiveData.observe(getViewLifecycleOwner(), new Observer<Contact>() {
             @Override
             public void onChanged(final Contact result) {
@@ -85,8 +88,15 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
                         address.setText(result.getContactAddress());
                         date = result.getBirthDate();
                         if (date != null) {
-                            birthDate.setText(String.format(Locale.getDefault(), "%d %s",
-                                    date.get(Calendar.DATE), date.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())).toUpperCase());
+                            birthDate.setText(
+                                    String.format(Locale.getDefault(),
+                                            "%d %s",
+                                            date.get(
+                                                    Calendar.DATE),
+                                            date.getDisplayName(
+                                                    Calendar.MONTH, Calendar.LONG,
+                                                    Locale.getDefault())).toUpperCase()
+                            );
                         } else {
                             birthDate.setText(R.string.empty_date);
                         }
@@ -95,7 +105,11 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
                 });
             }
         });
-        GradientDrawable drawable = (GradientDrawable) ResourcesCompat.getDrawable(getResources(), R.drawable.button, null);
+        GradientDrawable drawable = (GradientDrawable) ResourcesCompat.getDrawable(
+                getResources(),
+                R.drawable.button,
+                null
+        );
         switchCompat = view.findViewById(R.id.notificationSwitch);
         TextView add = view.findViewById(R.id.addButton);
 
@@ -103,7 +117,11 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         name.setSelected(true);
         add.setBackground(drawable);
         intent = new Intent(getContext(), ContactNotificationsReceiver.class);
-        isAlarmUp = PendingIntent.getBroadcast(getContext(), Integer.parseInt(position), intent, PendingIntent.FLAG_NO_CREATE) != null;
+        isAlarmUp = PendingIntent.getBroadcast(
+                getContext(),
+                Integer.parseInt(position),
+                intent, PendingIntent.FLAG_NO_CREATE
+        ) != null;
         if (switchCompat != null) {
             switchCompat.setOnCheckedChangeListener(this);
             if (isAlarmUp) {
@@ -133,24 +151,34 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         intent.putExtra("id", position);
         intent.putExtra("color", color);
         alarmIntent = PendingIntent.getBroadcast(getContext(), Integer.parseInt(position), intent, 0);
-        if (isChecked) {
-            if (!isAlarmUp) {
-                setRepeating();
-                Toast.makeText(getContext(), "Notification is ON", Toast.LENGTH_SHORT).show();
-            }
-            switchCompat.setThumbTintList(ColorStateList.valueOf(color));
-            switchCompat.setTrackTintList(ColorStateList.valueOf(color).withAlpha(100));
+        if (date != null) {
+            if (isChecked) {
+                if (!isAlarmUp) {
+                    setRepeating();
+                    Toast.makeText(getContext(), R.string.on_notification_toast_message, Toast.LENGTH_SHORT).show();
+                }
+                switchCompat.setThumbTintList(ColorStateList.valueOf(color));
+                switchCompat.setTrackTintList(ColorStateList.valueOf(color).withAlpha(100));
 
+            } else {
+                if (PendingIntent.getBroadcast(
+                        getContext(),
+                        Integer.parseInt(position),
+                        intent,
+                        PendingIntent.FLAG_NO_CREATE) != null
+                ) {
+                    alarmManager.cancel(alarmIntent);
+                    alarmIntent.cancel();
+                    Toast.makeText(getContext(), R.string.off_notification_toast_message, Toast.LENGTH_SHORT).show();
+                }
+                switchCompat.setThumbTintList(ColorStateList.valueOf(getResources().getColor(R.color.side_color)));
+                switchCompat.setTrackTintList(ColorStateList.valueOf(getResources().getColor(R.color.second_side_color)));
+
+            }
         } else {
-            if (PendingIntent.getBroadcast(getContext(), Integer.parseInt(position), intent, PendingIntent.FLAG_NO_CREATE) != null) {
-                alarmManager.cancel(alarmIntent);
-                alarmIntent.cancel();
-                Toast.makeText(getContext(), "Notification is OFF", Toast.LENGTH_SHORT).show();
-            }
-            switchCompat.setThumbTintList(ColorStateList.valueOf(getResources().getColor(R.color.side_color)));
-            switchCompat.setTrackTintList(ColorStateList.valueOf(getResources().getColor(R.color.second_side_color)));
-
+            Toast.makeText(getContext(), R.string.empty_date_toast_message, Toast.LENGTH_SHORT).show();
         }
+
     }
 
     public void setRepeating() {

@@ -9,20 +9,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-
 import androidx.core.app.NotificationCompat;
-
 import com.gmail.l2t45s7e9.empty.R;
 import com.gmail.l2t45s7e9.empty.presentation.activity.MainActivity;
-
 import java.util.Calendar;
 import java.util.Objects;
 
 public class ContactNotificationsReceiver extends BroadcastReceiver {
 
-
     private static final String CHANNEL_ID = "CHANNEL_ID";
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -31,7 +26,12 @@ public class ContactNotificationsReceiver extends BroadcastReceiver {
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.putExtra("notificationId", String.valueOf(id));
         notificationIntent.putExtra("notificationColor", color);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, id, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context,
+                id,
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
         String text = String.format("Today %s birthday!", intent.getStringExtra("name"));
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -53,7 +53,10 @@ public class ContactNotificationsReceiver extends BroadcastReceiver {
 
     private void createChannel(NotificationManager manager) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel notificationChannel = new NotificationChannel(
+                    CHANNEL_ID, CHANNEL_ID,
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
             manager.createNotificationChannel(notificationChannel);
         }
     }

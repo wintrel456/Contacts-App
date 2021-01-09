@@ -8,13 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.gmail.l2t45s7e9.empty.R;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
-
 import java.util.List;
 
 public class ContactListAdapter extends BaseAdapter {

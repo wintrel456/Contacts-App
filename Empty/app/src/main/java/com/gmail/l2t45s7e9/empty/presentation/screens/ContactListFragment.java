@@ -6,20 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-
 import com.gmail.l2t45s7e9.empty.R;
 import com.gmail.l2t45s7e9.empty.domain.ContactListViewModel;
-import com.gmail.l2t45s7e9.empty.domain.factories.ListFactory;
+import com.gmail.l2t45s7e9.empty.domain.factories.ViewModelListFactory;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
 import com.gmail.l2t45s7e9.empty.presentation.adapter.ContactListAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +37,7 @@ public class ContactListFragment extends ListFragment {
         final ContactListAdapter adapter = new ContactListAdapter(getContext(), contacts);
         ContactListViewModel contactListViewModel = new ViewModelProvider(
                 this,
-                new ListFactory(getActivity().getApplication())).get(ContactListViewModel.class
+                new ViewModelListFactory(getActivity().getApplication())).get(ContactListViewModel.class
         );
         contactListViewModel.listLiveData.observe(getViewLifecycleOwner(), new Observer<List<Contact>>() {
             @Override

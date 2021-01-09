@@ -3,10 +3,8 @@ package com.gmail.l2t45s7e9.empty.repository;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-
 import com.gmail.l2t45s7e9.empty.domain.ContactDetailsViewModel;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
-
 import java.lang.ref.WeakReference;
 import java.util.GregorianCalendar;
 import java.util.concurrent.ExecutionException;
@@ -15,6 +13,7 @@ import java.util.concurrent.Executors;
 
 public class ContactDetailsRepository {
     private final ContentResolver contentResolver;
+    private final ContactsRepositoryDelegate contactsRepositoryDelegate = new ContactsRepositoryDelegate();
 
     public ContactDetailsRepository(ContentResolver contentResolver) {
         this.contentResolver = contentResolver;
@@ -55,11 +54,12 @@ public class ContactDetailsRepository {
                     ContactsContract.Contacts.DISPLAY_NAME);
             while (cursor.moveToNext()) {
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
-                String firstNumber = new NumbersAndEmailsRepository(contentResolver, id).loadNumbers()[0];
-                String secondNumber = new NumbersAndEmailsRepository(contentResolver, id).loadNumbers()[1];
-                String firstEmail = new NumbersAndEmailsRepository(contentResolver, id).loadEmails()[0];
-                String secondEmail = new NumbersAndEmailsRepository(contentResolver, id).loadEmails()[1];
+                String firstNumber = contactsRepositoryDelegate.getEmails(contentResolver, id)[0];
+                String secondNumber = contactsRepositoryDelegate.getEmails(contentResolver, id)[1];
+                String firstEmail = contactsRepositoryDelegate.getEmails(contentResolver, id)[0];
+                String secondEmail = contactsRepositoryDelegate.getEmails(contentResolver, id)[1];
                 String address = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
+                GregorianCalendar birthDate = contactsRepositoryDelegate.getBirthDate(contentResolver, id);
                 contact = new Contact(id,
                         name,
                         firstNumber,
@@ -67,7 +67,7 @@ public class ContactDetailsRepository {
                         firstEmail,
                         secondEmail,
                         address,
-                        new GregorianCalendar(1999, 0, 7),
+                        birthDate,
                         color);
             }
 
