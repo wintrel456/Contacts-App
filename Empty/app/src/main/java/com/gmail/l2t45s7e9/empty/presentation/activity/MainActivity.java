@@ -1,6 +1,7 @@
 package com.gmail.l2t45s7e9.empty.presentation.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.READ_CONTACTS},
                     PERMISSIONS_REQUEST_READ_CONTACTS);
         }
+
     }
 
     private void loadContacts() {
@@ -48,16 +50,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                loadContacts();
-            }
+        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS &&
+                grantResults.length > 0 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ) {
+            Toast.makeText(
+                    this,
+                    R.string.permission_granted_toast_message,
+                    Toast.LENGTH_LONG
+            ).show();
+            restartAppWithGrantedPermission();
         } else {
             Toast.makeText(
                     this,
-                    R.string.permission_toast_message,
+                    R.string.permission_denied_toast_message,
                     Toast.LENGTH_LONG
             ).show();
         }
+    }
+
+    public void restartAppWithGrantedPermission() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

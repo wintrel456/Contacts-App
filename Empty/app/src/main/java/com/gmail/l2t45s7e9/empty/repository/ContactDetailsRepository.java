@@ -53,13 +53,13 @@ public class ContactDetailsRepository {
                     null,
                     ContactsContract.Contacts.DISPLAY_NAME);
             while (cursor.moveToNext()) {
-                String name = contactsRepositoryDelegate.getName();
-                String firstNumber = contactsRepositoryDelegate.getNumbers()[0];
-                String secondNumber = contactsRepositoryDelegate.getNumbers()[1];
-                String firstEmail = contactsRepositoryDelegate.getEmails()[0];
-                String secondEmail = contactsRepositoryDelegate.getEmails()[1];
+                String name = contactsRepositoryDelegate.getName(cursor);
+                String firstNumber = contactsRepositoryDelegate.getNumbers(cursor)[0];
+                String secondNumber = contactsRepositoryDelegate.getNumbers(cursor)[1];
+                String firstEmail = contactsRepositoryDelegate.getEmails(cursor)[0];
+                String secondEmail = contactsRepositoryDelegate.getEmails(cursor)[1];
                 String address = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
-                GregorianCalendar birthDate = contactsRepositoryDelegate.getBirthDate();
+                GregorianCalendar birthDate = contactsRepositoryDelegate.getBirthDate(cursor);
                 contact = new Contact(id,
                         name,
                         firstNumber,

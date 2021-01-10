@@ -18,10 +18,9 @@ public class ContactsRepositoryDelegate {
         this.id = id;
     }
 
-    public String[] getNumbers() {
+    public String[] getNumbers(Cursor cursor) {
         String[] number = new String[2];
         int count = 0;
-        Cursor cursor = null;
         try {
             cursor = contentResolver.query(
                     ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -55,10 +54,9 @@ public class ContactsRepositoryDelegate {
         return number;
     }
 
-    public String[] getEmails() {
+    public String[] getEmails(Cursor cursor) {
         String[] email = new String[2];
         int count = 0;
-        Cursor cursor = null;
         try {
             cursor = contentResolver.query(
                     ContactsContract.CommonDataKinds.Email.CONTENT_URI,
@@ -83,11 +81,10 @@ public class ContactsRepositoryDelegate {
         return email;
     }
 
-    public GregorianCalendar getBirthDate() {
+    public GregorianCalendar getBirthDate(Cursor cursor) {
         GregorianCalendar gregorianCalendar = null;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM dd", Locale.getDefault());
         String birthDate = null;
-        Cursor cursor = null;
         try {
             cursor = contentResolver.query(
                     ContactsContract.Data.CONTENT_URI,
@@ -117,14 +114,12 @@ public class ContactsRepositoryDelegate {
         return gregorianCalendar;
     }
 
-    public String getName() {
+    public String getName(Cursor cursor) {
         String name = null;
-        Cursor cursor = null;
         try {
             cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     null,
-                    ContactsContract.Contacts.HAS_PHONE_NUMBER + "AND" +
-                            ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
+                    ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
                     null,
                     ContactsContract.Contacts.DISPLAY_NAME);
             while (cursor.moveToNext()) {
