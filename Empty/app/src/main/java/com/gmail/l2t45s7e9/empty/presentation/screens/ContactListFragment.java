@@ -1,30 +1,28 @@
-package com.gmail.l2t45s7e9.empty;
+package com.gmail.l2t45s7e9.empty.presentation.screens;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.ListFragment;
-
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import com.gmail.l2t45s7e9.empty.R;
+import com.gmail.l2t45s7e9.empty.domain.ContactListViewModel;
+import com.gmail.l2t45s7e9.empty.domain.factories.ViewModelListFactory;
+import com.gmail.l2t45s7e9.empty.entity.Contact;
+import com.gmail.l2t45s7e9.empty.presentation.adapter.ContactListAdapter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContactListFragment extends ListFragment {
 
-    private ContactService contactService;
-    private List<Contact> contacts;
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        contactService = ((ContactService.PublicServiceInterface) context).getService();
-    }
+    private List<Contact> contacts = new ArrayList<>();
 
     @Nullable
     @Override
@@ -36,21 +34,25 @@ public class ContactListFragment extends ListFragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final TextView count = view.findViewById(R.id.contactCount);
-        ShortInformation callback = new ShortInformation() {
+        final ContactListAdapter adapter = new ContactListAdapter(getContext(), contacts);
+        ContactListViewModel contactListViewModel = new ViewModelProvider(
+                this,
+                new ViewModelListFactory(getActivity().getApplication())).get(ContactListViewModel.class
+        );
+        contactListViewModel.listLiveData.observe(getViewLifecycleOwner(), new Observer<List<Contact>>() {
             @Override
-            public void getContactList(final List<Contact> result) {
+            public void onChanged(final List<Contact> result) {
                 view.post(new Runnable() {
                     @Override
                     public void run() {
                         contacts = result;
-                        count.setText(String.valueOf(result.size()));
-                        ContactListAdapter adapter = new ContactListAdapter(getActivity(), R.layout.contact_list_item, result);
+                        count.setText(String.valueOf(contacts.size()));
+                        adapter.updateData(contacts);
                         setListAdapter(adapter);
                     }
                 });
             }
-        };
-        contactService.getShortInformation(callback);
+        });
     }
 
     @Override
@@ -62,16 +64,10 @@ public class ContactListFragment extends ListFragment {
     public void openDetails(int position) {
         String id = contacts.get(position).getId();
         int color = contacts.get(position).getContactColor();
-        ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(id, color);
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.mainFrame, contactDetailsFragment)
-                .addToBackStack(null)
-                .commit();
-    }
-
-    interface ShortInformation {
-        void getContactList(List<Contact> result);
+        Bundle bundle = new Bundle();
+        bundle.putString("id", id);
+        bundle.putInt("color", color);
+        Navigation.findNavController(getView()).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
     }
 
 }
