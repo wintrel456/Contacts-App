@@ -21,7 +21,6 @@ public class ContactListRepository {
 
     private ContentResolver contentResolver;
     private Context context;
-    private final ContactsRepositoryDelegate contactsRepositoryDelegate = new ContactsRepositoryDelegate();
     private ExecutorService executorService = Executors.newCachedThreadPool();
 
     public ContactListRepository(ContentResolver contentResolver, Context context) {
@@ -67,7 +66,7 @@ public class ContactListRepository {
             while (cursor.moveToNext()) {
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
-                String firstNumber = contactsRepositoryDelegate.getNumbers(contentResolver, id)[0];
+                String firstNumber = new ContactsRepositoryDelegate(contentResolver, id).getNumbers()[0];
                 Contact contact = new Contact(id,
                         name,
                         firstNumber,

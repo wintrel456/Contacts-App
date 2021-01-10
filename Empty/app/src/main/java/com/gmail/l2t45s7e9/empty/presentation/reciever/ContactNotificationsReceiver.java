@@ -23,6 +23,7 @@ public class ContactNotificationsReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         int id = Integer.parseInt(Objects.requireNonNull(intent.getStringExtra("id")));
         int color = intent.getIntExtra("color", -1);
+        String congratulationTextForNotification = context.getResources().getString(R.string.birthday_notification);
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.putExtra("notificationId", String.valueOf(id));
         notificationIntent.putExtra("notificationColor", color);
@@ -32,7 +33,10 @@ public class ContactNotificationsReceiver extends BroadcastReceiver {
                 notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
-        String text = String.format("Today %s birthday!", intent.getStringExtra("name"));
+        String text = String.format(
+                congratulationTextForNotification,
+                Objects.requireNonNull(intent.getStringExtra("name"))
+        );
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);

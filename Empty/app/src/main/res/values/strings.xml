@@ -26,4 +26,5 @@
     <string name="off_notification_toast_message">Notification is off</string>
     <string name="on_notification_toast_message">Notification is on</string>
     <string name="permission_toast_message">You need to set permission to read contacts</string>
+    <string name="date_format_for_contact_details">%d %s</string>
 </resources>

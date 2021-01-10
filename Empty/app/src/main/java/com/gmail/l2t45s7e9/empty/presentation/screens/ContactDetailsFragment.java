@@ -48,12 +48,14 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
     private PendingIntent alarmIntent;
     private Intent intent;
     private boolean isAlarmUp;
+    private String formatDate;
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         position = getArguments().getString("id");
         color = getArguments().getInt("color");
+        formatDate = getResources().getString(R.string.date_format_for_contact_details);
     }
 
     @Nullable
@@ -90,7 +92,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
                         if (date != null) {
                             birthDate.setText(
                                     String.format(Locale.getDefault(),
-                                            "%d %s",
+                                            formatDate,
                                             date.get(
                                                     Calendar.DATE),
                                             date.getDisplayName(

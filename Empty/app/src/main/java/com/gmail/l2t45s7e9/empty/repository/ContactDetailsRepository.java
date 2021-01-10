@@ -13,7 +13,6 @@ import java.util.concurrent.Executors;
 
 public class ContactDetailsRepository {
     private final ContentResolver contentResolver;
-    private final ContactsRepositoryDelegate contactsRepositoryDelegate = new ContactsRepositoryDelegate();
     private ExecutorService executorService = Executors.newCachedThreadPool();
 
     public ContactDetailsRepository(ContentResolver contentResolver) {
@@ -43,6 +42,7 @@ public class ContactDetailsRepository {
     }
 
     private Contact loadDetailsInformation(String id, int color) {
+        ContactsRepositoryDelegate contactsRepositoryDelegate = new ContactsRepositoryDelegate(contentResolver, id);
         Contact contact = null;
         Cursor cursor = null;
         try {
@@ -54,12 +54,12 @@ public class ContactDetailsRepository {
                     ContactsContract.Contacts.DISPLAY_NAME);
             while (cursor.moveToNext()) {
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
-                String firstNumber = contactsRepositoryDelegate.getEmails(contentResolver, id)[0];
-                String secondNumber = contactsRepositoryDelegate.getEmails(contentResolver, id)[1];
-                String firstEmail = contactsRepositoryDelegate.getEmails(contentResolver, id)[0];
-                String secondEmail = contactsRepositoryDelegate.getEmails(contentResolver, id)[1];
+                String firstNumber = contactsRepositoryDelegate.getEmails()[0];
+                String secondNumber = contactsRepositoryDelegate.getEmails()[1];
+                String firstEmail = contactsRepositoryDelegate.getEmails()[0];
+                String secondEmail = contactsRepositoryDelegate.getEmails()[1];
                 String address = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
-                GregorianCalendar birthDate = contactsRepositoryDelegate.getBirthDate(contentResolver, id);
+                GregorianCalendar birthDate = contactsRepositoryDelegate.getBirthDate();
                 contact = new Contact(id,
                         name,
                         firstNumber,

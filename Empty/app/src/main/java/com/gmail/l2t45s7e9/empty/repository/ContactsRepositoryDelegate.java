@@ -10,8 +10,15 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class ContactsRepositoryDelegate {
+    private final ContentResolver contentResolver;
+    private final String id;
 
-    public String[] getNumbers(ContentResolver contentResolver, String id) {
+    public ContactsRepositoryDelegate(ContentResolver contentResolver, String id) {
+        this.contentResolver = contentResolver;
+        this.id = id;
+    }
+
+    public String[] getNumbers() {
         String[] number = new String[2];
         int count = 0;
         Cursor cursor = null;
@@ -48,7 +55,7 @@ public class ContactsRepositoryDelegate {
         return number;
     }
 
-    public String[] getEmails(ContentResolver contentResolver, String id) {
+    public String[] getEmails() {
         String[] email = new String[2];
         int count = 0;
         Cursor cursor = null;
@@ -76,7 +83,7 @@ public class ContactsRepositoryDelegate {
         return email;
     }
 
-    public GregorianCalendar getBirthDate(ContentResolver contentResolver, String id) {
+    public GregorianCalendar getBirthDate() {
         GregorianCalendar gregorianCalendar = null;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM dd", Locale.getDefault());
         String birthDate = null;
