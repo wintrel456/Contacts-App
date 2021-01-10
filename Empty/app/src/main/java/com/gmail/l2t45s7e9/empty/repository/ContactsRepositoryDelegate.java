@@ -117,5 +117,27 @@ public class ContactsRepositoryDelegate {
         return gregorianCalendar;
     }
 
+    public String getName() {
+        String name = null;
+        Cursor cursor = null;
+        try {
+            cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null,
+                    ContactsContract.Contacts.HAS_PHONE_NUMBER + "AND" +
+                            ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
+                    null,
+                    ContactsContract.Contacts.DISPLAY_NAME);
+            while (cursor.moveToNext()) {
+                name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
+            }
+
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return name;
+    }
+
 }
 

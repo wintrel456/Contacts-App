@@ -13,20 +13,30 @@ import androidx.navigation.Navigation;
 import com.gmail.l2t45s7e9.empty.R;
 
 public class MainActivity extends AppCompatActivity {
-    private boolean contactsIsRead = false;
+    private final int PERMISSIONS_REQUEST_READ_CONTACTS = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        requestPermission();
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.READ_CONTACTS) ==
+                PackageManager.PERMISSION_GRANTED) {
+            loadContacts();
+
+        } else {
+            ActivityCompat.requestPermissions(
+                    MainActivity.this,
+                    new String[]{Manifest.permission.READ_CONTACTS},
+                    PERMISSIONS_REQUEST_READ_CONTACTS);
+        }
     }
 
     private void loadContacts() {
+        NavController navController = Navigation.findNavController(this, R.id.navHost);
         String position = getIntent().getStringExtra("notificationId");
         int color = getIntent().getIntExtra("notificationColor", R.color.Font);
-        NavController navController = Navigation.findNavController(this, R.id.navHost);
         if (position != null) {
             Bundle bundle = new Bundle();
             bundle.putString("id", position);
@@ -38,35 +48,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
+        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                contactsIsRead = true;
+                loadContacts();
             }
-        }
-        if (contactsIsRead) {
-            loadContacts();
         } else {
             Toast.makeText(
                     this,
                     R.string.permission_toast_message,
                     Toast.LENGTH_LONG
             ).show();
-        }
-    }
-
-    private void requestPermission() {
-        int hasReadContactPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
-        if (hasReadContactPermission == PackageManager.PERMISSION_GRANTED) {
-            contactsIsRead = true;
-        } else {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{Manifest.permission.READ_CONTACTS},
-                    1
-            );
-        }
-        if (contactsIsRead) {
-            loadContacts();
         }
     }
 }

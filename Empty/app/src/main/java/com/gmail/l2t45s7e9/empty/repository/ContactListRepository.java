@@ -50,7 +50,6 @@ public class ContactListRepository {
 
     }
 
-
     private List<Contact> loadShortInformation() {
         List<Contact> contacts = new ArrayList<>();
         Set<String> set = new HashSet<>();
@@ -65,7 +64,7 @@ public class ContactListRepository {
                     ContactsContract.Contacts.DISPLAY_NAME);
             while (cursor.moveToNext()) {
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
+                String name = new ContactsRepositoryDelegate(contentResolver, id).getName();
                 String firstNumber = new ContactsRepositoryDelegate(contentResolver, id).getNumbers()[0];
                 Contact contact = new Contact(id,
                         name,

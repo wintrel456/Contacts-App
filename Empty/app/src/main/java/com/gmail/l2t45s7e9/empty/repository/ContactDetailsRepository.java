@@ -53,7 +53,7 @@ public class ContactDetailsRepository {
                     null,
                     ContactsContract.Contacts.DISPLAY_NAME);
             while (cursor.moveToNext()) {
-                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
+                String name = contactsRepositoryDelegate.getName();
                 String firstNumber = contactsRepositoryDelegate.getNumbers()[0];
                 String secondNumber = contactsRepositoryDelegate.getNumbers()[1];
                 String firstEmail = contactsRepositoryDelegate.getEmails()[0];
