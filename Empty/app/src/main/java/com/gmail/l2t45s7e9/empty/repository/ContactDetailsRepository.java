@@ -54,8 +54,8 @@ public class ContactDetailsRepository {
                     ContactsContract.Contacts.DISPLAY_NAME);
             while (cursor.moveToNext()) {
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
-                String firstNumber = contactsRepositoryDelegate.getEmails()[0];
-                String secondNumber = contactsRepositoryDelegate.getEmails()[1];
+                String firstNumber = contactsRepositoryDelegate.getNumbers()[0];
+                String secondNumber = contactsRepositoryDelegate.getNumbers()[1];
                 String firstEmail = contactsRepositoryDelegate.getEmails()[0];
                 String secondEmail = contactsRepositoryDelegate.getEmails()[1];
                 String address = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
