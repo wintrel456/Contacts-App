@@ -19,10 +19,15 @@ public class ContactNotificationsReceiver extends BroadcastReceiver {
 
     private static final String CHANNEL_ID = "CHANNEL_ID";
 
+<<<<<<< HEAD:Empty/app/src/main/java/com/gmail/l2t45s7e9/empty/presentation/reciever/ContactNotificationsReceiver.java
+=======
+
+>>>>>>> master:Empty/app/src/main/java/com/gmail/l2t45s7e9/empty/ContactNotificationsReceiver.java
     @Override
     public void onReceive(Context context, Intent intent) {
         int id = Integer.parseInt(Objects.requireNonNull(intent.getStringExtra("id")));
         int color = intent.getIntExtra("color", -1);
+<<<<<<< HEAD:Empty/app/src/main/java/com/gmail/l2t45s7e9/empty/presentation/reciever/ContactNotificationsReceiver.java
         String congratulationTextForNotification = context.getResources().getString(R.string.birthday_notification);
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.putExtra("notificationId", String.valueOf(id));
@@ -42,6 +47,16 @@ public class ContactNotificationsReceiver extends BroadcastReceiver {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         taskStackBuilder.addNextIntent(notificationIntent);
 
+=======
+        Intent notificationIntent = new Intent(context, MainActivity.class);
+        notificationIntent.putExtra("notificationId", id);
+        notificationIntent.putExtra("notificationColor", color);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, id, notificationIntent, 0);
+        String text = String.format("Today %s birthday!", intent.getStringExtra("name"));
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        taskStackBuilder.addNextIntent(notificationIntent);
+>>>>>>> master:Empty/app/src/main/java/com/gmail/l2t45s7e9/empty/ContactNotificationsReceiver.java
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle(String.valueOf(id))
@@ -57,10 +72,14 @@ public class ContactNotificationsReceiver extends BroadcastReceiver {
 
     private void createChannel(NotificationManager manager) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+<<<<<<< HEAD:Empty/app/src/main/java/com/gmail/l2t45s7e9/empty/presentation/reciever/ContactNotificationsReceiver.java
             NotificationChannel notificationChannel = new NotificationChannel(
                     CHANNEL_ID, CHANNEL_ID,
                     NotificationManager.IMPORTANCE_DEFAULT
             );
+=======
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
+>>>>>>> master:Empty/app/src/main/java/com/gmail/l2t45s7e9/empty/ContactNotificationsReceiver.java
             manager.createNotificationChannel(notificationChannel);
         }
     }
