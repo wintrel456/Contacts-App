@@ -25,5 +25,6 @@
         android:id="@+id/action_global_contactListFragment"
         app:destination="@id/contactListFragment"
         app:enterAnim="@android:anim/slide_in_left"
-        app:exitAnim="@android:anim/slide_out_right" />
+        app:exitAnim="@android:anim/slide_out_right"
+        app:popUpTo="@id/nav_graph" />
 </navigation>

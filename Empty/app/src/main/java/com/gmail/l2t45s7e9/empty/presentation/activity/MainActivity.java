@@ -1,7 +1,6 @@
 package com.gmail.l2t45s7e9.empty.presentation.activity;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -37,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadContacts() {
         NavController navController = Navigation.findNavController(this, R.id.navHost);
+        navController.navigate(R.id.action_global_contactListFragment);
         String position = getIntent().getStringExtra("notificationId");
         int color = getIntent().getIntExtra("notificationColor", R.color.Font);
         if (position != null) {
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                     R.string.permission_granted_toast_message,
                     Toast.LENGTH_LONG
             ).show();
-            restartAppWithGrantedPermission();
+            loadContacts();
         } else {
             Toast.makeText(
                     this,
@@ -67,11 +67,5 @@ public class MainActivity extends AppCompatActivity {
                     Toast.LENGTH_LONG
             ).show();
         }
-    }
-
-    public void restartAppWithGrantedPermission() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 }
