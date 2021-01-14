@@ -61,7 +61,7 @@ public class ContactListFragment extends ListFragment {
         openDetails(position);
     }
 
-    public void openDetails(int position) {
+    private void openDetails(int position) {
         String id = contacts.get(position).getId();
         int color = contacts.get(position).getContactColor();
         Bundle bundle = new Bundle();

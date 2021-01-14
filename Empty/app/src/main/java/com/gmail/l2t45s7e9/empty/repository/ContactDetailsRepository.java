@@ -38,7 +38,6 @@ public class ContactDetailsRepository {
         } finally {
             executorService.shutdown();
         }
-
     }
 
     private Contact loadDetailsInformation(String id, int color) {

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/contactListFragment">
+    app:startDestination="@id/requestPermissionFragment">
 
     <fragment
         android:id="@+id/contactListFragment"
@@ -21,10 +22,17 @@
         android:id="@+id/contactDetailsFragment"
         android:name="com.gmail.l2t45s7e9.empty.presentation.screens.ContactDetailsFragment"
         android:label="ContactDetailsFragment" />
-    <action
-        android:id="@+id/action_global_contactListFragment"
-        app:destination="@id/contactListFragment"
-        app:enterAnim="@android:anim/slide_in_left"
-        app:exitAnim="@android:anim/slide_out_right"
-        app:popUpTo="@id/nav_graph" />
+
+    <fragment
+        android:id="@+id/requestPermissionFragment"
+        android:name="com.gmail.l2t45s7e9.empty.presentation.screens.RequestPermissionFragment"
+        android:label="fragment_request_permission"
+        tools:layout="@layout/fragment_request_permission">
+        <action
+            android:id="@+id/action_requestPermissionFragment_to_contactListFragment"
+            app:destination="@id/contactListFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/nav_graph" />
+    </fragment>
 </navigation>
