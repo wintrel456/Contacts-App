@@ -9,7 +9,6 @@
     <color name="second_side_color">#e6e6e6</color>
     <color name="bottom_panel">#F2F2F2</color>
     <color name="side_font">#808080</color>
-    <color name="red">#FFA7A7</color>
     <array name="colors_list">
         <item>#FFA7A7</item>
         <item>#FFE6A7</item>
