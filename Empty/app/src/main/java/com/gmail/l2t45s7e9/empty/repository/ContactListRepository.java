@@ -29,13 +29,13 @@ public class ContactListRepository {
     }
 
 
-    public void getShortInformation(ContactListViewModel.ShortInformation callback) {
+    public void getShortInformation(ContactListViewModel.ShortInformation callback, final String filterPattern) {
         final WeakReference<ContactListViewModel.ShortInformation> ref = new WeakReference<>(callback);
         try {
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
-                    List<Contact> result = loadShortInformation();
+                    List<Contact> result = loadShortInformation(filterPattern);
                     ContactListViewModel.ShortInformation local = ref.get();
                     if (local != null) {
                         local.getContactList(result);
@@ -45,12 +45,13 @@ public class ContactListRepository {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         } finally {
-            executorService.shutdown();
+            //executorService.shutdown();
         }
+
 
     }
 
-    private List<Contact> loadShortInformation() {
+    private List<Contact> loadShortInformation(String filterPattern) {
         List<Contact> contacts = new ArrayList<>();
         Set<String> set = new HashSet<>();
         Random random = new Random();
@@ -65,6 +66,11 @@ public class ContactListRepository {
             while (cursor.moveToNext()) {
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                 String name = new ContactsRepositoryDelegate(contentResolver, id).getName(cursor);
+                if (filterPattern != null && filterPattern.length() != 0) {
+                    if (!name.toLowerCase().trim().contains(filterPattern)) {
+                        continue;
+                    }
+                }
                 String firstNumber = new ContactsRepositoryDelegate(contentResolver, id).getNumbers(cursor)[0];
                 Contact contact = new Contact(id,
                         name,

@@ -18,13 +18,12 @@ import com.gmail.l2t45s7e9.empty.domain.ContactListViewModel;
 import com.gmail.l2t45s7e9.empty.domain.factories.ViewModelListFactory;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
 import com.gmail.l2t45s7e9.empty.presentation.adapter.ContactListAdapter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ContactListFragment extends Fragment {
 
-    private List<Contact> contacts = new ArrayList<>();
     private ContactListAdapter adapter;
+    private ContactListViewModel contactListViewModel;
 
     @Nullable
     @Override
@@ -39,24 +38,21 @@ public class ContactListFragment extends Fragment {
         adapter = new ContactListAdapter();
         final RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        ContactListViewModel contactListViewModel = new ViewModelProvider(
+        contactListViewModel = new ViewModelProvider(
                 this,
                 new ViewModelListFactory(getActivity().getApplication())).get(ContactListViewModel.class
         );
         contactListViewModel.listLiveData.observe(getViewLifecycleOwner(), new Observer<List<Contact>>() {
             @Override
             public void onChanged(final List<Contact> result) {
-                view.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        contacts = result;
-                        adapter.setContacts(contacts);
-                        count.setText(String.valueOf(contacts.size()));
-                        recyclerView.setAdapter(adapter);
-                    }
-                });
+                if (adapter != null) {
+                    adapter.submitList(result);
+                    count.setText(String.valueOf(result.size()));
+                }
             }
         });
+
+        recyclerView.setAdapter(adapter);
 
         SearchView searchView = view.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -66,8 +62,10 @@ public class ContactListFragment extends Fragment {
             }
 
             @Override
-            public boolean onQueryTextChange(String s) {
-                adapter.getFilter().filter(s);
+            public boolean onQueryTextChange(String filterPattern) {
+                /*contactListViewModel.setAdapter(adapter, contactListViewModel.listLiveData.getValue());
+                contactListViewModel.getFilter().filter(filterPattern);*/
+                contactListViewModel.setFilterPattern(filterPattern);
                 return false;
             }
         });

@@ -1,48 +1,55 @@
 package com.gmail.l2t45s7e9.empty.presentation.adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.gmail.l2t45s7e9.empty.R;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
-import java.util.ArrayList;
-import java.util.List;
 
-public class ContactListAdapter extends RecyclerView.Adapter<ContactViewHolder> implements Filterable {
+public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.ContactViewHolder> {
 
-    private List<Contact> contacts;
-    private List<Contact> contactsFull;
-
-    public void setContacts(List<Contact> contacts) {
-        this.contacts = contacts;
-        contactsFull = new ArrayList<>(contacts);
-        checkOnChange();
+    public ContactListAdapter() {
+        super(DIFF_CALLBACK);
     }
 
-    private void checkOnChange() {
-        DiffUtil.DiffResult diffResult =
-                DiffUtil.calculateDiff(new ContactDiffUtil(contacts, contactsFull), false);
-        diffResult.dispatchUpdatesTo(this);
-    }
+    public static final DiffUtil.ItemCallback<Contact> DIFF_CALLBACK = new DiffUtil.ItemCallback<Contact>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Contact oldItem, @NonNull Contact newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Contact oldItem, @NonNull Contact newItem) {
+            return oldItem.getFirstNumber().equals(newItem.getFirstNumber()) &&
+                    oldItem.getName().equals(newItem.getName()) &&
+                    oldItem.getContactColor() == newItem.getContactColor();
+        }
+    };
+
 
     @NonNull
     @Override
-    public ContactViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
+    public ContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.contact_list_item, parent, false);
         final ContactViewHolder contactViewHolder = new ContactViewHolder(view);
         contactViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openDetails(contactViewHolder.getAdapterPosition(), view);
+                if (contactViewHolder.getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    openDetails(contactViewHolder.getAdapterPosition(), view);
+
+                }
             }
         });
         return contactViewHolder;
@@ -50,58 +57,36 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
-        holder.bind(contacts.get(position));
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public int getItemCount() {
-        return contacts.size();
+        holder.bind(getItem(position));
     }
 
     private void openDetails(int position, View view) {
-        String id = contacts.get(position).getId();
-        int color = contacts.get(position).getContactColor();
+        String id = getItem(position).getId();
+        int color = getItem(position).getContactColor();
         Bundle bundle = new Bundle();
         bundle.putString("id", id);
         bundle.putInt("color", color);
         Navigation.findNavController(view).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
     }
 
-    @Override
-    public Filter getFilter() {
+    public static class ContactViewHolder extends RecyclerView.ViewHolder {
 
-        return new Filter() {
+        private TextView name;
+        private TextView number;
+        private ImageView avatar;
 
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                contacts.clear();
-                contacts.addAll((List<Contact>) results.values);
-                notifyDataSetChanged();
-            }
+        public ContactViewHolder(@NonNull View itemView) {
+            super(itemView);
+            name = itemView.findViewById(R.id.userName);
+            number = itemView.findViewById(R.id.userNumber);
+            avatar = itemView.findViewById(R.id.avatar);
+        }
 
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                List<Contact> filteredList = new ArrayList<Contact>();
-                if (constraint == null || constraint.length() == 0) {
-                    filteredList.addAll(contactsFull);
-                } else {
-                    String filterPattern = constraint.toString().toLowerCase().trim();
-                    for (Contact contact : contactsFull) {
-                        if (contact.getName().toLowerCase().contains(filterPattern)) {
-                            filteredList.add(contact);
-                        }
-                    }
-                }
-                FilterResults filterResults = new FilterResults();
-                filterResults.values = filteredList;
-                return filterResults;
-            }
-        };
+        public void bind(Contact contact) {
+            name.setText(contact.getName());
+            number.setText(contact.getFirstNumber());
+            avatar.setBackgroundTintList(ColorStateList.valueOf(contact.getContactColor()));
+        }
     }
 
 }
