@@ -44,11 +44,9 @@ public class ContactListRepository {
             }).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
-        } finally {
-            //executorService.shutdown();
-        }
-
-
+        } /*finally {
+            executorService.shutdown();
+        }*/
     }
 
     private List<Contact> loadShortInformation(String filterPattern) {
@@ -60,17 +58,12 @@ public class ContactListRepository {
         try {
             cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     null,
-                    ContactsContract.Contacts.HAS_PHONE_NUMBER,
-                    null,
+                    ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?",
+                    new String[]{"%" + filterPattern + "%"},
                     ContactsContract.Contacts.DISPLAY_NAME);
             while (cursor.moveToNext()) {
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                 String name = new ContactsRepositoryDelegate(contentResolver, id).getName(cursor);
-                if (filterPattern != null && filterPattern.length() != 0) {
-                    if (!name.toLowerCase().trim().contains(filterPattern)) {
-                        continue;
-                    }
-                }
                 String firstNumber = new ContactsRepositoryDelegate(contentResolver, id).getNumbers(cursor)[0];
                 Contact contact = new Contact(id,
                         name,

@@ -30,7 +30,8 @@ public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.
 
         @Override
         public boolean areContentsTheSame(@NonNull Contact oldItem, @NonNull Contact newItem) {
-            return oldItem.getFirstNumber().equals(newItem.getFirstNumber()) &&
+            return oldItem.getId().equals(newItem.getId()) &&
+                    oldItem.getFirstNumber().equals(newItem.getFirstNumber()) &&
                     oldItem.getName().equals(newItem.getName()) &&
                     oldItem.getContactColor() == newItem.getContactColor();
         }

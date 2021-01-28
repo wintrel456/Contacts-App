@@ -17,6 +17,7 @@ import com.gmail.l2t45s7e9.empty.R;
 import com.gmail.l2t45s7e9.empty.domain.ContactListViewModel;
 import com.gmail.l2t45s7e9.empty.domain.factories.ViewModelListFactory;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
+import com.gmail.l2t45s7e9.empty.presentation.adapter.ContactItemDecorator;
 import com.gmail.l2t45s7e9.empty.presentation.adapter.ContactListAdapter;
 import java.util.List;
 
@@ -34,10 +35,14 @@ public class ContactListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ContactItemDecorator contactItemDecorator = new ContactItemDecorator(
+                (int) (8 * getResources().getDisplayMetrics().density)
+        );
         final TextView count = view.findViewById(R.id.contactCount);
         adapter = new ContactListAdapter();
         final RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(contactItemDecorator);
         contactListViewModel = new ViewModelProvider(
                 this,
                 new ViewModelListFactory(getActivity().getApplication())).get(ContactListViewModel.class
@@ -51,7 +56,6 @@ public class ContactListFragment extends Fragment {
                 }
             }
         });
-
         recyclerView.setAdapter(adapter);
 
         SearchView searchView = view.findViewById(R.id.searchView);
@@ -63,9 +67,7 @@ public class ContactListFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String filterPattern) {
-                /*contactListViewModel.setAdapter(adapter, contactListViewModel.listLiveData.getValue());
-                contactListViewModel.getFilter().filter(filterPattern);*/
-                contactListViewModel.setFilterPattern(filterPattern);
+                contactListViewModel.loadContactList(filterPattern);
                 return false;
             }
         });
