@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.gmail.l2t45s7e9.empty.R;
@@ -26,6 +27,7 @@ public class ContactListFragment extends Fragment {
     private ContactListAdapter adapter;
     private ContactListViewModel contactListViewModel;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,7 +42,7 @@ public class ContactListFragment extends Fragment {
         );
         final TextView count = view.findViewById(R.id.contactCount);
         adapter = new ContactListAdapter();
-        final RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(contactItemDecorator);
         contactListViewModel = new ViewModelProvider(
@@ -73,9 +75,13 @@ public class ContactListFragment extends Fragment {
         });
     }
 
+    public void openDetails(Bundle bundle, View view) {
+        Navigation.findNavController(view).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
+    }
+
     @Override
     public void onDestroyView() {
-        adapter = null;
+        adapter.submitList(null);
         super.onDestroyView();
     }
 }

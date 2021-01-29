@@ -11,6 +11,12 @@ import com.gmail.l2t45s7e9.empty.R;
 public class ContactItemDecorator extends RecyclerView.ItemDecoration {
 
     private final int verticalSpaceHeight;
+    private int childCount;
+    private int left;
+    private int top;
+    private int bottom;
+    private int right;
+    private Drawable divider;
 
     public ContactItemDecorator(int verticalSpaceHeight) {
         this.verticalSpaceHeight = verticalSpaceHeight;
@@ -28,18 +34,17 @@ public class ContactItemDecorator extends RecyclerView.ItemDecoration {
     @Override
     public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.onDraw(c, parent, state);
-        Drawable divider = ContextCompat.getDrawable(parent.getContext(), R.drawable.end_line);
-        int childCount = parent.getChildCount();
-        int left = parent.getPaddingLeft() + parent.getWidth() / 6;
-        int right = parent.getWidth() - left;
+        divider = ContextCompat.getDrawable(parent.getContext(), R.drawable.end_line);
+        childCount = parent.getChildCount();
+        left = parent.getPaddingLeft() + parent.getWidth() / 6;
+        right = parent.getWidth() - left;
         for (int i = 0; i < childCount - 1; i++) {
             View child = parent.getChildAt(i);
-            int top = child.getBottom() + verticalSpaceHeight;
-            int bottom = top + divider.getIntrinsicHeight();
+            top = child.getBottom() + verticalSpaceHeight;
+            bottom = top + divider.getIntrinsicHeight();
             divider.setBounds(left, top, right, bottom);
             divider.draw(c);
         }
-
     }
 
 }

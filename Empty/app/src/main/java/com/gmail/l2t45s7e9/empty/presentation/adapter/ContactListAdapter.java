@@ -9,14 +9,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.gmail.l2t45s7e9.empty.R;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
+import com.gmail.l2t45s7e9.empty.presentation.screens.ContactListFragment;
 
 public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.ContactViewHolder> {
+
+
+    private Bundle bundle = new Bundle();
+    private ContactListFragment contactListFragment = new ContactListFragment();
 
     public ContactListAdapter() {
         super(DIFF_CALLBACK);
@@ -37,7 +41,6 @@ public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.
         }
     };
 
-
     @NonNull
     @Override
     public ContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -47,9 +50,13 @@ public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.
         contactViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (contactViewHolder.getAdapterPosition() != RecyclerView.NO_POSITION) {
-                    openDetails(contactViewHolder.getAdapterPosition(), view);
-
+                int position = contactViewHolder.getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    String id = getItem(position).getId();
+                    int color = getItem(position).getContactColor();
+                    bundle.putString("id", id);
+                    bundle.putInt("color", color);
+                    contactListFragment.openDetails(bundle, view);
                 }
             }
         });
@@ -59,15 +66,6 @@ public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.
     @Override
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
         holder.bind(getItem(position));
-    }
-
-    private void openDetails(int position, View view) {
-        String id = getItem(position).getId();
-        int color = getItem(position).getContactColor();
-        Bundle bundle = new Bundle();
-        bundle.putString("id", id);
-        bundle.putInt("color", color);
-        Navigation.findNavController(view).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
     }
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
