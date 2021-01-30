@@ -17,7 +17,7 @@ import com.gmail.l2t45s7e9.empty.entity.Contact;
 public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.ContactViewHolder> {
 
     public interface OnItemClickListener{
-        void onItemClicked(Contact contact);
+        void onItemClicked(Contact contact, View view);
     }
     private OnItemClickListener onItemClickListener;
 
@@ -29,7 +29,7 @@ public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.
     public static final DiffUtil.ItemCallback<Contact> DIFF_CALLBACK = new DiffUtil.ItemCallback<Contact>() {
         @Override
         public boolean areItemsTheSame(@NonNull Contact oldItem, @NonNull Contact newItem) {
-            return oldItem.getId() == newItem.getId();
+            return oldItem.getId().equals(newItem.getId());
         }
 
         @Override
@@ -76,7 +76,7 @@ public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onItemClickListener.onItemClicked(contact);
+                    onItemClickListener.onItemClicked(contact, view);
                 }
             });
         }

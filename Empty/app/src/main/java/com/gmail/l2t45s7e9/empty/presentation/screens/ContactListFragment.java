@@ -24,17 +24,18 @@ import java.util.List;
 
 public class ContactListFragment extends Fragment {
 
+    private RecyclerView recyclerView;
     private ContactListAdapter adapter;
     private ContactListViewModel contactListViewModel;
     private ContactListAdapter.OnItemClickListener onItemClickListener = new ContactListAdapter.OnItemClickListener() {
         @Override
-        public void onItemClicked(Contact contact) {
+        public void onItemClicked(Contact contact, View view) {
             String id = contact.getId();
             int color = contact.getContactColor();
             Bundle bundle = new Bundle();
             bundle.putString("id", id);
             bundle.putInt("color", color);
-            Navigation.findNavController(getView()).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
+            Navigation.findNavController(view).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
         }
     };
 
@@ -52,7 +53,7 @@ public class ContactListFragment extends Fragment {
         );
         final TextView count = view.findViewById(R.id.contactCount);
         adapter = new ContactListAdapter(onItemClickListener);
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(contactItemDecorator);
         contactListViewModel = new ViewModelProvider(
@@ -87,7 +88,8 @@ public class ContactListFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        adapter.submitList(null);
+        recyclerView.setAdapter(null);
+        recyclerView.setLayoutManager(null);
         super.onDestroyView();
     }
 
