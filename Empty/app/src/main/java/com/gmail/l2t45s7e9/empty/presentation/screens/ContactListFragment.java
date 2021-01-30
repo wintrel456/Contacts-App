@@ -26,7 +26,17 @@ public class ContactListFragment extends Fragment {
 
     private ContactListAdapter adapter;
     private ContactListViewModel contactListViewModel;
-
+    private ContactListAdapter.OnItemClickListener onItemClickListener = new ContactListAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClicked(Contact contact) {
+            String id = contact.getId();
+            int color = contact.getContactColor();
+            Bundle bundle = new Bundle();
+            bundle.putString("id", id);
+            bundle.putInt("color", color);
+            Navigation.findNavController(getView()).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
+        }
+    };
 
     @Nullable
     @Override
@@ -41,7 +51,7 @@ public class ContactListFragment extends Fragment {
                 (int) (8 * getResources().getDisplayMetrics().density)
         );
         final TextView count = view.findViewById(R.id.contactCount);
-        adapter = new ContactListAdapter();
+        adapter = new ContactListAdapter(onItemClickListener);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(contactItemDecorator);
@@ -75,13 +85,10 @@ public class ContactListFragment extends Fragment {
         });
     }
 
-    public void openDetails(Bundle bundle, View view) {
-        Navigation.findNavController(view).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
-    }
-
     @Override
     public void onDestroyView() {
         adapter.submitList(null);
         super.onDestroyView();
     }
+
 }
