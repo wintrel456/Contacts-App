@@ -29,13 +29,13 @@ public class ContactListRepository {
     }
 
 
-    public void getShortInformation(ContactListViewModel.ShortInformation callback) {
+    public void getShortInformation(ContactListViewModel.ShortInformation callback, final String filterPattern) {
         final WeakReference<ContactListViewModel.ShortInformation> ref = new WeakReference<>(callback);
         try {
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
-                    List<Contact> result = loadShortInformation();
+                    List<Contact> result = loadShortInformation(filterPattern);
                     ContactListViewModel.ShortInformation local = ref.get();
                     if (local != null) {
                         local.getContactList(result);
@@ -44,13 +44,12 @@ public class ContactListRepository {
             }).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
-        } finally {
+        } /*finally {
             executorService.shutdown();
-        }
-
+        }*/
     }
 
-    private List<Contact> loadShortInformation() {
+    private List<Contact> loadShortInformation(String filterPattern) {
         List<Contact> contacts = new ArrayList<>();
         Set<String> set = new HashSet<>();
         Random random = new Random();
@@ -59,8 +58,8 @@ public class ContactListRepository {
         try {
             cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     null,
-                    ContactsContract.Contacts.HAS_PHONE_NUMBER,
-                    null,
+                    ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?",
+                    new String[]{"%" + filterPattern + "%"},
                     ContactsContract.Contacts.DISPLAY_NAME);
             while (cursor.moveToNext()) {
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));

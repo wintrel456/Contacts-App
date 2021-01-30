@@ -5,61 +5,81 @@ import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 import com.gmail.l2t45s7e9.empty.R;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
-import java.util.List;
 
-public class ContactListAdapter extends BaseAdapter {
-    private LayoutInflater inflater;
-    private List<Contact> contacts;
+public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.ContactViewHolder> {
 
-    public void updateData(List<Contact> contacts) {
-        this.contacts = contacts;
+    public interface OnItemClickListener{
+        void onItemClicked(Contact contact, View view);
+    }
+    private OnItemClickListener onItemClickListener;
+
+    public ContactListAdapter(OnItemClickListener onItemClickListener) {
+        super(DIFF_CALLBACK);
+        this.onItemClickListener = onItemClickListener;
     }
 
-    public ContactListAdapter(Context context, List<Contact> contacts) {
-        this.contacts = contacts;
-        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
+    public static final DiffUtil.ItemCallback<Contact> DIFF_CALLBACK = new DiffUtil.ItemCallback<Contact>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Contact oldItem, @NonNull Contact newItem) {
+            return oldItem.getId().equals(newItem.getId());
+        }
 
-    @Override
-    public int getCount() {
-        return contacts.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return contacts.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+        @Override
+        public boolean areContentsTheSame(@NonNull Contact oldItem, @NonNull Contact newItem) {
+            return oldItem.getId().equals(newItem.getId()) &&
+                    oldItem.getFirstNumber().equals(newItem.getFirstNumber()) &&
+                    oldItem.getName().equals(newItem.getName()) &&
+                    oldItem.getContactColor() == newItem.getContactColor();
+        }
+    };
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        if (convertView == null) {
-            convertView = inflater.inflate(
-                    R.layout.contact_list_item,
-                    parent,
-                    false
-            );
+    public ContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        View view = LayoutInflater.from(context).inflate(R.layout.contact_list_item, parent, false);
+        return new ContactViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
+        if(position != RecyclerView.NO_POSITION){
+            holder.bind(getItem(position), onItemClickListener);
         }
-        Contact contact = (Contact) getItem(position);
-        TextView name = convertView.findViewById(R.id.userName);
-        name.setText(contact.getName());
-        TextView number = convertView.findViewById(R.id.userNumber);
-        number.setText(contact.getFirstNumber());
-        ImageView avatar = convertView.findViewById(R.id.avatar);
-        avatar.setBackgroundTintList(ColorStateList.valueOf(contacts.get(position).getContactColor()));
-        return convertView;
+    }
+
+    public static class ContactViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView name;
+        private TextView number;
+        private ImageView avatar;
+
+        public ContactViewHolder(@NonNull View itemView) {
+            super(itemView);
+            name = itemView.findViewById(R.id.userName);
+            number = itemView.findViewById(R.id.userNumber);
+            avatar = itemView.findViewById(R.id.avatar);
+        }
+
+        public void bind(final Contact contact, final OnItemClickListener onItemClickListener) {
+            name.setText(contact.getName());
+            number.setText(contact.getFirstNumber());
+            avatar.setBackgroundTintList(ColorStateList.valueOf(contact.getContactColor()));
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onItemClickListener.onItemClicked(contact, view);
+                }
+            });
+        }
     }
 
 }

@@ -235,27 +235,27 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/imageView5"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:background="@drawable/end_line"
-                    android:contentDescription="@string/button_add"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/firstEmailInscription"
-                    app:layout_constraintStart_toStartOf="@+id/firstEmail"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/end_line" />
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/end_line"
+                android:contentDescription="@string/button_add"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/firstEmailInscription"
+                app:layout_constraintStart_toStartOf="@+id/firstEmail"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/end_line" />
 
-                <TextView
-                    android:id="@+id/secondEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="32dp"
-                    android:fontFamily="@font/segoe"
-                    android:text="@string/second_email"
+            <TextView
+                android:id="@+id/secondEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="32dp"
+                android:fontFamily="@font/segoe"
+                android:text="@string/second_email"
                     android:textColor="@color/Font"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
