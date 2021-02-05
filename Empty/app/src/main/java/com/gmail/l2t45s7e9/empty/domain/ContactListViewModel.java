@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
 import com.gmail.l2t45s7e9.empty.repository.ContactListRepository;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.List;
@@ -32,7 +32,7 @@ public class ContactListViewModel extends AndroidViewModel {
 
     public void loadContactList(String filterPattern) {
         disposable.add(
-                Observable.fromCallable(() -> contactListRepository.loadShortInformation(filterPattern))
+                Single.fromCallable(() -> contactListRepository.loadShortInformation(filterPattern))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(contacts -> contactListMutableLiveData.setValue(contacts))
