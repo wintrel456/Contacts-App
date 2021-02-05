@@ -1,22 +1,22 @@
 package com.gmail.l2t45s7e9.empty.domain;
 
 import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
 import com.gmail.l2t45s7e9.empty.entity.Contact;
 import com.gmail.l2t45s7e9.empty.repository.ContactDetailsRepository;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class ContactDetailsViewModel extends AndroidViewModel {
-    public interface DetailsInformation {
-        void getDetails(Contact contact);
-    }
 
     private final ContactDetailsRepository contactDetailsRepository;
     private MutableLiveData<Contact> contactDetailsMutableLiveData = new MutableLiveData<>();
+    private CompositeDisposable disposable = new CompositeDisposable();
     public LiveData<Contact> contactLiveData;
     private String id;
     private int color;
@@ -30,13 +30,18 @@ public class ContactDetailsViewModel extends AndroidViewModel {
     }
 
     private LiveData<Contact> loadContactDetails() {
-        DetailsInformation callback = new DetailsInformation() {
-            @Override
-            public void getDetails(Contact contact) {
-                contactDetailsMutableLiveData.postValue(contact);
-            }
-        };
-        contactDetailsRepository.getDetailsInformation(callback, id, color);
+        disposable.add(
+                Observable.fromCallable(() -> contactDetailsRepository.loadDetailsInformation(id, color))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(contacts -> contactDetailsMutableLiveData.setValue(contacts))
+        );
         return contactDetailsMutableLiveData;
+    }
+
+    @Override
+    protected void onCleared() {
+        disposable.dispose();
+        super.onCleared();
     }
 }

@@ -51,9 +51,7 @@ public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
-        if(position != RecyclerView.NO_POSITION){
-            holder.bind(getItem(position), onItemClickListener);
-        }
+        holder.bind(getItem(position), onItemClickListener);
     }
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
@@ -73,11 +71,11 @@ public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.
             name.setText(contact.getName());
             number.setText(contact.getFirstNumber());
             avatar.setBackgroundTintList(ColorStateList.valueOf(contact.getContactColor()));
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            itemView.setOnClickListener(view -> {
+                if (getAdapterPosition() != RecyclerView.NO_POSITION) {
                     onItemClickListener.onItemClicked(contact, view);
                 }
+
             });
         }
     }
