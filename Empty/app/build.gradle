@@ -13,6 +13,10 @@ android {
 
         testInstrumentationRunner "androidx.contact_details_fragment.runner.AndroidJUnitRunner"
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     buildTypes {
         release {
@@ -28,6 +32,8 @@ configurations {
 
 dependencies {
 
+    implementation "io.reactivex.rxjava3:rxjava:3.0.10"
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     def nav_version = "2.3.2"
 

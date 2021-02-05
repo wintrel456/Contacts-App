@@ -20,4 +20,8 @@
         <item name="android:strokeColor">@color/Font</item>
     </style>
 
+    <style name="progress_bar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">@color/Font</item>
+    </style>
+
 </resources>

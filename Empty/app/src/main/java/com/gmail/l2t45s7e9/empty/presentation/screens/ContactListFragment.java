@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,26 +17,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.gmail.l2t45s7e9.empty.R;
 import com.gmail.l2t45s7e9.empty.domain.ContactListViewModel;
 import com.gmail.l2t45s7e9.empty.domain.factories.ViewModelListFactory;
-import com.gmail.l2t45s7e9.empty.entity.Contact;
 import com.gmail.l2t45s7e9.empty.presentation.adapter.ContactItemDecorator;
 import com.gmail.l2t45s7e9.empty.presentation.adapter.ContactListAdapter;
-import java.util.List;
 
 public class ContactListFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ContactListAdapter adapter;
     private ContactListViewModel contactListViewModel;
-    private ContactListAdapter.OnItemClickListener onItemClickListener = new ContactListAdapter.OnItemClickListener() {
-        @Override
-        public void onItemClicked(Contact contact, View view) {
-            String id = contact.getId();
-            int color = contact.getContactColor();
-            Bundle bundle = new Bundle();
-            bundle.putString("id", id);
-            bundle.putInt("color", color);
-            Navigation.findNavController(view).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
-        }
+    private ProgressBar progressBar;
+
+    private ContactListAdapter.OnItemClickListener onItemClickListener = (contact, view) -> {
+        String id = contact.getId();
+        int color = contact.getContactColor();
+        Bundle bundle = new Bundle();
+        bundle.putString("id", id);
+        bundle.putInt("color", color);
+        Navigation.findNavController(view).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
     };
 
     @Nullable
@@ -52,6 +49,7 @@ public class ContactListFragment extends Fragment {
                 (int) (8 * getResources().getDisplayMetrics().density)
         );
         final TextView count = view.findViewById(R.id.contactCount);
+        progressBar = view.findViewById(R.id.progressBar);
         adapter = new ContactListAdapter(onItemClickListener);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -60,13 +58,11 @@ public class ContactListFragment extends Fragment {
                 this,
                 new ViewModelListFactory(getActivity().getApplication())).get(ContactListViewModel.class
         );
-        contactListViewModel.listLiveData.observe(getViewLifecycleOwner(), new Observer<List<Contact>>() {
-            @Override
-            public void onChanged(final List<Contact> result) {
-                if (adapter != null) {
-                    adapter.submitList(result);
-                    count.setText(String.valueOf(result.size()));
-                }
+        contactListViewModel.listLiveData.observe(getViewLifecycleOwner(), result -> {
+            if (adapter != null) {
+                adapter.submitList(result);
+                count.setText(String.valueOf(result.size()));
+                progressBar.setVisibility(View.GONE);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -90,6 +86,7 @@ public class ContactListFragment extends Fragment {
     public void onDestroyView() {
         recyclerView.setAdapter(null);
         recyclerView.setLayoutManager(null);
+        progressBar = null;
         super.onDestroyView();
     }
 
