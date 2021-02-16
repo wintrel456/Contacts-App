@@ -79,7 +79,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         ContactDetailsViewModel contactDetailsViewModel = new ViewModelProvider(
                 this, viewModelDetailsFactory
         ).get(ContactDetailsViewModel.class);
-        contactDetailsViewModel.contactLiveData.observe(
+        contactDetailsViewModel.loadContactDetails(position, color).observe(
                 getViewLifecycleOwner(),
                 result -> view.post(
                         () -> {

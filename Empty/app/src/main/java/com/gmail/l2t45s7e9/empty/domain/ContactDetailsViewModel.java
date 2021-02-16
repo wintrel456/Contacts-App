@@ -20,15 +20,18 @@ public class ContactDetailsViewModel extends ViewModel {
     private int color;
     public LiveData<Contact> contactLiveData;
 
-    @Inject
-    public ContactDetailsViewModel(ContactDetailsRepository contactDetailsRepository, String id, int color) {
-        this.contactDetailsRepository = contactDetailsRepository;
+    public void setIdAndColor(String id, int color) {
         this.id = id;
         this.color = color;
-        contactLiveData = loadContactDetails();
     }
 
-    private LiveData<Contact> loadContactDetails() {
+    @Inject
+    public ContactDetailsViewModel(ContactDetailsRepository contactDetailsRepository) {
+        this.contactDetailsRepository = contactDetailsRepository;
+        //contactLiveData = loadContactDetails();
+    }
+
+    public LiveData<Contact> loadContactDetails(String id, int color) {
         disposable.add(
                 Single.fromCallable(() -> contactDetailsRepository.loadDetailsInformation(id, color))
                         .subscribeOn(Schedulers.io())

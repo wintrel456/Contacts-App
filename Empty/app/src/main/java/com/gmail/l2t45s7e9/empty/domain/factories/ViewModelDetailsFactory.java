@@ -10,14 +10,10 @@ import javax.inject.Provider;
 public class ViewModelDetailsFactory implements ViewModelProvider.Factory {
 
     private final Map<Class<? extends ViewModel>, Provider<ViewModel>> creators;
-    private String id;
-    private int color;
 
     @Inject
-    public ViewModelDetailsFactory(Map<Class<? extends ViewModel>, Provider<ViewModel>> creators, String id, int color) {
+    public ViewModelDetailsFactory(Map<Class<? extends ViewModel>, Provider<ViewModel>> creators) {
         this.creators = creators;
-        this.id = id;
-        this.color = color;
     }
 
     @NonNull
