@@ -1,29 +1,28 @@
 package com.gmail.l2t45s7e9.empty.domain;
 
-import android.app.Application;
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
 import com.gmail.l2t45s7e9.empty.repository.ContactDetailsRepository;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import javax.inject.Inject;
 
-public class ContactDetailsViewModel extends AndroidViewModel {
+public class ContactDetailsViewModel extends ViewModel {
 
     private final ContactDetailsRepository contactDetailsRepository;
     private MutableLiveData<Contact> contactDetailsMutableLiveData = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
-    public LiveData<Contact> contactLiveData;
     private String id;
     private int color;
+    public LiveData<Contact> contactLiveData;
 
-    public ContactDetailsViewModel(@NonNull Application application, String id, int color) {
-        super(application);
-        contactDetailsRepository = new ContactDetailsRepository(application.getContentResolver());
+    @Inject
+    public ContactDetailsViewModel(ContactDetailsRepository contactDetailsRepository, String id, int color) {
+        this.contactDetailsRepository = contactDetailsRepository;
         this.id = id;
         this.color = color;
         contactLiveData = loadContactDetails();

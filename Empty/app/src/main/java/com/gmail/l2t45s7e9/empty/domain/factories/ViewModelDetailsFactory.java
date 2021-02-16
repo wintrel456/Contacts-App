@@ -1,23 +1,28 @@
 package com.gmail.l2t45s7e9.empty.domain.factories;
 
-import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import com.gmail.l2t45s7e9.empty.domain.ContactDetailsViewModel;
+import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Provider;
 
-public class ViewModelDetailsFactory extends ViewModelProvider.AndroidViewModelFactory {
+public class ViewModelDetailsFactory implements ViewModelProvider.Factory {
 
-    private final ContactDetailsViewModel contactDetailsViewModel;
+    private final Map<Class<? extends ViewModel>, Provider<ViewModel>> creators;
+    private String id;
+    private int color;
 
-    public ViewModelDetailsFactory(@NonNull Application application, String id, int color) {
-        super(application);
-        contactDetailsViewModel = new ContactDetailsViewModel(application, id, color);
+    @Inject
+    public ViewModelDetailsFactory(Map<Class<? extends ViewModel>, Provider<ViewModel>> creators, String id, int color) {
+        this.creators = creators;
+        this.id = id;
+        this.color = color;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) contactDetailsViewModel;
+        return (T) creators.get(modelClass).get();
     }
 }
