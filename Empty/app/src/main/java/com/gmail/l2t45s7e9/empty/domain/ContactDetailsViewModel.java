@@ -16,19 +16,10 @@ public class ContactDetailsViewModel extends ViewModel {
     private final ContactDetailsRepository contactDetailsRepository;
     private MutableLiveData<Contact> contactDetailsMutableLiveData = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
-    private String id;
-    private int color;
-    public LiveData<Contact> contactLiveData;
-
-    public void setIdAndColor(String id, int color) {
-        this.id = id;
-        this.color = color;
-    }
 
     @Inject
     public ContactDetailsViewModel(ContactDetailsRepository contactDetailsRepository) {
         this.contactDetailsRepository = contactDetailsRepository;
-        //contactLiveData = loadContactDetails();
     }
 
     public LiveData<Contact> loadContactDetails(String id, int color) {

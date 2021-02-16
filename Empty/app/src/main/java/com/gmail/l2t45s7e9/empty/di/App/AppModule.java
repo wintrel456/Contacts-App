@@ -4,24 +4,26 @@ import android.content.ContentResolver;
 import android.content.Context;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Singleton;
 
 @Module
 public class AppModule {
     private Context context;
-    private ContentResolver contentResolver;
 
-    public AppModule(Context context, ContentResolver contentResolver) {
+    public AppModule(Context context) {
         this.context = context;
-        this.contentResolver = contentResolver;
     }
 
     @Provides
+    @Singleton
     Context context() {
         return context;
     }
 
     @Provides
+    @Singleton
     ContentResolver contentResolver() {
-        return contentResolver;
+        return context.getContentResolver();
     }
+
 }

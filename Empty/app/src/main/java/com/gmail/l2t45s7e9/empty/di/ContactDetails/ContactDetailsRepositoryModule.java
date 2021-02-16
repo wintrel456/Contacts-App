@@ -1,12 +1,14 @@
 package com.gmail.l2t45s7e9.empty.di.ContactDetails;
 
 import android.content.ContentResolver;
+import com.gmail.l2t45s7e9.empty.di.scopes.ContactDetailsFragmentScope;
 import com.gmail.l2t45s7e9.empty.repository.ContactDetailsRepository;
 import dagger.Module;
 import dagger.Provides;
 @Module
-public class CDModule2 {
+public class ContactDetailsRepositoryModule {
     @Provides
+    @ContactDetailsFragmentScope
     ContactDetailsRepository contactDetailsRepository(ContentResolver contentResolver) {
         return new ContactDetailsRepository(contentResolver);
     }

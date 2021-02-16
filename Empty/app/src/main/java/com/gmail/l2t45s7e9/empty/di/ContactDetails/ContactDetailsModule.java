@@ -15,5 +15,5 @@ public abstract class ContactDetailsModule {
     abstract ViewModel bindContactDetailsViewModel(ContactDetailsViewModel contactDetailsViewModel);
 
     @Binds
-    abstract ViewModelProvider.Factory bindViewModelFactory(ViewModelDetailsFactory viewModelDetailsFactory);
+    abstract ViewModelProvider.Factory bindContactDetailsViewModelFactory(ViewModelDetailsFactory viewModelDetailsFactory);
 }

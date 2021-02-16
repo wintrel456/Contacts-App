@@ -1,16 +1,20 @@
 package com.gmail.l2t45s7e9.empty.di.ContactList;
 
-import com.gmail.l2t45s7e9.empty.di.App.AppDelegate;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import com.gmail.l2t45s7e9.empty.domain.ContactListViewModel;
 import com.gmail.l2t45s7e9.empty.domain.factories.ViewModelListFactory;
+import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
-import javax.inject.Singleton;
+import dagger.multibindings.IntoMap;
 
 @Module
-public class ContactListModule {
-    @Provides
-    @Singleton
-    ViewModelListFactory provideViewModelListFactory(AppDelegate appDelegate) {
-        return new ViewModelListFactory(appDelegate);
-    }
+public abstract class ContactListModule {
+    @Binds
+    @IntoMap
+    @ContactListViewModelKey(ContactListViewModel.class)
+    abstract ViewModel bindContactListViewModel(ContactListViewModel contactListViewModel);
+
+    @Binds
+    abstract ViewModelProvider.Factory bindContactListViewModelFactory(ViewModelListFactory viewModelListFactory);
 }
