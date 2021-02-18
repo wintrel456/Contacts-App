@@ -8,9 +8,10 @@ import dagger.Module;
 import dagger.Provides;
 @Module
 public class ContactListRepositoryModule {
+
     @Provides
     @ContactListFragmentScope
-    ContactListRepository contactListRepository(ContentResolver contentResolver, Context context) {
-        return new ContactListRepository(contentResolver, context);
+    ListRepositoryGetter listRepo(Context context, ContentResolver contentResolver) {
+        return () -> new ContactListRepository(contentResolver, context);
     }
 }

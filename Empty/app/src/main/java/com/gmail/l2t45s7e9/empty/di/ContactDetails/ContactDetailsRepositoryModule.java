@@ -7,10 +7,11 @@ import dagger.Module;
 import dagger.Provides;
 @Module
 public class ContactDetailsRepositoryModule {
+
     @Provides
     @ContactDetailsFragmentScope
-    ContactDetailsRepository contactDetailsRepository(ContentResolver contentResolver) {
-        return new ContactDetailsRepository(contentResolver);
+    DetailsRepositoryGetter provideDetailsRepositoryGetter(ContentResolver contentResolver) {
+        return () -> new ContactDetailsRepository(contentResolver);
     }
 
 }
