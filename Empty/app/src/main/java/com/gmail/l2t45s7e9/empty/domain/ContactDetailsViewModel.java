@@ -3,7 +3,7 @@ package com.gmail.l2t45s7e9.empty.domain;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import com.gmail.l2t45s7e9.empty.di.ContactDetails.DetailsRepositoryGetter;
+import com.gmail.l2t45s7e9.empty.di.ContactDetails.ContactDetailsRepository;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Single;
@@ -13,19 +13,18 @@ import javax.inject.Inject;
 
 public class ContactDetailsViewModel extends ViewModel {
 
-    private DetailsRepositoryGetter detailsRepositoryGetter;
+    private ContactDetailsRepository contactDetailsRepository;
     private MutableLiveData<Contact> contactDetailsMutableLiveData = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
-    public ContactDetailsViewModel(DetailsRepositoryGetter detailsRepositoryGetter) {
-        this.detailsRepositoryGetter = detailsRepositoryGetter;
+    public ContactDetailsViewModel(ContactDetailsRepository contactDetailsRepository) {
+        this.contactDetailsRepository = contactDetailsRepository;
     }
 
     public LiveData<Contact> loadContactDetails(String id, int color) {
         disposable.add(
-                Single.fromCallable(() -> detailsRepositoryGetter
-                        .getDetailsRepository()
+                Single.fromCallable(() -> contactDetailsRepository
                         .loadDetailsInformation(id, color))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
