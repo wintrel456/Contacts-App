@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:appDelegate="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient">
@@ -17,9 +17,9 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="48dp"
             android:contentDescription="@string/avatar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/avatar" />
+            appDelegate:layout_constraintStart_toStartOf="parent"
+            appDelegate:layout_constraintTop_toTopOf="parent"
+            appDelegate:srcCompat="@drawable/avatar" />
 
         <TextView
             android:id="@+id/userName"
@@ -37,9 +37,9 @@
             android:text="@string/user_name"
             android:textColor="@color/Font"
             android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/avatar"
-            app:layout_constraintTop_toTopOf="@+id/avatar" />
+            appDelegate:layout_constraintEnd_toEndOf="parent"
+            appDelegate:layout_constraintStart_toEndOf="@+id/avatar"
+            appDelegate:layout_constraintTop_toTopOf="@+id/avatar" />
 
         <TextView
             android:id="@+id/userNumber"
@@ -49,9 +49,9 @@
             android:text="@string/first_user_number"
             android:textColor="@color/Font"
             android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/secondUserNumber"
-            app:layout_constraintStart_toStartOf="@+id/userName"
-            app:layout_constraintTop_toBottomOf="@+id/userName" />
+            appDelegate:layout_constraintBottom_toTopOf="@+id/secondUserNumber"
+            appDelegate:layout_constraintStart_toStartOf="@+id/userName"
+            appDelegate:layout_constraintTop_toBottomOf="@+id/userName" />
 
         <TextView
             android:id="@+id/secondUserNumber"
@@ -62,9 +62,9 @@
             android:text="@string/second_user_number"
             android:textColor="@color/side_color"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/avatar"
-            app:layout_constraintStart_toStartOf="@+id/userNumber"
-            app:layout_constraintTop_toBottomOf="@id/userNumber" />
+            appDelegate:layout_constraintBottom_toBottomOf="@+id/avatar"
+            appDelegate:layout_constraintStart_toStartOf="@+id/userNumber"
+            appDelegate:layout_constraintTop_toBottomOf="@id/userNumber" />
 
         <TextView
             android:id="@+id/birtDateInscription"
@@ -75,8 +75,8 @@
             android:text="@string/birth_date"
             android:textColor="@color/Font"
             android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/avatar"
-            app:layout_constraintTop_toBottomOf="@+id/avatar" />
+            appDelegate:layout_constraintStart_toStartOf="@+id/avatar"
+            appDelegate:layout_constraintTop_toBottomOf="@+id/avatar" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/birthDateContainer"
@@ -84,9 +84,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/details_fields"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/birtDateInscription">
+            appDelegate:layout_constraintEnd_toEndOf="parent"
+            appDelegate:layout_constraintStart_toStartOf="parent"
+            appDelegate:layout_constraintTop_toBottomOf="@+id/birtDateInscription">
 
             <TextView
                 android:id="@+id/birhDate"
@@ -97,34 +97,34 @@
                 android:fontFamily="@font/segoe"
                 android:text="@string/date_of_BD"
                 android:textColor="@color/Font"
-                    android:textSize="12sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                android:textSize="12sp"
+                appDelegate:layout_constraintStart_toStartOf="parent"
+                appDelegate:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/notificationSwitch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="32dp"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/notificationSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="32dp"
+                android:visibility="visible"
+                appDelegate:layout_constraintEnd_toEndOf="parent"
+                appDelegate:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/notificationInscription"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="16dp"
-                    android:fontFamily="@font/segoe"
-                    android:text="@string/annotation_for_switcher"
-                    android:textColor="@color/side_color"
-                    android:textSize="12sp"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/notificationSwitch"
-                    app:layout_constraintTop_toBottomOf="@+id/notificationSwitch" />
+            <TextView
+                android:id="@+id/notificationInscription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/segoe"
+                android:text="@string/annotation_for_switcher"
+                android:textColor="@color/side_color"
+                android:textSize="12sp"
+                android:visibility="visible"
+                appDelegate:layout_constraintBottom_toBottomOf="parent"
+                appDelegate:layout_constraintEnd_toEndOf="@+id/notificationSwitch"
+                appDelegate:layout_constraintTop_toBottomOf="@+id/notificationSwitch" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
@@ -138,8 +138,8 @@
             android:textColor="@color/Font"
             android:textSize="18sp"
             android:visibility="visible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/birthDateContainer" />
+            appDelegate:layout_constraintStart_toStartOf="parent"
+            appDelegate:layout_constraintTop_toBottomOf="@+id/birthDateContainer" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/addressContainer"
@@ -148,9 +148,9 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/details_fields"
             android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addressInscription">
+            appDelegate:layout_constraintEnd_toEndOf="parent"
+            appDelegate:layout_constraintStart_toStartOf="parent"
+            appDelegate:layout_constraintTop_toBottomOf="@+id/addressInscription">
 
             <TextView
                 android:id="@+id/address"
@@ -161,9 +161,9 @@
                 android:fontFamily="@font/segoe"
                 android:text="@string/address_label"
                 android:textColor="@color/Font"
-                    android:textSize="12sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                android:textSize="12sp"
+                appDelegate:layout_constraintStart_toStartOf="parent"
+                appDelegate:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/addButton"
@@ -178,9 +178,9 @@
                     android:textColor="@color/side_font"
                     android:textSize="12sp"
                     android:background="@drawable/button"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    appDelegate:layout_constraintBottom_toBottomOf="parent"
+                    appDelegate:layout_constraintEnd_toEndOf="parent"
+                    appDelegate:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -195,8 +195,8 @@
             android:textColor="@color/Font"
             android:textSize="18sp"
             android:visibility="visible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addressContainer" />
+            appDelegate:layout_constraintStart_toStartOf="parent"
+            appDelegate:layout_constraintTop_toBottomOf="@+id/addressContainer" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/emailsContainer"
@@ -205,9 +205,9 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/details_fields"
             android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailInscription">
+            appDelegate:layout_constraintEnd_toEndOf="parent"
+            appDelegate:layout_constraintStart_toStartOf="parent"
+            appDelegate:layout_constraintTop_toBottomOf="@+id/emailInscription">
 
             <TextView
                 android:id="@+id/firstEmail"
@@ -218,22 +218,22 @@
                 android:fontFamily="@font/segoe"
                 android:text="@string/first_email"
                 android:textColor="@color/Font"
-                    android:textSize="12sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                android:textSize="12sp"
+                appDelegate:layout_constraintStart_toStartOf="parent"
+                appDelegate:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/firstEmailInscription"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="32dp"
-                    android:fontFamily="@font/segoe"
-                    android:text="@string/email1_label"
-                    android:textColor="@color/side_color"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/firstEmailInscription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="32dp"
+                android:fontFamily="@font/segoe"
+                android:text="@string/email1_label"
+                android:textColor="@color/side_color"
+                android:textSize="12sp"
+                appDelegate:layout_constraintEnd_toEndOf="parent"
+                appDelegate:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/imageView5"
@@ -241,11 +241,11 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/end_line"
                 android:contentDescription="@string/button_add"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/firstEmailInscription"
-                app:layout_constraintStart_toStartOf="@+id/firstEmail"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/end_line" />
+                appDelegate:layout_constraintBottom_toBottomOf="parent"
+                appDelegate:layout_constraintEnd_toEndOf="@+id/firstEmailInscription"
+                appDelegate:layout_constraintStart_toStartOf="@+id/firstEmail"
+                appDelegate:layout_constraintTop_toTopOf="parent"
+                appDelegate:srcCompat="@drawable/end_line" />
 
             <TextView
                 android:id="@+id/secondEmail"
@@ -256,23 +256,23 @@
                 android:layout_marginBottom="32dp"
                 android:fontFamily="@font/segoe"
                 android:text="@string/second_email"
-                    android:textColor="@color/Font"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+                android:textColor="@color/Font"
+                android:textSize="12sp"
+                appDelegate:layout_constraintBottom_toBottomOf="parent"
+                appDelegate:layout_constraintStart_toStartOf="parent"
+                appDelegate:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
-                <TextView
-                    android:id="@+id/secondEmailInscription"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:fontFamily="@font/segoe"
-                    android:text="@string/email2_label"
-                    android:textColor="@color/side_color"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/secondEmail" />
+            <TextView
+                android:id="@+id/secondEmailInscription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                android:fontFamily="@font/segoe"
+                android:text="@string/email2_label"
+                android:textColor="@color/side_color"
+                android:textSize="12sp"
+                appDelegate:layout_constraintEnd_toEndOf="parent"
+                appDelegate:layout_constraintTop_toTopOf="@+id/secondEmail" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

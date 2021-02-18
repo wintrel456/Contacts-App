@@ -1,5 +1,6 @@
 package com.gmail.l2t45s7e9.empty.presentation.screens;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +16,18 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.gmail.l2t45s7e9.empty.R;
+import com.gmail.l2t45s7e9.empty.di.App.AppDelegate;
+import com.gmail.l2t45s7e9.empty.di.ContactList.ContactListComponent;
 import com.gmail.l2t45s7e9.empty.domain.ContactListViewModel;
 import com.gmail.l2t45s7e9.empty.domain.factories.ViewModelListFactory;
 import com.gmail.l2t45s7e9.empty.presentation.adapter.ContactItemDecorator;
 import com.gmail.l2t45s7e9.empty.presentation.adapter.ContactListAdapter;
+import javax.inject.Inject;
 
 public class ContactListFragment extends Fragment {
 
+    @Inject
+    ViewModelListFactory viewModelListFactory;
     private RecyclerView recyclerView;
     private ContactListAdapter adapter;
     private ContactListViewModel contactListViewModel;
@@ -35,6 +41,15 @@ public class ContactListFragment extends Fragment {
         bundle.putInt("color", color);
         Navigation.findNavController(view).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
     };
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        AppDelegate appDelegate = (AppDelegate) getActivity().getApplication();
+        ContactListComponent contactListComponent = appDelegate.getAppComponent()
+                .plusContactListComponent();
+        contactListComponent.inject(this);
+        super.onAttach(context);
+    }
 
     @Nullable
     @Override
@@ -54,10 +69,12 @@ public class ContactListFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(contactItemDecorator);
+
         contactListViewModel = new ViewModelProvider(
                 this,
-                new ViewModelListFactory(getActivity().getApplication())).get(ContactListViewModel.class
-        );
+                viewModelListFactory
+        ).get(ContactListViewModel.class);
+
         contactListViewModel.listLiveData.observe(getViewLifecycleOwner(), result -> {
             if (adapter != null) {
                 adapter.submitList(result);

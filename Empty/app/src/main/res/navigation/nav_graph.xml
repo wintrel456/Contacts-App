@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:appDelegate="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/requestPermissionFragment">
+    appDelegate:startDestination="@id/requestPermissionFragment">
 
     <fragment
         android:id="@+id/contactListFragment"
@@ -11,12 +11,12 @@
         android:label="ContactListFragment">
         <action
             android:id="@+id/action_contactListFragment_to_contactDetailsFragment"
-            app:destination="@id/contactDetailsFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
-            app:popUpTo="@id/contactListFragment" />
+            appDelegate:destination="@id/contactDetailsFragment"
+            appDelegate:enterAnim="@android:anim/slide_in_left"
+            appDelegate:exitAnim="@android:anim/slide_out_right"
+            appDelegate:popEnterAnim="@android:anim/slide_in_left"
+            appDelegate:popExitAnim="@android:anim/slide_out_right"
+            appDelegate:popUpTo="@id/contactListFragment" />
     </fragment>
     <fragment
         android:id="@+id/contactDetailsFragment"
@@ -30,9 +30,9 @@
         tools:layout="@layout/fragment_request_permission">
         <action
             android:id="@+id/action_requestPermissionFragment_to_contactListFragment"
-            app:destination="@id/contactListFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popUpTo="@id/nav_graph" />
+            appDelegate:destination="@id/contactListFragment"
+            appDelegate:enterAnim="@android:anim/slide_in_left"
+            appDelegate:exitAnim="@android:anim/slide_out_right"
+            appDelegate:popUpTo="@id/nav_graph" />
     </fragment>
 </navigation>

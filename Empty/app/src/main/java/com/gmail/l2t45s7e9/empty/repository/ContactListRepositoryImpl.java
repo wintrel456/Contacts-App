@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import com.gmail.l2t45s7e9.empty.R;
+import com.gmail.l2t45s7e9.empty.di.ContactList.ContactListRepository;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,16 +13,17 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class ContactListRepository {
+public class ContactListRepositoryImpl implements ContactListRepository {
 
     private ContentResolver contentResolver;
     private Context context;
 
-    public ContactListRepository(ContentResolver contentResolver, Context context) {
+    public ContactListRepositoryImpl(ContentResolver contentResolver, Context context) {
         this.contentResolver = contentResolver;
         this.context = context;
     }
 
+    @Override
     public List<Contact> loadShortInformation(String filterPattern) {
         List<Contact> contacts = new ArrayList<>();
         Set<String> set = new HashSet<>();
@@ -55,5 +57,4 @@ public class ContactListRepository {
         }
         return contacts;
     }
-
 }

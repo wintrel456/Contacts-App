@@ -10,6 +10,7 @@ import androidx.navigation.Navigation;
 import com.gmail.l2t45s7e9.empty.R;
 
 public class MainActivity extends AppCompatActivity {
+
     private NavController navController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

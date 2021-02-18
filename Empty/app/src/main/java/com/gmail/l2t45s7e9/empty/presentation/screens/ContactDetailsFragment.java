@@ -19,19 +19,22 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.gmail.l2t45s7e9.empty.R;
+import com.gmail.l2t45s7e9.empty.di.App.AppDelegate;
+import com.gmail.l2t45s7e9.empty.di.ContactDetails.ContactDetailsComponent;
 import com.gmail.l2t45s7e9.empty.domain.ContactDetailsViewModel;
 import com.gmail.l2t45s7e9.empty.domain.factories.ViewModelDetailsFactory;
-import com.gmail.l2t45s7e9.empty.entity.Contact;
 import com.gmail.l2t45s7e9.empty.presentation.reciever.ContactNotificationsReceiver;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import javax.inject.Inject;
 
 public class ContactDetailsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
 
+    @Inject
+    ViewModelDetailsFactory viewModelDetailsFactory;
     private SwitchCompat switchCompat;
     private int color;
     private String position;
@@ -52,6 +55,11 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
 
     @Override
     public void onAttach(@NonNull Context context) {
+        AppDelegate appDelegate = (AppDelegate) getActivity().getApplication();
+        ContactDetailsComponent contactDetailsComponent = appDelegate.getAppComponent()
+                .plusContactDetailsComponent();
+        contactDetailsComponent.inject(this);
+
         super.onAttach(context);
         position = getArguments().getString("id");
         color = getArguments().getInt("color");
@@ -69,44 +77,38 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
         ContactDetailsViewModel contactDetailsViewModel = new ViewModelProvider(
-                this,
-                new ViewModelDetailsFactory(getActivity().getApplication(),
-                        position,
-                        color)
+                this, viewModelDetailsFactory
         ).get(ContactDetailsViewModel.class);
-        contactDetailsViewModel.contactLiveData.observe(getViewLifecycleOwner(), new Observer<Contact>() {
-            @Override
-            public void onChanged(final Contact result) {
-                view.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        position = result.getId();
-                        avatar.setColorFilter(result.getContactColor());
-                        name.setText(result.getName());
-                        firstNumber.setText(result.getFirstNumber());
-                        secondNumber.setText(result.getSecondNumber());
-                        firstEmail.setText(result.getFirstEmail());
-                        secondEmail.setText(result.getSecondEmail());
-                        address.setText(result.getContactAddress());
-                        date = result.getBirthDate();
-                        if (date != null) {
-                            birthDate.setText(
-                                    String.format(Locale.getDefault(),
-                                            formatDate,
-                                            date.get(
-                                                    Calendar.DATE),
-                                            date.getDisplayName(
-                                                    Calendar.MONTH, Calendar.LONG,
-                                                    Locale.getDefault())).toUpperCase()
-                            );
-                        } else {
-                            birthDate.setText(R.string.empty_date);
+        contactDetailsViewModel.loadContactDetails(position, color).observe(
+                getViewLifecycleOwner(),
+                result -> view.post(
+                        () -> {
+                            position = result.getId();
+                            avatar.setColorFilter(result.getContactColor());
+                            name.setText(result.getName());
+                            firstNumber.setText(result.getFirstNumber());
+                            secondNumber.setText(result.getSecondNumber());
+                            firstEmail.setText(result.getFirstEmail());
+                            secondEmail.setText(result.getSecondEmail());
+                            address.setText(result.getContactAddress());
+                            date = result.getBirthDate();
+                            if (date != null) {
+                                birthDate.setText(
+                                        String.format(Locale.getDefault(),
+                                                formatDate,
+                                                date.get(
+                                                        Calendar.DATE),
+                                                date.getDisplayName(
+                                                        Calendar.MONTH, Calendar.LONG,
+                                                        Locale.getDefault())).toUpperCase()
+                                );
+                            } else {
+                                birthDate.setText(R.string.empty_date);
+                            }
+                            color = result.getContactColor();
                         }
-                        color = result.getContactColor();
-                    }
-                });
-            }
-        });
+                )
+        );
         GradientDrawable drawable = (GradientDrawable) ResourcesCompat.getDrawable(
                 getResources(),
                 R.drawable.button,
@@ -135,7 +137,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         }
     }
 
-    public void initViews(View view) {
+    private void initViews(View view) {
         name = view.findViewById(R.id.userName);
         firstNumber = view.findViewById(R.id.userNumber);
         secondNumber = view.findViewById(R.id.secondUserNumber);
@@ -183,7 +185,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
 
     }
 
-    public void setRepeating() {
+    private void setRepeating() {
         GregorianCalendar calendar = (GregorianCalendar) Calendar.getInstance();
         if (date.get(Calendar.DATE) == 29 && date.get(Calendar.MONTH) == Calendar.FEBRUARY) {
             if (calendar.isLeapYear(calendar.get(Calendar.YEAR))) {

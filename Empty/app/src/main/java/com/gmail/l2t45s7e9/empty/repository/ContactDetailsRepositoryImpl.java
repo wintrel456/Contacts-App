@@ -3,17 +3,19 @@ package com.gmail.l2t45s7e9.empty.repository;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import com.gmail.l2t45s7e9.empty.di.ContactDetails.ContactDetailsRepository;
 import com.gmail.l2t45s7e9.empty.entity.Contact;
 import java.util.GregorianCalendar;
 
-public class ContactDetailsRepository {
+public class ContactDetailsRepositoryImpl implements ContactDetailsRepository {
 
     private final ContentResolver contentResolver;
 
-    public ContactDetailsRepository(ContentResolver contentResolver) {
+    public ContactDetailsRepositoryImpl(ContentResolver contentResolver) {
         this.contentResolver = contentResolver;
     }
 
+    @Override
     public Contact loadDetailsInformation(String id, int color) {
         ContactsRepositoryDelegate contactsRepositoryDelegate = new ContactsRepositoryDelegate(contentResolver, id);
         Contact contact = null;
@@ -51,4 +53,5 @@ public class ContactDetailsRepository {
         }
         return contact;
     }
+
 }
