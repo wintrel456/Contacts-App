@@ -1,7 +1,9 @@
 package com.gmail.l2t45s7e9.empty.di.App;
 
 import android.app.Application;
-public class AppDelegate extends Application {
+import com.gmail.l2t45s7e9.library.interfaces.AppContainer;
+import com.gmail.l2t45s7e9.library.interfaces.HasAppContainer;
+public class AppDelegate extends Application implements HasAppContainer {
 
     private AppComponent appComponent;
 
@@ -17,11 +19,11 @@ public class AppDelegate extends Application {
                 .build();
     }
 
-    public AppComponent getAppComponent() {
+    @Override
+    public AppContainer appContainer() {
         if (appComponent == null) {
             initDependencies();
         }
         return appComponent;
     }
-
 }
