@@ -74,6 +74,7 @@ public class ContactListFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         adapter = new ContactListAdapter(onItemClickListener);
         recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(contactItemDecorator);
 
@@ -89,7 +90,6 @@ public class ContactListFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
             }
         });
-        recyclerView.setAdapter(adapter);
 
         SearchView searchView = view.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

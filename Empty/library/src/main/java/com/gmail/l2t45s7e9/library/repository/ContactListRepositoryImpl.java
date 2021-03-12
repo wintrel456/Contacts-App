@@ -32,7 +32,7 @@ public class ContactListRepositoryImpl implements ContactListRepository {
         int[] colors = context.getResources().getIntArray(R.array.colors_list);
         Cursor cursor = null;
         try {
-            cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
                     null,
                     ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?",
                     new String[]{"%" + filterPattern + "%"},

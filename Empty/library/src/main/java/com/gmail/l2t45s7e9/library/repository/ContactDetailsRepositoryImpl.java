@@ -23,9 +23,9 @@ public class ContactDetailsRepositoryImpl implements ContactDetailsRepository {
         Cursor cursor = null;
         try {
             cursor = contentResolver.query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    ContactsContract.Contacts.CONTENT_URI,
                     null,
-                    ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
+                    ContactsContract.Contacts._ID + "=" + id,
                     null,
                     ContactsContract.Contacts.DISPLAY_NAME);
             while (cursor.moveToNext()) {

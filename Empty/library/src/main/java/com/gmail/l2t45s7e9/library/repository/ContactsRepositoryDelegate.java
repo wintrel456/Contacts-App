@@ -25,7 +25,7 @@ public class ContactsRepositoryDelegate {
             cursor = contentResolver.query(
                     ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     null,
-                    ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
+                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + id,
                     null,
                     null
             );
@@ -61,7 +61,7 @@ public class ContactsRepositoryDelegate {
             cursor = contentResolver.query(
                     ContactsContract.CommonDataKinds.Email.CONTENT_URI,
                     null,
-                    ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
+                    ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=" + id,
                     null,
                     null
             );
@@ -82,14 +82,15 @@ public class ContactsRepositoryDelegate {
     }
 
     public GregorianCalendar getBirthDate(Cursor cursor) {
-        GregorianCalendar gregorianCalendar = null;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM dd", Locale.getDefault());
+        GregorianCalendar gregorianCalendar = new GregorianCalendar();
         String birthDate = null;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         try {
             cursor = contentResolver.query(
                     ContactsContract.Data.CONTENT_URI,
                     null,
-                    ContactsContract.CommonDataKinds.Event.TYPE + "=" +
+                    ContactsContract.CommonDataKinds.Event.CONTACT_ID + "=" + id + " AND " +
+                            ContactsContract.CommonDataKinds.Event.TYPE + "=" +
                             ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY,
                     null,
                     null
@@ -102,13 +103,18 @@ public class ContactsRepositoryDelegate {
                 cursor.close();
             }
         }
+
         try {
             if (birthDate != null) {
                 Date date = simpleDateFormat.parse(birthDate);
                 gregorianCalendar.setTime(date);
+            } else {
+                gregorianCalendar = null;
             }
+
         } catch (ParseException e) {
             e.printStackTrace();
+            gregorianCalendar = null;
         }
 
         return gregorianCalendar;
@@ -117,9 +123,9 @@ public class ContactsRepositoryDelegate {
     public String getName(Cursor cursor) {
         String name = null;
         try {
-            cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
                     null,
-                    ContactsContract.CommonDataKinds.Phone._ID + "=" + id,
+                    ContactsContract.Contacts._ID + "=" + id,
                     null,
                     ContactsContract.Contacts.DISPLAY_NAME);
             while (cursor.moveToNext()) {
