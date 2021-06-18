@@ -1,9 +1,7 @@
 package com.gmail.l2t45s7e9.library.presentation.screens;
 
 import android.app.Application;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -25,7 +23,6 @@ import com.gmail.l2t45s7e9.library.domain.ContactDetailsViewModel;
 import com.gmail.l2t45s7e9.library.domain.factories.ViewModelDetailsFactory;
 import com.gmail.l2t45s7e9.library.interfaces.ContactDetailsContainer;
 import com.gmail.l2t45s7e9.library.interfaces.HasAppContainer;
-import com.gmail.l2t45s7e9.library.presentation.reciever.ContactNotificationsReceiver;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -104,6 +101,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
                         birthDate.setText(R.string.empty_date);
                     }
                     color = result.getContactColor();
+                    setSwitchCompat();
                 }
         );
         GradientDrawable drawable = (GradientDrawable) ResourcesCompat.getDrawable(
@@ -115,20 +113,21 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         drawable.setStroke(2, color);
         name.setSelected(true);
         add.setBackground(drawable);
-        if (switchCompat != null) {
-            switchCompat.setOnCheckedChangeListener(this);
-            if (PendingIntent.getBroadcast(
-                    getContext(),
-                    Integer.parseInt(position),
-                    new Intent(getContext(), ContactNotificationsReceiver.class), PendingIntent.FLAG_NO_CREATE
-            ) != null) {
-                switchCompat.setChecked(true);
-            } else {
-                switchCompat.setChecked(false);
+    }
+
+    private void setSwitchCompat() {
+        if (date != null) {
+            if (switchCompat != null) {
+                switchCompat.setOnCheckedChangeListener(this);
+                if (contactDetailsViewModel.getStatus()) {
+                    switchCompat.setChecked(true);
+                } else {
+                    switchCompat.setChecked(false);
+                }
             }
-
+        } else {
+            Toast.makeText(getContext(), R.string.empty_date_toast_message, Toast.LENGTH_LONG).show();
         }
-
     }
 
     private void initViews(View view) {
@@ -146,26 +145,22 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-        if (date != null) {
-            if (isChecked) {
-                switchCompat.setThumbTintList(ColorStateList.valueOf(color));
-                switchCompat.setTrackTintList(ColorStateList.valueOf(color).withAlpha(100));
+        if (isChecked) {
+            switchCompat.setThumbTintList(ColorStateList.valueOf(color));
+            switchCompat.setTrackTintList(ColorStateList.valueOf(color).withAlpha(100));
 
-                if (!contactDetailsViewModel.getStatus()) {
-                    contactDetailsViewModel.setNotification();
-                    Toast.makeText(getContext(), R.string.on_notification_toast_message, Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                switchCompat.setThumbTintList(ColorStateList.valueOf(getResources().getColor(R.color.side_color)));
-                switchCompat.setTrackTintList(ColorStateList.valueOf(getResources().getColor(R.color.second_side_color)));
-
-                if (contactDetailsViewModel.getStatus()) {
-                    contactDetailsViewModel.cancelNotification();
-                    Toast.makeText(getContext(), R.string.off_notification_toast_message, Toast.LENGTH_SHORT).show();
-                }
+            if (!contactDetailsViewModel.getStatus()) {
+                contactDetailsViewModel.setNotification();
+                Toast.makeText(getContext(), R.string.on_notification_toast_message, Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(getContext(), R.string.empty_date_toast_message, Toast.LENGTH_SHORT).show();
+            switchCompat.setThumbTintList(ColorStateList.valueOf(getResources().getColor(R.color.side_color)));
+            switchCompat.setTrackTintList(ColorStateList.valueOf(getResources().getColor(R.color.second_side_color)));
+
+            if (contactDetailsViewModel.getStatus()) {
+                contactDetailsViewModel.cancelNotification();
+                Toast.makeText(getContext(), R.string.off_notification_toast_message, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

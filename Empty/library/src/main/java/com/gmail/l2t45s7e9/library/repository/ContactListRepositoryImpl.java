@@ -16,16 +16,17 @@ import java.util.Set;
 
 public class ContactListRepositoryImpl implements ContactListRepository {
 
-    private ContentResolver contentResolver;
-    private Context context;
+    private final ContentResolver contentResolver;
+    private final Context context;
 
-    public ContactListRepositoryImpl(ContentResolver contentResolver, Context context) {
-        this.contentResolver = contentResolver;
+    public ContactListRepositoryImpl(Context context) {
+        contentResolver = context.getContentResolver();
         this.context = context;
     }
 
     @Override
     public Single<List<Contact>> loadShortInformation(String filterPattern) {
+        ContactsRepositoryDelegate contactsRepositoryDelegate = new ContactsRepositoryDelegate(context);
         List<Contact> contacts = new ArrayList<>();
         Set<String> set = new HashSet<>();
         Random random = new Random();
@@ -39,8 +40,8 @@ public class ContactListRepositoryImpl implements ContactListRepository {
                     ContactsContract.Contacts.DISPLAY_NAME);
             while (cursor.moveToNext()) {
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                String name = new ContactsRepositoryDelegate(contentResolver, id).getName(cursor);
-                String firstNumber = new ContactsRepositoryDelegate(contentResolver, id).getNumbers(cursor)[0];
+                String name = contactsRepositoryDelegate.getName(cursor, id);
+                String firstNumber = contactsRepositoryDelegate.getNumbers(cursor, id)[0];
                 Contact contact = new Contact(id,
                         name,
                         firstNumber,

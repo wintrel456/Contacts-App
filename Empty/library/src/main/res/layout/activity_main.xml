@@ -6,11 +6,11 @@
     android:layout_height="match_parent">
 
     <fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/navHost"
         android:name="androidx.navigation.fragment.NavHostFragment"
-        appDelegate:navGraph="@navigation/nav_graph"
-        appDelegate:defaultNavHost="true" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        appDelegate:defaultNavHost="true"
+        appDelegate:navGraph="@navigation/nav_graph" />
 
 </FrameLayout>

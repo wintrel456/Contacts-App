@@ -28,4 +28,5 @@
     <string name="permission_denied_toast_message">You need to set permission to read contacts</string>
     <string name="date_format_for_contact_details">%d %s</string>
     <string name="permission_granted_toast_message">Permission successfully granted</string>
+    <string name="empty_number">Number not set</string>
 </resources>

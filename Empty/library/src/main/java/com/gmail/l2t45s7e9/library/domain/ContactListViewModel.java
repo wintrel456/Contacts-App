@@ -13,10 +13,10 @@ import javax.inject.Inject;
 
 public class ContactListViewModel extends ViewModel {
 
+    public LiveData<List<Contact>> listLiveData;
     private ContactListInteractor contactListInteractor;
     private MutableLiveData<List<Contact>> contactListMutableLiveData = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
-    public LiveData<List<Contact>> listLiveData;
 
     @Inject
     public ContactListViewModel(ContactListInteractor contactListInteractor) {

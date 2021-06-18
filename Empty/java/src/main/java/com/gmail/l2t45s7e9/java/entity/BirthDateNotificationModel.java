@@ -22,6 +22,10 @@ public class BirthDateNotificationModel implements NotificationInteractor {
         if (date.get(Calendar.DATE) == 29 && date.get(Calendar.MONTH) == Calendar.FEBRUARY) {
             if (calendar.isLeapYear(calendar.get(Calendar.YEAR))) {
                 calendar.add(Calendar.YEAR, 4);
+            } else {
+                while (!calendar.isLeapYear(calendar.get(Calendar.YEAR))) {
+                    calendar.add(Calendar.YEAR, 1);
+                }
             }
         } else if (calendar.get(Calendar.MONTH) >= date.get(Calendar.MONTH) && calendar.get(Calendar.DATE) > date.get(Calendar.DATE)) {
             calendar.add(Calendar.YEAR, 1);

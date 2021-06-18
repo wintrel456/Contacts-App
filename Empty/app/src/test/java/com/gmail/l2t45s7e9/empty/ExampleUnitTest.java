@@ -1,8 +1,7 @@
 package com.gmail.l2t45s7e9.empty;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 /**
  * Example local unit contact_details_fragment, which will execute on the development machine (host).

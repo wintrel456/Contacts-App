@@ -12,6 +12,7 @@ import com.gmail.l2t45s7e9.library.R;
 public class MainActivity extends AppCompatActivity {
 
     private NavController navController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);

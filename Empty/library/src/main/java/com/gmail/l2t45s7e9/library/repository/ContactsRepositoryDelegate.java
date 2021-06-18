@@ -1,8 +1,10 @@
 package com.gmail.l2t45s7e9.library.repository;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import com.gmail.l2t45s7e9.library.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,14 +13,14 @@ import java.util.Locale;
 
 public class ContactsRepositoryDelegate {
     private final ContentResolver contentResolver;
-    private final String id;
+    private final Context context;
 
-    public ContactsRepositoryDelegate(ContentResolver contentResolver, String id) {
-        this.contentResolver = contentResolver;
-        this.id = id;
+    public ContactsRepositoryDelegate(Context context) {
+        contentResolver = context.getContentResolver();
+        this.context = context;
     }
 
-    public String[] getNumbers(Cursor cursor) {
+    public String[] getNumbers(Cursor cursor, String id) {
         String[] number = new String[2];
         int count = 0;
         try {
@@ -51,10 +53,17 @@ public class ContactsRepositoryDelegate {
                 cursor.close();
             }
         }
+        if (number[0] == null) {
+            number[0] = context.getResources().getString(R.string.empty_number);
+        }
+        if (number[1] == null) {
+            number[1] = context.getResources().getString(R.string.empty_number);
+        }
+
         return number;
     }
 
-    public String[] getEmails(Cursor cursor) {
+    public String[] getEmails(Cursor cursor, String id) {
         String[] email = new String[2];
         int count = 0;
         try {
@@ -81,7 +90,7 @@ public class ContactsRepositoryDelegate {
         return email;
     }
 
-    public GregorianCalendar getBirthDate(Cursor cursor) {
+    public GregorianCalendar getBirthDate(Cursor cursor, String id) {
         GregorianCalendar gregorianCalendar = new GregorianCalendar();
         String birthDate = null;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -120,7 +129,7 @@ public class ContactsRepositoryDelegate {
         return gregorianCalendar;
     }
 
-    public String getName(Cursor cursor) {
+    public String getName(Cursor cursor, String id) {
         String name = null;
         try {
             cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
