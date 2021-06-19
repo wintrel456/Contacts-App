@@ -125,7 +125,7 @@
                 appDelegate:layout_constraintBottom_toBottomOf="parent"
                 appDelegate:layout_constraintEnd_toEndOf="@+id/notificationSwitch"
                 appDelegate:layout_constraintTop_toBottomOf="@+id/notificationSwitch" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/addressInscription"
@@ -165,24 +165,24 @@
                 appDelegate:layout_constraintStart_toStartOf="parent"
                 appDelegate:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/addButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginBottom="48dp"
-                    android:fontFamily="@font/segoe"
-                    android:text="@string/button_add"
-                    android:textAlignment="center"
-                    android:textColor="@color/side_font"
-                    android:textSize="12sp"
-                    android:background="@drawable/button"
-                    appDelegate:layout_constraintBottom_toBottomOf="parent"
-                    appDelegate:layout_constraintEnd_toEndOf="parent"
-                    appDelegate:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/addButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="48dp"
+                android:background="@drawable/button"
+                android:fontFamily="@font/segoe"
+                android:text="@string/button_add"
+                android:textAlignment="center"
+                android:textColor="@color/side_font"
+                android:textSize="12sp"
+                appDelegate:layout_constraintBottom_toBottomOf="parent"
+                appDelegate:layout_constraintEnd_toEndOf="parent"
+                appDelegate:layout_constraintTop_toTopOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/emailInscription"

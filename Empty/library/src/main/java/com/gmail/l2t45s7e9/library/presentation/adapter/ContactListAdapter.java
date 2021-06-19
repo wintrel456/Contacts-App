@@ -16,16 +16,6 @@ import com.gmail.l2t45s7e9.library.R;
 
 public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.ContactViewHolder> {
 
-    public interface OnItemClickListener{
-        void onItemClicked(Contact contact, View view);
-    }
-    private OnItemClickListener onItemClickListener;
-
-    public ContactListAdapter(OnItemClickListener onItemClickListener) {
-        super(DIFF_CALLBACK);
-        this.onItemClickListener = onItemClickListener;
-    }
-
     public static final DiffUtil.ItemCallback<Contact> DIFF_CALLBACK = new DiffUtil.ItemCallback<Contact>() {
         @Override
         public boolean areItemsTheSame(@NonNull Contact oldItem, @NonNull Contact newItem) {
@@ -40,6 +30,12 @@ public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.
                     oldItem.getContactColor() == newItem.getContactColor();
         }
     };
+    private OnItemClickListener onItemClickListener;
+
+    public ContactListAdapter(OnItemClickListener onItemClickListener) {
+        super(DIFF_CALLBACK);
+        this.onItemClickListener = onItemClickListener;
+    }
 
     @NonNull
     @Override
@@ -52,6 +48,10 @@ public class ContactListAdapter extends ListAdapter<Contact, ContactListAdapter.
     @Override
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
         holder.bind(getItem(position), onItemClickListener);
+    }
+
+    public interface OnItemClickListener {
+        void onItemClicked(Contact contact, View view);
     }
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
