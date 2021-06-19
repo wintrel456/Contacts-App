@@ -5,9 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.gmail.l2t45s7e9.java.entity.Contact;
 import com.gmail.l2t45s7e9.java.interactor.ContactListInteractor;
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import com.gmail.l2t45s7e9.library.interfaces.SchedulersProvider;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -16,11 +15,16 @@ public class ContactListViewModel extends ViewModel {
     public LiveData<List<Contact>> listLiveData;
     private ContactListInteractor contactListInteractor;
     private MutableLiveData<List<Contact>> contactListMutableLiveData = new MutableLiveData<>();
+    private SchedulersProvider schedulersProvider;
     private CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
-    public ContactListViewModel(ContactListInteractor contactListInteractor) {
+    public ContactListViewModel(
+            ContactListInteractor contactListInteractor,
+            SchedulersProvider schedulersProvider
+    ) {
         this.contactListInteractor = contactListInteractor;
+        this.schedulersProvider = schedulersProvider;
         listLiveData = contactListMutableLiveData;
         loadContactList("");
     }
@@ -28,8 +32,8 @@ public class ContactListViewModel extends ViewModel {
     public void loadContactList(String filterPattern) {
         disposable.add(
                 contactListInteractor.getContactListRepo(filterPattern)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(schedulersProvider.io())
+                        .observeOn(schedulersProvider.ui())
                         .subscribe(contacts -> contactListMutableLiveData.setValue(contacts))
         );
     }

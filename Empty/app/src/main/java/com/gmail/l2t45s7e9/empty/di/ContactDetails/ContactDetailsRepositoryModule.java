@@ -9,8 +9,6 @@ import com.gmail.l2t45s7e9.java.interactor.ContactDetilsModel;
 import com.gmail.l2t45s7e9.java.interactor.CurrentDate;
 import com.gmail.l2t45s7e9.java.interactor.NotificationInteractor;
 import com.gmail.l2t45s7e9.java.interactor.NotificationRepository;
-import com.gmail.l2t45s7e9.library.interfaces.SchedulersProvider;
-import com.gmail.l2t45s7e9.library.interfaces.SchedulersProviderModel;
 import com.gmail.l2t45s7e9.library.repository.ContactDetailsRepositoryImpl;
 import com.gmail.l2t45s7e9.library.repository.NotificationRepositoryImpl;
 import dagger.Module;
@@ -36,11 +34,6 @@ public class ContactDetailsRepositoryModule {
         return new NotificationRepositoryImpl(context);
     }
 
-    @Provides
-    @ContactDetailsFragmentScope
-    SchedulersProvider provideSchedulersProvider() {
-        return new SchedulersProviderModel();
-    }
 
     @Provides
     @ContactDetailsFragmentScope

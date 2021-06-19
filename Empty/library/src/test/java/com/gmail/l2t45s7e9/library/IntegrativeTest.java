@@ -17,6 +17,7 @@ import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -39,7 +40,8 @@ public class IntegrativeTest {
     @Mock
     SchedulersProvider schedulersProvider;
 
-    private void installDelegate() {
+    @Before
+    public void installDelegate() {
         ArchTaskExecutor.getInstance().setDelegate(new TaskExecutor() {
             @Override
             public void executeOnDiskIO(@NonNull Runnable runnable) {
@@ -55,12 +57,14 @@ public class IntegrativeTest {
             public boolean isMainThread() {
                 return true;
             }
+
         });
+        Mockito.when(schedulersProvider.io()).thenReturn(Schedulers.trampoline());
+        Mockito.when(schedulersProvider.ui()).thenReturn(Schedulers.trampoline());
     }
 
     @Test
     public void successfully_adding_notification() {
-        installDelegate();
         GregorianCalendar addNotificationDate = new GregorianCalendar(2000, 8, 8);
         GregorianCalendar currentDate = new GregorianCalendar(1999, 8, 9);
         GregorianCalendar birthDate = new GregorianCalendar();
@@ -80,8 +84,6 @@ public class IntegrativeTest {
         Single<Contact> single = Single.fromCallable(() -> contact);
         Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor())).thenReturn(single);
         Mockito.when(dateModel.getCurrentDate()).thenReturn(currentDate);
-        Mockito.when(schedulersProvider.io()).thenReturn(Schedulers.trampoline());
-        Mockito.when(schedulersProvider.ui()).thenReturn(Schedulers.trampoline());
         ContactDetailsInteractor contactDetailsInteractor = new ContactDetilsModel(contactDetailsRepository);
         NotificationInteractor notificationInteractor = new BirthDateNotificationModel(dateModel, notificationRepository);
         ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor, schedulersProvider);
@@ -92,7 +94,7 @@ public class IntegrativeTest {
 
     @Test
     public void successfully_adding_notification_when_birthday_in_this_year_is_not() {
-        installDelegate();
+
         GregorianCalendar addNotificationDate = new GregorianCalendar(1999, Calendar.SEPTEMBER, 8);
         GregorianCalendar currentDate = new GregorianCalendar(1999, Calendar.SEPTEMBER, 7);
         GregorianCalendar birthDate = new GregorianCalendar();
@@ -112,8 +114,6 @@ public class IntegrativeTest {
         Single<Contact> single = Single.fromCallable(() -> contact);
         Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor())).thenReturn(single);
         Mockito.when(dateModel.getCurrentDate()).thenReturn(currentDate);
-        Mockito.when(schedulersProvider.io()).thenReturn(Schedulers.trampoline());
-        Mockito.when(schedulersProvider.ui()).thenReturn(Schedulers.trampoline());
         ContactDetailsInteractor contactDetailsInteractor = new ContactDetilsModel(contactDetailsRepository);
         NotificationInteractor notificationInteractor = new BirthDateNotificationModel(dateModel, notificationRepository);
         ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor, schedulersProvider);
@@ -124,7 +124,7 @@ public class IntegrativeTest {
 
     @Test
     public void successfully_deleting_notification() {
-        installDelegate();
+
         GregorianCalendar currentDate = new GregorianCalendar();
         currentDate.set(Calendar.YEAR, 1999);
         GregorianCalendar birthDate = new GregorianCalendar();
@@ -144,8 +144,6 @@ public class IntegrativeTest {
         Single<Contact> single = Single.fromCallable(() -> contact);
         Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor())).thenReturn(single);
         Mockito.when(dateModel.getCurrentDate()).thenReturn(currentDate);
-        Mockito.when(schedulersProvider.io()).thenReturn(Schedulers.trampoline());
-        Mockito.when(schedulersProvider.ui()).thenReturn(Schedulers.trampoline());
         ContactDetailsInteractor contactDetailsInteractor = new ContactDetilsModel(contactDetailsRepository);
         NotificationInteractor notificationInteractor = new BirthDateNotificationModel(dateModel, notificationRepository);
         ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor, schedulersProvider);
@@ -156,7 +154,7 @@ public class IntegrativeTest {
 
     @Test
     public void successfully_adding_notification_for_contact_who_was_born_on_29February() {
-        installDelegate();
+
         GregorianCalendar addNotificationDate = new GregorianCalendar(2000, Calendar.FEBRUARY, 29);
         GregorianCalendar currentDate = new GregorianCalendar(1999, Calendar.MARCH, 2);
         GregorianCalendar birthDate = new GregorianCalendar();
@@ -176,8 +174,6 @@ public class IntegrativeTest {
         Single<Contact> single = Single.fromCallable(() -> contact);
         Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor())).thenReturn(single);
         Mockito.when(dateModel.getCurrentDate()).thenReturn(currentDate);
-        Mockito.when(schedulersProvider.io()).thenReturn(Schedulers.trampoline());
-        Mockito.when(schedulersProvider.ui()).thenReturn(Schedulers.trampoline());
         ContactDetailsInteractor contactDetailsInteractor = new ContactDetilsModel(contactDetailsRepository);
         NotificationInteractor notificationInteractor = new BirthDateNotificationModel(dateModel, notificationRepository);
         ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor, schedulersProvider);
@@ -188,7 +184,7 @@ public class IntegrativeTest {
 
     @Test
     public void successfully_adding_notification_for_contact_who_was_born_on_29February_of_leap_year() {
-        installDelegate();
+
         GregorianCalendar addNotificationDate = new GregorianCalendar(2004, Calendar.FEBRUARY, 29);
         GregorianCalendar currentDate = new GregorianCalendar(2000, Calendar.MARCH, 1);
         GregorianCalendar birthDate = new GregorianCalendar();
@@ -208,8 +204,6 @@ public class IntegrativeTest {
         Single<Contact> single = Single.fromCallable(() -> contact);
         Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor())).thenReturn(single);
         Mockito.when(dateModel.getCurrentDate()).thenReturn(currentDate);
-        Mockito.when(schedulersProvider.io()).thenReturn(Schedulers.trampoline());
-        Mockito.when(schedulersProvider.ui()).thenReturn(Schedulers.trampoline());
         ContactDetailsInteractor contactDetailsInteractor = new ContactDetilsModel(contactDetailsRepository);
         NotificationInteractor notificationInteractor = new BirthDateNotificationModel(dateModel, notificationRepository);
         ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor, schedulersProvider);
