@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -45,6 +46,9 @@ public class ContactListFragment extends Fragment {
         Navigation.findNavController(view).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
     };
 
+    private Button.OnClickListener onClickListener = view -> {
+        Navigation.findNavController(view).navigate(R.id.action_contactListFragment_to_mapFragment);
+    };
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -71,7 +75,9 @@ public class ContactListFragment extends Fragment {
                 (int) (8 * getResources().getDisplayMetrics().density)
         );
         final TextView count = view.findViewById(R.id.contactCount);
+        Button mapFragmentButton = view.findViewById(R.id.mapButton);
         progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         adapter = new ContactListAdapter(onItemClickListener);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(adapter);
@@ -90,7 +96,7 @@ public class ContactListFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
             }
         });
-
+        mapFragmentButton.setOnClickListener(onClickListener);
         SearchView searchView = view.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

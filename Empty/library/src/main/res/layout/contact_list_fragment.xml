@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient">
 
+    <Button
+        android:id="@+id/mapButton"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/ic_map"
+        android:text=""
+        appDelegate:layout_constraintBottom_toBottomOf="@+id/searchView"
+        appDelegate:layout_constraintEnd_toEndOf="parent"
+        appDelegate:layout_constraintTop_toTopOf="@+id/searchView" />
+
     <ImageView
         android:id="@+id/logo"
         android:layout_width="wrap_content"
@@ -42,7 +53,7 @@
         android:layout_marginEnd="8dp"
         android:queryBackground="@color/back_white"
         android:searchIcon="@drawable/ic_search"
-        appDelegate:layout_constraintEnd_toEndOf="parent"
+        appDelegate:layout_constraintEnd_toStartOf="@+id/mapButton"
         appDelegate:layout_constraintStart_toStartOf="parent"
         appDelegate:layout_constraintTop_toBottomOf="@+id/logo" />
 

@@ -4,19 +4,25 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import androidx.room.Room;
 import com.gmail.l2t45s7e9.java.entity.Contact;
 import com.gmail.l2t45s7e9.java.interactor.ContactDetailsRepository;
+import com.gmail.l2t45s7e9.library.dataBase.ContactAddressDataBase;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.GregorianCalendar;
 
 public class ContactDetailsRepositoryImpl implements ContactDetailsRepository {
 
     private final ContentResolver contentResolver;
     private final Context context;
+    private ContactAddressDataBase db;
 
     public ContactDetailsRepositoryImpl(Context context) {
         this.context = context;
         contentResolver = context.getContentResolver();
+        db = Room.databaseBuilder(context,
+                ContactAddressDataBase.class, "contact-address2").build();
     }
 
     @Override
@@ -24,6 +30,7 @@ public class ContactDetailsRepositoryImpl implements ContactDetailsRepository {
         ContactsRepositoryDelegate contactsRepositoryDelegate = new ContactsRepositoryDelegate(context);
         Contact contact = null;
         Cursor cursor = null;
+
         try {
             cursor = contentResolver.query(
                     ContactsContract.Contacts.CONTENT_URI,
@@ -37,7 +44,6 @@ public class ContactDetailsRepositoryImpl implements ContactDetailsRepository {
                 String secondNumber = contactsRepositoryDelegate.getNumbers(cursor, id)[1];
                 String firstEmail = contactsRepositoryDelegate.getEmails(cursor, id)[0];
                 String secondEmail = contactsRepositoryDelegate.getEmails(cursor, id)[1];
-                String address = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
                 GregorianCalendar birthDate = contactsRepositoryDelegate.getBirthDate(cursor, id);
                 contact = new Contact(id,
                         name,
@@ -45,7 +51,7 @@ public class ContactDetailsRepositoryImpl implements ContactDetailsRepository {
                         secondNumber,
                         firstEmail,
                         secondEmail,
-                        address,
+                        "",
                         birthDate,
                         color);
             }
@@ -56,8 +62,22 @@ public class ContactDetailsRepositoryImpl implements ContactDetailsRepository {
             }
         }
         Contact finalContact = contact;
-        return Single.fromCallable(() -> finalContact);
+        return Single.fromCallable(() -> finalContact)
+                .zipWith(getAddress(id), (contact1, address) -> new Contact(
+                        contact1.getId(),
+                        contact1.getName(),
+                        contact1.getFirstNumber(),
+                        contact1.getSecondNumber(),
+                        contact1.getFirstEmail(),
+                        contact1.getSecondEmail(),
+                        address,
+                        contact1.getBirthDate(),
+                        contact1.getContactColor()
+                ))
+                .subscribeOn(Schedulers.io());
     }
 
-
+    public Single<String> getAddress(String id) {
+        return db.contactDao().loadContactById(id).onErrorReturnItem("");
+    }
 }

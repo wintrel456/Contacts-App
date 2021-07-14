@@ -29,4 +29,8 @@
     <string name="date_format_for_contact_details">%d %s</string>
     <string name="permission_granted_toast_message">Permission successfully granted</string>
     <string name="empty_number">Number not set</string>
+    <string name="map_fragment_tag">Map</string>
+    <string name="map_fragment_second_tag">With all contacts</string>
+    <string name="empty_address">Address not set</string>
+    <string name="see_on_map_label">See</string>
 </resources>

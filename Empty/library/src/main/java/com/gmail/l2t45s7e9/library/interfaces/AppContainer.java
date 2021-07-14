@@ -4,4 +4,6 @@ public interface AppContainer {
     ContactListContainer plusContactListContainer();
 
     ContactDetailsContainer plusContactDetailsContainer();
+
+    AddressSearchContainer plusAddressSearchContainer();
 }

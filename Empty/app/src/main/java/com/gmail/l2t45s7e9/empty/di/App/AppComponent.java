@@ -1,5 +1,6 @@
 package com.gmail.l2t45s7e9.empty.di.App;
 
+import com.gmail.l2t45s7e9.empty.di.AddressSearch.AddressSearchComponent;
 import com.gmail.l2t45s7e9.empty.di.ContactDetails.ContactDetailsComponent;
 import com.gmail.l2t45s7e9.empty.di.ContactList.ContactListComponent;
 import com.gmail.l2t45s7e9.empty.di.Schedulers.SchedulersProviderModule;
@@ -14,4 +15,5 @@ public interface AppComponent extends AppContainer {
 
     ContactListComponent plusContactListContainer();
 
+    AddressSearchComponent plusAddressSearchContainer();
 }
