@@ -10,23 +10,30 @@ class RouteFromGMaps {
     @Expose
     private lateinit var routes: List<Route>
 
-    @SerializedName("status")
-    @Expose
-    private var status: String? = null
-
     fun getRoutes(): List<Route> {
         return routes
     }
 
-    fun setRoutes(routes: List<Route>) {
-        this.routes = routes
+    class Route {
+
+        @SerializedName("overview_polyline")
+        @Expose
+        private var overviewPolyline: OverviewPolyline? = null
+
+
+        fun getOverviewPolyline(): OverviewPolyline? {
+            return overviewPolyline
+        }
+
     }
 
-    fun getStatus(): String? {
-        return status
-    }
+    class OverviewPolyline {
+        @SerializedName("points")
+        @Expose
+        private lateinit var points: String
 
-    fun setStatus(status: String?) {
-        this.status = status
+        fun getPoints(): String {
+            return points
+        }
     }
 }

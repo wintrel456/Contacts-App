@@ -1,5 +1,6 @@
 package com.gmail.l2t45s7e9.library.presentation.screens
 
+import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -11,6 +12,7 @@ import com.gmail.l2t45s7e9.java.entity.Contact
 import com.gmail.l2t45s7e9.library.R
 import com.gmail.l2t45s7e9.library.domain.MapViewModel
 import com.gmail.l2t45s7e9.library.domain.factories.ViewModelMapFactory
+import com.gmail.l2t45s7e9.library.interfaces.HasAppContainer
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
@@ -21,55 +23,50 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 
 class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
 
-    private lateinit var gmap: GoogleMap
-    private lateinit var mapTag: TextView
-    private lateinit var mapTag2: TextView
-    private lateinit var mapView: MapView
-    private lateinit var id: String
+    @Inject
+    lateinit var mapFactory: ViewModelMapFactory
+    private var gmap: GoogleMap? = null
+    private var mapTag: TextView? = null
+    private var mapTag2: TextView? = null
+    private var mapView: MapView? = null
+    private var id: String? = null
     private lateinit var mapViewModel: MapViewModel
     private var markers = mutableListOf<Contact>()
-    private var state = false
+    private var markerState = false
     private var firstMarker: LatLng? = null
     private var secondMarker: LatLng? = null
 
     private var onMarkerClick = OnMarkerClickListener { marker ->
-        if (!state) {
+        if (!markerState) {
             firstMarker = marker.position
-            state = true
-            Toast.makeText(context, "first_added", Toast.LENGTH_SHORT).show()
+            markerState = true
+            Toast.makeText(context, R.string.first_marker_added, Toast.LENGTH_SHORT).show()
         } else {
             secondMarker = marker.position
-            state = false
-            Toast.makeText(context, "Second_added", Toast.LENGTH_SHORT).show()
-        }
-        if (firstMarker != null && secondMarker != null) {
-            mapViewModel.getRoute(firstMarker!!, secondMarker!!).observe(this, {
-                route(it, gmap)
-                firstMarker = null
-                secondMarker = null
-            })
+            markerState = false
+            Toast.makeText(context, R.string.second_marker_added, Toast.LENGTH_SHORT).show()
+            firstMarker?.let { first ->
+                secondMarker?.let { second ->
+                    mapViewModel.getRoute(first, second)
+                }
+            }
         }
         true
     }
 
     override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mapViewModel = ViewModelProvider(this, object : ViewModelMapFactory(context) {}).get(MapViewModel::class.java)
-        if (arguments?.getString("id") != null) {
-            id = arguments?.getString("id").toString()
-            mapViewModel.getContactMarker(id).observe(this, {
-                markers.addAll(it)
-            })
-        } else {
-            id = ""
-            mapViewModel.getContactMarkers().observe(this, {
-                markers.addAll(it)
-            })
+        val app = context.applicationContext as Application
+        check(app is HasAppContainer)
+        (app as HasAppContainer).apply {
+            appContainer().plusMapContainer().inject(this@MapFragment)
         }
+        super.onAttach(context)
+        id = arguments?.getString("id")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,52 +74,62 @@ class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
         mapTag = view.findViewById(R.id.textView)
         mapTag2 = view.findViewById(R.id.textView2)
         mapView = view.findViewById(R.id.mapView)
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this)
-    }
-
-    override fun onMapReady(p0: GoogleMap) {
-        gmap = p0
-        val ny = LatLng(0.0, 0.0)
-        gmap.moveCamera(CameraUpdateFactory.newLatLng(ny))
-        gmap.uiSettings.setAllGesturesEnabled(true)
-        for (i in markers.indices) {
-            gmap.addMarker(MarkerOptions()
-                    .position(LatLng(markers[i].latitude, markers[i].longitude)))
+        mapViewModel = ViewModelProvider(this, mapFactory).get(MapViewModel::class.java)
+        mapViewModel.contacts.observe(viewLifecycleOwner, {
+            markers.addAll(it)
+        })
+        mapViewModel.route.observe(viewLifecycleOwner, {
+            gmap?.let { it1 -> route(it, it1) }
+            firstMarker = null
+            secondMarker = null
+        })
+        if (id != null) {
+            mapViewModel.getContactMarker(id.toString())
+        } else {
+            id = ""
+            mapViewModel.getContactMarkers()
         }
-        gmap.setOnMarkerClickListener(onMarkerClick)
-
+        mapView?.onCreate(savedInstanceState)
+        loadMarkers()
+        mapView?.getMapAsync(this)
     }
 
-    override fun onResume() {
-        mapView.onResume()
-        super.onResume()
+    override fun onMapReady(googleMap: GoogleMap) {
+        gmap = googleMap
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView.onDestroy()
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mapView.onLowMemory()
+    private fun loadMarkers() {
+        gmap?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(0.0, 0.0)))
+        gmap?.uiSettings?.setAllGesturesEnabled(true)
+        markers.forEach {
+            gmap?.addMarker(MarkerOptions()
+                    .position(LatLng(it.latitude, it.longitude)))
+        }
+        gmap?.setOnMarkerClickListener(onMarkerClick)
     }
 
     private fun route(mPoints: List<LatLng>, googleMap: GoogleMap) {
         if (mPoints.isEmpty()) {
-            Snackbar.make(requireView(), "Route not possible", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(requireView(), R.string.route_not_created, Snackbar.LENGTH_SHORT).show()
         } else {
             val line = PolylineOptions()
             line.width(4f).color(R.color.Font)
             val latLngBuilder = LatLngBounds.Builder()
-            for (i in mPoints.indices) {
-                line.add(mPoints.get(i))
-                latLngBuilder.include(mPoints.get(i))
+            mPoints.forEach {
+                line.add(it)
+                latLngBuilder.include(it)
             }
             googleMap.addPolyline(line)
+            Snackbar.make(requireView(), R.string.route_created, Snackbar.LENGTH_SHORT).show()
         }
 
     }
 
+    override fun onDestroyView() {
+        mapTag = null
+        mapTag2 = null
+        gmap = null
+        mapView = null
+        super.onDestroyView()
+    }
 }

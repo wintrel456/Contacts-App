@@ -1,15 +1,16 @@
 package com.gmail.l2t45s7e9.library.domain.factories
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.gmail.l2t45s7e9.library.domain.MapViewModel
+import javax.inject.Inject
+import javax.inject.Provider
 
-open class ViewModelMapFactory(_context: Context) : ViewModelProvider.Factory {
-
-    private var mapViewModel: MapViewModel = MapViewModel(_context)
+class ViewModelMapFactory
+@Inject constructor(
+        private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return mapViewModel as T
+        return creators[modelClass]!!.get() as T
     }
 }

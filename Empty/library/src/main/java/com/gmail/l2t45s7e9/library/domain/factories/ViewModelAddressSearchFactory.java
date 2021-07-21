@@ -20,4 +20,5 @@ public class ViewModelAddressSearchFactory implements ViewModelProvider.Factory 
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         return (T) creators.get(modelClass).get();
     }
+
 }

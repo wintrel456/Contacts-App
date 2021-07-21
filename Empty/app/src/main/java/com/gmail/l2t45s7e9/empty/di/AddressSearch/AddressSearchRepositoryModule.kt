@@ -1,10 +1,11 @@
 package com.gmail.l2t45s7e9.empty.di.AddressSearch
 
-import android.content.Context
+import android.location.Geocoder
 import com.gmail.l2t45s7e9.empty.di.scopes.AddressSearchFragmentScope
 import com.gmail.l2t45s7e9.java.interactor.AddressSearchInteractor
 import com.gmail.l2t45s7e9.java.interactor.AddressSearchModel
 import com.gmail.l2t45s7e9.java.interactor.AddressSearchRepository
+import com.gmail.l2t45s7e9.library.dataBase.ContactAddressDataBase
 import com.gmail.l2t45s7e9.library.repository.AddressSearchRepositoryImpl
 import dagger.Module
 import dagger.Provides
@@ -13,8 +14,11 @@ import dagger.Provides
 class AddressSearchRepositoryModule {
     @Provides
     @AddressSearchFragmentScope
-    fun provideAddressSearchRepository(context: Context): AddressSearchRepository {
-        return AddressSearchRepositoryImpl(context)
+    fun provideAddressSearchRepository(
+            contactAddressDataBase: ContactAddressDataBase,
+            geocoder: Geocoder
+    ): AddressSearchRepository {
+        return AddressSearchRepositoryImpl(contactAddressDataBase, geocoder)
     }
 
     @Provides

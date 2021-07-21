@@ -11,6 +11,11 @@ public class SchedulersProviderModel implements SchedulersProvider {
     }
 
     @Override
+    public Scheduler computation() {
+        return Schedulers.computation();
+    }
+
+    @Override
     public Scheduler ui() {
         return AndroidSchedulers.mainThread();
     }

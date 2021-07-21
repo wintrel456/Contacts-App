@@ -12,11 +12,12 @@ import javax.inject.Inject;
 
 public class ContactListViewModel extends ViewModel {
 
-    public LiveData<List<Contact>> listLiveData;
+
     private ContactListInteractor contactListInteractor;
     private MutableLiveData<List<Contact>> contactListMutableLiveData = new MutableLiveData<>();
     private SchedulersProvider schedulersProvider;
     private CompositeDisposable disposable = new CompositeDisposable();
+    public LiveData<List<Contact>> listLiveData = contactListMutableLiveData;
 
     @Inject
     public ContactListViewModel(
@@ -25,8 +26,6 @@ public class ContactListViewModel extends ViewModel {
     ) {
         this.contactListInteractor = contactListInteractor;
         this.schedulersProvider = schedulersProvider;
-        listLiveData = contactListMutableLiveData;
-        loadContactList("");
     }
 
     public void loadContactList(String filterPattern) {

@@ -1,3 +1,8 @@
 package com.gmail.l2t45s7e9.library.interfaces
 
-interface MapContainer
+import com.gmail.l2t45s7e9.library.presentation.screens.MapFragment
+
+
+interface MapContainer {
+    fun inject(mapFragment: MapFragment)
+}

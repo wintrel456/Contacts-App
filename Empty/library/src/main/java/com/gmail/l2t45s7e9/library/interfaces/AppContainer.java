@@ -6,4 +6,6 @@ public interface AppContainer {
     ContactDetailsContainer plusContactDetailsContainer();
 
     AddressSearchContainer plusAddressSearchContainer();
+
+    MapContainer plusMapContainer();
 }

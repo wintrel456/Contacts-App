@@ -17,6 +17,6 @@ public class AddressSearchModel implements AddressSearchInteractor {
 
     @Override
     public void setAddress(String address, String id) {
-        addressSearchRepository.insert(address, id);
+        addressSearchRepository.insertAddressIntoDB(address, id);
     }
 }

@@ -5,5 +5,5 @@ import java.util.List;
 public interface AddressSearchRepository {
     Single<List<String>> loadSearchList(String filter);
 
-    void insert(String address, String id);
+    void insertAddressIntoDB(String address, String id);
 }

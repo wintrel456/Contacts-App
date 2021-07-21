@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gmail.l2t45s7e9.library.R
 
 
-class AddressSearchAdapter(private var onItemClick: OnItemClickListener) : ListAdapter<String, AddressSearchAdapter.ItemViewHolder>(DiffCallback()) {
+class AddressSearchAdapter(private val onItemClick: OnItemClickListener) : ListAdapter<String, AddressSearchAdapter.ItemViewHolder>(DiffCallback()) {
 
     interface OnItemClickListener {
         fun onItemClicked(string: String?, view: View?)
@@ -30,9 +30,9 @@ class AddressSearchAdapter(private var onItemClick: OnItemClickListener) : ListA
     }
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val s = itemView.findViewById<TextView>(R.id.addressSearchResult)
+        private val addressSearchResult: TextView = itemView.findViewById(R.id.addressSearchResult)
         fun bind(item: String, onItemClick: OnItemClickListener) = with(itemView) {
-            s.text = item
+            addressSearchResult.text = item
             setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
                     onItemClick.onItemClicked(item, itemView)
@@ -44,14 +44,12 @@ class AddressSearchAdapter(private var onItemClick: OnItemClickListener) : ListA
     class DiffCallback : DiffUtil.ItemCallback<String>() {
 
         override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
-            return false
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
-            return false
+            return oldItem == newItem
         }
 
     }
-
-
 }

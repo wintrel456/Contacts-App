@@ -4,12 +4,10 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-import androidx.room.Room;
 import com.gmail.l2t45s7e9.java.entity.Contact;
 import com.gmail.l2t45s7e9.java.interactor.ContactDetailsRepository;
 import com.gmail.l2t45s7e9.library.dataBase.ContactAddressDataBase;
 import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.GregorianCalendar;
 
 public class ContactDetailsRepositoryImpl implements ContactDetailsRepository {
@@ -18,11 +16,10 @@ public class ContactDetailsRepositoryImpl implements ContactDetailsRepository {
     private final Context context;
     private ContactAddressDataBase db;
 
-    public ContactDetailsRepositoryImpl(Context context) {
+    public ContactDetailsRepositoryImpl(Context context, ContactAddressDataBase contactAddressDataBase) {
         this.context = context;
         contentResolver = context.getContentResolver();
-        db = Room.databaseBuilder(context,
-                ContactAddressDataBase.class, "contact-address2").build();
+        db = contactAddressDataBase;
     }
 
     @Override
@@ -73,8 +70,7 @@ public class ContactDetailsRepositoryImpl implements ContactDetailsRepository {
                         address,
                         contact1.getBirthDate(),
                         contact1.getContactColor()
-                ))
-                .subscribeOn(Schedulers.io());
+                ));
     }
 
     public Single<String> getAddress(String id) {

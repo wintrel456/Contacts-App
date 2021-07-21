@@ -30,7 +30,8 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import javax.inject.Inject;
 
-public class ContactDetailsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
+public class ContactDetailsFragment extends Fragment implements
+        CompoundButton.OnCheckedChangeListener, AddressSearchFragment.OnChooseAddress {
 
     @Inject
     ViewModelDetailsFactory viewModelDetailsFactory;
@@ -50,22 +51,26 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
     private GregorianCalendar date;
     private String formatDate;
     private String addressString;
-
-    private AddressSearchFragment.OnChooseAddress onChooseAddress = string -> {
-        contactDetailsViewModel.loadContactDetails(position, color);
-    };
+    private boolean addressState;
 
     private TextView.OnClickListener onClickListener = view -> {
-        if (add.getText().equals("Add")) {
+        Bundle bundle = new Bundle();
+        bundle.putString("id", position);
+        if (!addressState) {
             FragmentManager fragmentManager = getFragmentManager();
-            AddressSearchFragment addressSearchFragment = new AddressSearchFragment(onChooseAddress, position);
+            AddressSearchFragment addressSearchFragment = new AddressSearchFragment();
+            addressSearchFragment.setArguments(bundle);
             addressSearchFragment.show(fragmentManager, "SearchAddress");
-        } else if (add.getText().equals("See")) {
-            Bundle bundle = new Bundle();
-            bundle.putString("id", position);
+        } else {
             Navigation.findNavController(view).navigate(R.id.action_contactDetailsFragment_to_mapFragment, bundle);
         }
     };
+
+    @Override
+    public void onChoose() {
+        contactDetailsViewModel.loadContactDetails(position, color);
+        Snackbar.make(getView(), "Address successfully added", Snackbar.LENGTH_SHORT).show();
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -95,7 +100,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         contactDetailsViewModel = new ViewModelProvider(
                 this, viewModelDetailsFactory
         ).get(ContactDetailsViewModel.class);
-        contactDetailsViewModel.loadContactDetails(position, color).observe(
+        contactDetailsViewModel.contactDetailsLiveData.observe(
                 getViewLifecycleOwner(), result -> {
                     position = result.getId();
                     avatar.setColorFilter(result.getContactColor());
@@ -106,9 +111,11 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
                     secondEmail.setText(result.getSecondEmail());
                     addressString = result.getContactAddress();
                     if (addressString.length() != 0) {
+                        addressState = true;
                         address.setText(addressString);
                         add.setText(getString(R.string.see_on_map_label));
                     } else {
+                        addressState = false;
                         address.setText(getString(R.string.empty_address));
                         add.setText(getString(R.string.button_add));
                     }
@@ -131,6 +138,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
                     setSwitchCompat();
                 }
         );
+        contactDetailsViewModel.loadContactDetails(position, color);
         GradientDrawable drawable = (GradientDrawable) ResourcesCompat.getDrawable(
                 getResources(),
                 R.drawable.button,
@@ -152,8 +160,6 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
                     switchCompat.setChecked(false);
                 }
             }
-        } else {
-            Snackbar.make(getView(), R.string.empty_date_toast_message, Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -209,4 +215,6 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         birthDate = null;
         super.onDestroyView();
     }
+
+
 }

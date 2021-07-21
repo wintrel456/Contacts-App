@@ -1,5 +1,6 @@
 package com.gmail.l2t45s7e9.library.presentation.screens
 
+import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -15,63 +16,68 @@ import com.gmail.l2t45s7e9.library.interfaces.HasAppContainer
 import com.gmail.l2t45s7e9.library.presentation.adapter.AddressSearchAdapter
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class AddressSearchFragment(
-        private var onChooseAddress: OnChooseAddress, var id: String
-) : DialogFragment(R.layout.address_search_fragment) {
+class AddressSearchFragment : DialogFragment(R.layout.address_search_fragment) {
 
     @Inject
     lateinit var addressSearchFactory: ViewModelAddressSearchFactory
-    private lateinit var searchAddressView: SearchView
+    private var searchAddressView: SearchView? = null
     private lateinit var listView: RecyclerView
-    private lateinit var adapter: AddressSearchAdapter
     private lateinit var viewModel: AddressSerachViewModel
-
+    private lateinit var id: String
+    private val compositeDisposable = CompositeDisposable()
 
     interface OnChooseAddress {
-        fun onChoose(string: String?)
+        fun onChoose()
     }
 
-    val onItemClick = object : AddressSearchAdapter.OnItemClickListener {
+    private val onItemClick = object : AddressSearchAdapter.OnItemClickListener {
         override fun onItemClicked(string: String?, view: View?) {
             viewModel.addAddressForContact(string, id)
-            onChooseAddress.onChoose(string)
+            val contactFrag = fragmentManager?.findFragmentById(R.id.navHost) as ContactDetailsFragment
             dismiss()
+            contactFrag.onChoose()
         }
     }
 
     override fun onAttach(context: Context) {
-        val app = requireActivity().application
+        val app = context.applicationContext as Application
         check(app is HasAppContainer)
-        val addressSearchContainer = (app as HasAppContainer).appContainer()
-                .plusAddressSearchContainer()
-        addressSearchContainer.inject(this)
+        (app as HasAppContainer).apply {
+            appContainer().plusAddressSearchContainer().inject(this@AddressSearchFragment)
+        }
         super.onAttach(context)
+        id = requireArguments().getString("id").toString()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         searchAddressView = view.findViewById(R.id.addressSearchView)
         listView = view.findViewById(R.id.addressList)
-        adapter = AddressSearchAdapter(onItemClick)
+        val adapter = AddressSearchAdapter(onItemClick)
         listView.adapter = adapter
         listView.layoutManager = LinearLayoutManager(context)
         viewModel = ViewModelProvider(this, addressSearchFactory).get(AddressSerachViewModel::class.java)
         viewModel.listLiveData.observe(this, {
             adapter.submitList(it)
         })
-        Observable.create(ObservableOnSubscribe<String> { subscriber ->
-            searchAddressView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(p0: String?): Boolean {
-                    subscriber.onNext(p0!!)
+        compositeDisposable.add(Observable.create(ObservableOnSubscribe<String> { subscriber ->
+            searchAddressView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(search: String?): Boolean {
+                    search.also {
+                        subscriber.onNext(it)
+                    }
                     return false
                 }
 
-                override fun onQueryTextChange(p0: String?): Boolean {
-                    subscriber.onNext(p0!!)
+                override fun onQueryTextChange(search: String?): Boolean {
+                    search.also {
+                        subscriber.onNext(it)
+                    }
                     return false
                 }
 
@@ -84,6 +90,15 @@ class AddressSearchFragment(
                 .subscribe { text ->
                     viewModel.getStartList(text)
                 }
+        )
 
+    }
+
+    override fun onDestroyView() {
+        listView.adapter = null
+        listView.layoutManager = null
+        searchAddressView = null
+        compositeDisposable.dispose()
+        super.onDestroyView()
     }
 }

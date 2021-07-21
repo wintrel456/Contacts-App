@@ -33,4 +33,8 @@
     <string name="map_fragment_second_tag">With all contacts</string>
     <string name="empty_address">Address not set</string>
     <string name="see_on_map_label">See</string>
+    <string name="first_marker_added">First marker added</string>
+    <string name="second_marker_added">Second marker added</string>
+    <string name="route_created">Route created</string>
+    <string name="route_not_created">Route not possible</string>
 </resources>

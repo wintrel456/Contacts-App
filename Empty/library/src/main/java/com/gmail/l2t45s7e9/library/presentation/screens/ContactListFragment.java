@@ -37,13 +37,13 @@ public class ContactListFragment extends Fragment {
     private ProgressBar progressBar;
 
 
-    private ContactListAdapter.OnItemClickListener onItemClickListener = (contact, view) -> {
+    private ContactListAdapter.OnItemClickListener onItemClickListener = (contact) -> {
         String id = contact.getId();
         int color = contact.getContactColor();
         Bundle bundle = new Bundle();
         bundle.putString("id", id);
         bundle.putInt("color", color);
-        Navigation.findNavController(view).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
+        Navigation.findNavController(getView()).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
     };
 
     private Button.OnClickListener onClickListener = view -> {
@@ -77,7 +77,6 @@ public class ContactListFragment extends Fragment {
         final TextView count = view.findViewById(R.id.contactCount);
         Button mapFragmentButton = view.findViewById(R.id.mapButton);
         progressBar = view.findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
         adapter = new ContactListAdapter(onItemClickListener);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(adapter);
@@ -96,6 +95,7 @@ public class ContactListFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
             }
         });
+        contactListViewModel.loadContactList("");
         mapFragmentButton.setOnClickListener(onClickListener);
         SearchView searchView = view.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
