@@ -11,6 +11,6 @@ class ViewModelMapFactory
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return creators[modelClass]!!.get() as T
+        return creators[modelClass]?.get() as T
     }
 }

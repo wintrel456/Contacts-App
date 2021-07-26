@@ -37,4 +37,5 @@
     <string name="second_marker_added">Second marker added</string>
     <string name="route_created">Route created</string>
     <string name="route_not_created">Route not possible</string>
+    <string name="address_added">Address successfully added</string>
 </resources>

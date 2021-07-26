@@ -69,7 +69,7 @@ public class ContactDetailsFragment extends Fragment implements
     @Override
     public void onChoose() {
         contactDetailsViewModel.loadContactDetails(position, color);
-        Snackbar.make(getView(), "Address successfully added", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(getView(), R.string.address_added, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

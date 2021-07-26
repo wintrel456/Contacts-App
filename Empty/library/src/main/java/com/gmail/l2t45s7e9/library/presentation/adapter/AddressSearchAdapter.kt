@@ -14,7 +14,7 @@ import com.gmail.l2t45s7e9.library.R
 class AddressSearchAdapter(private val onItemClick: OnItemClickListener) : ListAdapter<String, AddressSearchAdapter.ItemViewHolder>(DiffCallback()) {
 
     interface OnItemClickListener {
-        fun onItemClicked(string: String?, view: View?)
+        fun onItemClicked(string: String?)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -35,7 +35,7 @@ class AddressSearchAdapter(private val onItemClick: OnItemClickListener) : ListA
             addressSearchResult.text = item
             setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
-                    onItemClick.onItemClicked(item, itemView)
+                    onItemClick.onItemClicked(item)
                 }
             }
         }

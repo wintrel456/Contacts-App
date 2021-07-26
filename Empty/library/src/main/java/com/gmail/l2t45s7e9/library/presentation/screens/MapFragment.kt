@@ -3,8 +3,8 @@ package com.gmail.l2t45s7e9.library.presentation.screens
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -31,11 +31,11 @@ class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
     @Inject
     lateinit var mapFactory: ViewModelMapFactory
     private var gmap: GoogleMap? = null
-    private var mapTag: TextView? = null
-    private var mapTag2: TextView? = null
     private var mapView: MapView? = null
     private var id: String? = null
-    private lateinit var mapViewModel: MapViewModel
+    private val mapViewModel: MapViewModel by lazy {
+        ViewModelProvider(this, mapFactory).get(MapViewModel::class.java)
+    }
     private var markers = mutableListOf<Contact>()
     private var markerState = false
     private var firstMarker: LatLng? = null
@@ -71,10 +71,7 @@ class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mapTag = view.findViewById(R.id.textView)
-        mapTag2 = view.findViewById(R.id.textView2)
         mapView = view.findViewById(R.id.mapView)
-        mapViewModel = ViewModelProvider(this, mapFactory).get(MapViewModel::class.java)
         mapViewModel.contacts.observe(viewLifecycleOwner, {
             markers.addAll(it)
         })
@@ -90,30 +87,34 @@ class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
             mapViewModel.getContactMarkers()
         }
         mapView?.onCreate(savedInstanceState)
-        loadMarkers()
         mapView?.getMapAsync(this)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         gmap = googleMap
+        loadMarkers()
     }
 
     private fun loadMarkers() {
-        gmap?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(0.0, 0.0)))
-        gmap?.uiSettings?.setAllGesturesEnabled(true)
-        markers.forEach {
-            gmap?.addMarker(MarkerOptions()
-                    .position(LatLng(it.latitude, it.longitude)))
+        gmap?.apply {
+            moveCamera(CameraUpdateFactory.newLatLng(LatLng(0.0, 0.0)))
+            uiSettings.setAllGesturesEnabled(true)
+            markers.forEach {
+                addMarker(MarkerOptions()
+                        .position(LatLng(it.latitude, it.longitude)))
+            }
+            setOnMarkerClickListener(onMarkerClick)
         }
-        gmap?.setOnMarkerClickListener(onMarkerClick)
     }
 
     private fun route(mPoints: List<LatLng>, googleMap: GoogleMap) {
         if (mPoints.isEmpty()) {
             Snackbar.make(requireView(), R.string.route_not_created, Snackbar.LENGTH_SHORT).show()
         } else {
+            val width = TypedValue()
+            resources.getValue(R.dimen.width, width, true)
             val line = PolylineOptions()
-            line.width(4f).color(R.color.Font)
+            line.width(width.float).color(R.color.Font)
             val latLngBuilder = LatLngBounds.Builder()
             mPoints.forEach {
                 line.add(it)
@@ -126,8 +127,6 @@ class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
     }
 
     override fun onDestroyView() {
-        mapTag = null
-        mapTag2 = null
         gmap = null
         mapView = null
         super.onDestroyView()

@@ -5,35 +5,19 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 
-class RouteFromGMaps {
-    @SerializedName("routes")
-    @Expose
-    private lateinit var routes: List<Route>
-
-    fun getRoutes(): List<Route> {
-        return routes
-    }
-
-    class Route {
-
-        @SerializedName("overview_polyline")
+class RouteFromGMaps(
+        @SerializedName("routes")
         @Expose
-        private var overviewPolyline: OverviewPolyline? = null
+        val routes: List<Route>
+) {
+    class Route(
+            @SerializedName("overview_polyline")
+            @Expose
+            val overviewPolyline: OverviewPolyline? = null)
 
-
-        fun getOverviewPolyline(): OverviewPolyline? {
-            return overviewPolyline
-        }
-
-    }
-
-    class OverviewPolyline {
-        @SerializedName("points")
-        @Expose
-        private lateinit var points: String
-
-        fun getPoints(): String {
-            return points
-        }
-    }
+    class OverviewPolyline(
+            @SerializedName("points")
+            @Expose
+            val points: String
+    )
 }

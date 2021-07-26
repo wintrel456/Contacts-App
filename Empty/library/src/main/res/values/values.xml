@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="width" type="dimen" format="float">1.2</item>
+    <dimen name="address_item_margin">8dp</dimen>
+</resources>
