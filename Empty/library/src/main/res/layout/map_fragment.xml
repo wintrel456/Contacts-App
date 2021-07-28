@@ -31,7 +31,7 @@
         app:layout_constraintStart_toStartOf="@+id/mapTitle"
         app:layout_constraintTop_toBottomOf="@+id/mapTitle" />
 
-    <com.google.android.gms.maps.MapView
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/mapView"
         android:layout_width="0dp"
         android:layout_height="0dp"

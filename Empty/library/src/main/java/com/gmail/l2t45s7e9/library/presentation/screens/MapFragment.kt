@@ -13,11 +13,8 @@ import com.gmail.l2t45s7e9.library.R
 import com.gmail.l2t45s7e9.library.domain.MapViewModel
 import com.gmail.l2t45s7e9.library.domain.factories.ViewModelMapFactory
 import com.gmail.l2t45s7e9.library.interfaces.HasAppContainer
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.*
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
-import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
@@ -31,7 +28,6 @@ class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
     @Inject
     lateinit var mapFactory: ViewModelMapFactory
     private var gmap: GoogleMap? = null
-    private var mapView: MapView? = null
     private var id: String? = null
     private val mapViewModel: MapViewModel by lazy {
         ViewModelProvider(this, mapFactory).get(MapViewModel::class.java)
@@ -71,7 +67,12 @@ class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mapView = view.findViewById(R.id.mapView)
+        childFragmentManager.beginTransaction().apply {
+            val map = SupportMapFragment()
+            map.getMapAsync(this@MapFragment)
+            add(R.id.mapView, map)
+            commit()
+        }
         mapViewModel.contacts.observe(viewLifecycleOwner, {
             markers.addAll(it)
         })
@@ -86,8 +87,6 @@ class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
             id = ""
             mapViewModel.getContactMarkers()
         }
-        mapView?.onCreate(savedInstanceState)
-        mapView?.getMapAsync(this)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -128,7 +127,6 @@ class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
 
     override fun onDestroyView() {
         gmap = null
-        mapView = null
         super.onDestroyView()
     }
 }

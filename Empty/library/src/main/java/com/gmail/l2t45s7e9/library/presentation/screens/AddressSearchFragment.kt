@@ -26,7 +26,9 @@ class AddressSearchFragment : DialogFragment(R.layout.address_search_fragment) {
     private val viewModel: AddressSearchViewModel by lazy {
         ViewModelProvider(this, addressSearchFactory).get(AddressSearchViewModel::class.java)
     }
-    private lateinit var id: String
+    private val id: String by lazy {
+        requireArguments().getString("id").toString()
+    }
 
     interface OnChooseAddress {
         fun onChoose()
@@ -35,9 +37,10 @@ class AddressSearchFragment : DialogFragment(R.layout.address_search_fragment) {
     private val onItemClick = object : AddressSearchAdapter.OnItemClickListener {
         override fun onItemClicked(string: String?) {
             viewModel.addAddressForContact(string, id)
-            val contactFrag = fragmentManager?.findFragmentById(R.id.navHost) as ContactDetailsFragment
-            dismiss()
-            contactFrag.onChoose()
+            (fragmentManager?.findFragmentById(R.id.navHost) as? ContactDetailsFragment)?.also {
+                dismiss()
+                it.onChoose()
+            }
         }
     }
 
@@ -48,7 +51,6 @@ class AddressSearchFragment : DialogFragment(R.layout.address_search_fragment) {
             appContainer().plusAddressSearchContainer().inject(this@AddressSearchFragment)
         }
         super.onAttach(context)
-        id = requireArguments().getString("id").toString()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

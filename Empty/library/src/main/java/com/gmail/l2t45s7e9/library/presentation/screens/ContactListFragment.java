@@ -43,7 +43,7 @@ public class ContactListFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putString("id", id);
         bundle.putInt("color", color);
-        Navigation.findNavController(getView()).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
+        Navigation.findNavController(requireView()).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
     };
 
     private Button.OnClickListener onClickListener = view -> {
