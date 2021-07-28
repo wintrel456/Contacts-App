@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gmail.l2t45s7e9.empty">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".di.App.AppDelegate"
@@ -16,7 +19,9 @@
             android:name="com.gmail.l2t45s7e9.library.presentation.reciever.ContactNotificationsReceiver"
             android:enabled="true"
             android:exported="true" />
-
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/API_KEY" />
         <activity
             android:name="com.gmail.l2t45s7e9.library.presentation.activity.MainActivity"
             android:theme="@style/splash_screen">
@@ -28,5 +33,6 @@
             </intent-filter>
         </activity>
     </application>
+
 
 </manifest>

@@ -11,24 +11,27 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import com.gmail.l2t45s7e9.library.R;
 import com.gmail.l2t45s7e9.library.domain.ContactDetailsViewModel;
 import com.gmail.l2t45s7e9.library.domain.factories.ViewModelDetailsFactory;
 import com.gmail.l2t45s7e9.library.interfaces.ContactDetailsContainer;
 import com.gmail.l2t45s7e9.library.interfaces.HasAppContainer;
+import com.google.android.material.snackbar.Snackbar;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import javax.inject.Inject;
 
-public class ContactDetailsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
+public class ContactDetailsFragment extends Fragment implements
+        CompoundButton.OnCheckedChangeListener, AddressSearchFragment.OnChooseAddress {
 
     @Inject
     ViewModelDetailsFactory viewModelDetailsFactory;
@@ -47,6 +50,27 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
     private TextView birthDate;
     private GregorianCalendar date;
     private String formatDate;
+    private String addressString;
+    private boolean addressState;
+
+    private TextView.OnClickListener onClickListener = view -> {
+        Bundle bundle = new Bundle();
+        bundle.putString("id", position);
+        if (!addressState) {
+            FragmentManager fragmentManager = getFragmentManager();
+            AddressSearchFragment addressSearchFragment = new AddressSearchFragment();
+            addressSearchFragment.setArguments(bundle);
+            addressSearchFragment.show(fragmentManager, "SearchAddress");
+        } else {
+            Navigation.findNavController(view).navigate(R.id.action_contactDetailsFragment_to_mapFragment, bundle);
+        }
+    };
+
+    @Override
+    public void onChoose() {
+        contactDetailsViewModel.loadContactDetails(position, color);
+        Snackbar.make(getView(), R.string.address_added, Snackbar.LENGTH_SHORT).show();
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -76,7 +100,7 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         contactDetailsViewModel = new ViewModelProvider(
                 this, viewModelDetailsFactory
         ).get(ContactDetailsViewModel.class);
-        contactDetailsViewModel.loadContactDetails(position, color).observe(
+        contactDetailsViewModel.contactDetailsLiveData.observe(
                 getViewLifecycleOwner(), result -> {
                     position = result.getId();
                     avatar.setColorFilter(result.getContactColor());
@@ -85,7 +109,17 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
                     secondNumber.setText(result.getSecondNumber());
                     firstEmail.setText(result.getFirstEmail());
                     secondEmail.setText(result.getSecondEmail());
-                    address.setText(result.getContactAddress());
+                    addressString = result.getContactAddress();
+                    if (addressString.length() != 0) {
+                        addressState = true;
+                        address.setText(addressString);
+                        add.setText(getString(R.string.see_on_map_label));
+                    } else {
+                        addressState = false;
+                        address.setText(getString(R.string.empty_address));
+                        add.setText(getString(R.string.button_add));
+                    }
+
                     date = result.getBirthDate();
                     if (date != null) {
                         birthDate.setText(
@@ -104,12 +138,13 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
                     setSwitchCompat();
                 }
         );
+        contactDetailsViewModel.loadContactDetails(position, color);
         GradientDrawable drawable = (GradientDrawable) ResourcesCompat.getDrawable(
                 getResources(),
                 R.drawable.button,
                 null
         );
-
+        add.setOnClickListener(onClickListener);
         drawable.setStroke(2, color);
         name.setSelected(true);
         add.setBackground(drawable);
@@ -125,8 +160,6 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
                     switchCompat.setChecked(false);
                 }
             }
-        } else {
-            Toast.makeText(getContext(), R.string.empty_date_toast_message, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -151,15 +184,19 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
 
             if (!contactDetailsViewModel.getStatus()) {
                 contactDetailsViewModel.setNotification();
-                Toast.makeText(getContext(), R.string.on_notification_toast_message, Toast.LENGTH_SHORT).show();
+                Snackbar.make(getView(), R.string.on_notification_toast_message, Snackbar.LENGTH_SHORT).show();
             }
         } else {
-            switchCompat.setThumbTintList(ColorStateList.valueOf(getResources().getColor(R.color.side_color)));
-            switchCompat.setTrackTintList(ColorStateList.valueOf(getResources().getColor(R.color.second_side_color)));
+            switchCompat.setThumbTintList(
+                    ColorStateList.valueOf(getResources().getColor(R.color.side_color))
+            );
+            switchCompat.setTrackTintList(
+                    ColorStateList.valueOf(getResources().getColor(R.color.second_side_color))
+            );
 
             if (contactDetailsViewModel.getStatus()) {
                 contactDetailsViewModel.cancelNotification();
-                Toast.makeText(getContext(), R.string.off_notification_toast_message, Toast.LENGTH_SHORT).show();
+                Snackbar.make(getView(), R.string.off_notification_toast_message, Snackbar.LENGTH_SHORT).show();
             }
         }
     }
@@ -178,4 +215,6 @@ public class ContactDetailsFragment extends Fragment implements CompoundButton.O
         birthDate = null;
         super.onDestroyView();
     }
+
+
 }

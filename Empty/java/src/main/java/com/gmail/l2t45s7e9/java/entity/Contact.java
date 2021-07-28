@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 
 
 public class Contact {
+
     @NonNull
     private final String id;
     @NonNull
@@ -20,9 +21,29 @@ public class Contact {
     private final String secondEmail;
     @Nullable
     private final String contactAddress;
+
     private final int contactColor;
     @Nullable
     private final GregorianCalendar birthDate;
+
+    private final double latitude;
+
+    private final double longitude;
+
+
+    public Contact(@NonNull String id, @Nullable String contactAddress, double latitude, double longitude) {
+        this.id = id;
+        this.contactAddress = contactAddress;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.secondNumber = null;
+        this.firstEmail = null;
+        this.secondEmail = null;
+        this.contactColor = 0;
+        this.birthDate = null;
+        this.name = null;
+        this.firstNumber = null;
+    }
 
     public Contact(
             @NonNull String id,
@@ -44,6 +65,8 @@ public class Contact {
         this.contactAddress = contactAddress;
         this.contactColor = contactColor;
         this.birthDate = birthDate;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
     }
 
     public Contact(
@@ -61,6 +84,8 @@ public class Contact {
         this.secondEmail = null;
         this.contactAddress = null;
         this.birthDate = null;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
     }
 
     @NonNull
@@ -106,5 +131,14 @@ public class Contact {
     public GregorianCalendar getBirthDate() {
         return birthDate;
     }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
 
 }

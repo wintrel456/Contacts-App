@@ -17,6 +17,7 @@ public class ContactDetailsViewModel extends ViewModel {
     private NotificationInteractor notificationInteractor;
     private MutableLiveData<Contact> contactDetailsMutableLiveData = new MutableLiveData<>();
     private CompositeDisposable disposable = new CompositeDisposable();
+    public LiveData<Contact> contactDetailsLiveData = contactDetailsMutableLiveData;
 
     @Inject
     public ContactDetailsViewModel(
@@ -29,14 +30,13 @@ public class ContactDetailsViewModel extends ViewModel {
         this.schedulersProvider = schedulersProvider;
     }
 
-    public LiveData<Contact> loadContactDetails(String id, int color) {
+    public void loadContactDetails(String id, int color) {
         disposable.add(
                 contactDetailsInteractor.getContactDetailsRepo(id, color)
                         .subscribeOn(schedulersProvider.io())
                         .observeOn(schedulersProvider.ui())
                         .subscribe(contactDetailsInfo -> contactDetailsMutableLiveData.setValue(contactDetailsInfo))
         );
-        return contactDetailsMutableLiveData;
     }
 
     public void setNotification() {

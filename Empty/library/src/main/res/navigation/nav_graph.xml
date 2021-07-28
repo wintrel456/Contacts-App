@@ -17,11 +17,20 @@
             appDelegate:popEnterAnim="@android:anim/slide_in_left"
             appDelegate:popExitAnim="@android:anim/slide_out_right"
             appDelegate:popUpTo="@id/contactListFragment" />
+        <action
+            android:id="@+id/action_contactListFragment_to_mapFragment"
+            appDelegate:destination="@id/mapFragment"
+            appDelegate:popUpTo="@id/contactListFragment" />
     </fragment>
     <fragment
         android:id="@+id/contactDetailsFragment"
         android:name="com.gmail.l2t45s7e9.library.presentation.screens.ContactDetailsFragment"
-        android:label="ContactDetailsFragment" />
+        android:label="ContactDetailsFragment">
+        <action
+            android:id="@+id/action_contactDetailsFragment_to_mapFragment"
+            appDelegate:destination="@id/mapFragment"
+            appDelegate:popUpTo="@id/contactDetailsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/requestPermissionFragment"
@@ -35,4 +44,8 @@
             appDelegate:exitAnim="@android:anim/slide_out_right"
             appDelegate:popUpTo="@id/nav_graph" />
     </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.gmail.l2t45s7e9.library.presentation.screens.MapFragment"
+        android:label="MapFragment" />
 </navigation>
