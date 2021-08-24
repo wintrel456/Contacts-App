@@ -3,9 +3,7 @@ package com.gmail.l2t45s7e9.library.presentation.screens
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -20,28 +18,34 @@ import com.gmail.l2t45s7e9.library.interfaces.HasAppContainer
 import com.gmail.l2t45s7e9.library.presentation.adapter.ContactItemDecorator
 import com.gmail.l2t45s7e9.library.presentation.adapter.ContactListAdapter
 import javax.inject.Inject
-
+private const val ID_CONST:String = "id"
+private const val COLOR_CONST:String = "color"
 class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
 
     @Inject
     lateinit var viewModelListFactory: ViewModelListFactory
     private var binding: ContactListFragmentBinding? = null
     private val viewBinding get() = binding
-    private val contactListViewModel: ContactListViewModel by lazy {
+    private val contactListViewModel: ContactListViewModel by lazy(LazyThreadSafetyMode.NONE) {
         ViewModelProvider(
             this,
             viewModelListFactory
         ).get(ContactListViewModel::class.java)
     }
-    private val adapter: ContactListAdapter by lazy{
+    private val adapter: ContactListAdapter by lazy(LazyThreadSafetyMode.NONE) {
         ContactListAdapter(onItemClickListener)
+    }
+    private val contactItemDecorator: ContactItemDecorator by lazy(LazyThreadSafetyMode.NONE) {
+        ContactItemDecorator(
+            (8 * resources.displayMetrics.density).toInt()
+        )
     }
     private val onItemClickListener = ContactListAdapter.OnItemClickListener { contact: Contact ->
         val id = contact.id
         val color = contact.contactColor
         val bundle = Bundle()
-        bundle.putString("id", id)
-        bundle.putInt("color", color)
+        bundle.putString(ID_CONST, id)
+        bundle.putInt(COLOR_CONST, color)
         Navigation.findNavController(requireView())
             .navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle)
     }
@@ -60,42 +64,36 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
         super.onAttach(context)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = ContactListFragmentBinding.inflate(inflater, container, false)
-        return binding!!.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val contactItemDecorator = ContactItemDecorator(
-            (8 * resources.displayMetrics.density).toInt()
-        )
-        viewBinding?.recyclerView?.adapter = adapter
-        viewBinding?.recyclerView?.layoutManager = LinearLayoutManager(context)
-        viewBinding?.recyclerView?.addItemDecoration(contactItemDecorator)
+        binding = ContactListFragmentBinding.bind(view)
+        viewBinding?.apply {
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            recyclerView.addItemDecoration(contactItemDecorator)
+        }
 
         contactListViewModel.listLiveData.observe(viewLifecycleOwner, { result: List<Contact?> ->
             adapter.submitList(result)
-            viewBinding?.contactCount?.text = result.size.toString()
-            viewBinding?.progressBar?.visibility = View.GONE
+            viewBinding?.apply {
+                progressBar.visibility = View.GONE
+                contactCount.text = result.size.toString()
+            }
         })
         contactListViewModel.loadContactList("")
-        viewBinding?.mapButton?.setOnClickListener(onClickListener)
-        val searchView = view.findViewById<SearchView>(R.id.searchView)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(s: String): Boolean {
-                return false
-            }
+        viewBinding?.apply {
+            mapButton.setOnClickListener(onClickListener)
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(s: String): Boolean {
+                    return false
+                }
 
-            override fun onQueryTextChange(filterPattern: String): Boolean {
-                contactListViewModel.loadContactList(filterPattern)
-                return false
-            }
-        })
+                override fun onQueryTextChange(filterPattern: String): Boolean {
+                    contactListViewModel.loadContactList(filterPattern)
+                    return false
+                }
+            })
+        }
     }
 
     override fun onDestroyView() {

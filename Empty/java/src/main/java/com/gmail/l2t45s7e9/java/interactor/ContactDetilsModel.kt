@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 class ContactDetilsModel(private val contactDetailsRepository: ContactDetailsRepository) :
     ContactDetailsInteractor {
-    override suspend fun getContactDetailsRepo(id: String?, color: Int): Flow<Contact> {
+    override suspend fun getContactDetailsRepo(id: String?, color: Int): Flow<Contact?> {
         return contactDetailsRepository.loadDetailsInformation(id, color)
     }
 }

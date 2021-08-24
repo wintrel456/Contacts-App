@@ -21,7 +21,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
-
+private const val ID_CONST:String = "id"
 
 class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
 
@@ -29,7 +29,7 @@ class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
     lateinit var mapFactory: ViewModelMapFactory
     private var gmap: GoogleMap? = null
     private var id: String? = null
-    private val mapViewModel: MapViewModel by lazy {
+    private val mapViewModel: MapViewModel by lazy(LazyThreadSafetyMode.NONE) {
         ViewModelProvider(this, mapFactory).get(MapViewModel::class.java)
     }
     private var markers = mutableListOf<Contact>()
@@ -62,7 +62,7 @@ class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
             appContainer().plusMapContainer().inject(this@MapFragment)
         }
         super.onAttach(context)
-        id = arguments?.getString("id")
+        id = arguments?.getString(ID_CONST)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
