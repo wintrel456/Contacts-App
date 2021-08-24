@@ -1,62 +1,58 @@
-package com.gmail.l2t45s7e9.library.repository;
+package com.gmail.l2t45s7e9.library.repository
 
-import android.content.ContentResolver;
-import android.content.Context;
-import android.database.Cursor;
-import android.provider.ContactsContract;
-import com.gmail.l2t45s7e9.java.entity.Contact;
-import com.gmail.l2t45s7e9.java.interactor.ContactListRepository;
-import com.gmail.l2t45s7e9.library.R;
-import io.reactivex.rxjava3.core.Single;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import com.gmail.l2t45s7e9.java.interactor.ContactListRepository
+import android.content.ContentResolver
+import android.content.Context
+import android.database.Cursor
+import com.gmail.l2t45s7e9.java.entity.Contact
+import com.gmail.l2t45s7e9.library.repository.ContactsRepositoryDelegate
+import com.gmail.l2t45s7e9.library.R
+import android.provider.ContactsContract
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
+import java.util.*
 
-public class ContactListRepositoryImpl implements ContactListRepository {
-
-    private final ContentResolver contentResolver;
-    private final Context context;
-
-    public ContactListRepositoryImpl(Context context) {
-        contentResolver = context.getContentResolver();
-        this.context = context;
-    }
-
-    @Override
-    public Single<List<Contact>> loadShortInformation(String filterPattern) {
-        ContactsRepositoryDelegate contactsRepositoryDelegate = new ContactsRepositoryDelegate(context);
-        List<Contact> contacts = new ArrayList<>();
-        Set<String> set = new HashSet<>();
-        Random random = new Random();
-        int[] colors = context.getResources().getIntArray(R.array.colors_list);
-        Cursor cursor = null;
+class ContactListRepositoryImpl(
+    private val context: Context
+    ) : ContactListRepository {
+    private val contentResolver: ContentResolver = context.contentResolver
+    override suspend fun loadShortInformation(filterPattern: String) = withContext(Dispatchers.IO) {
+        val contactsRepositoryDelegate = ContactsRepositoryDelegate(context)
+        val contacts: MutableList<Contact> = ArrayList()
+        val set: MutableSet<String> = HashSet()
+        val random = Random()
+        val colors = context.resources.getIntArray(R.array.colors_list)
+        var cursor: Cursor? = null
         try {
-            cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
-                    null,
-                    ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?",
-                    new String[]{"%" + filterPattern + "%"},
-                    ContactsContract.Contacts.DISPLAY_NAME);
-            while (cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                String name = contactsRepositoryDelegate.getName(cursor, id);
-                String firstNumber = contactsRepositoryDelegate.getNumbers(cursor, id)[0];
-                Contact contact = new Contact(id,
-                        name,
-                        firstNumber,
-                        colors[random.nextInt(colors.length)]);
-
+            cursor = contentResolver.query(
+                ContactsContract.Contacts.CONTENT_URI,
+                null,
+                ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?", arrayOf("%$filterPattern%"),
+                ContactsContract.Contacts.DISPLAY_NAME
+            )
+            while (cursor!!.moveToNext()) {
+                val id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
+                val name = contactsRepositoryDelegate.getName(cursor, id)
+                val firstNumber = contactsRepositoryDelegate.getNumbers(cursor, id)[0]
+                val contact = Contact(
+                    id,
+                    name,
+                    firstNumber,
+                    colors[random.nextInt(colors.size)]
+                )
                 if (!set.contains(firstNumber)) {
-                    contacts.add(contact);
-                    set.add(firstNumber);
+                    contacts.add(contact)
+                    set.add(firstNumber)
                 }
             }
         } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
+            cursor?.close()
         }
-        return Single.fromCallable(() -> contacts);
+        return@withContext flow {
+            emit(contacts)
+        }
     }
+
 }

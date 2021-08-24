@@ -1,19 +1,13 @@
-package com.gmail.l2t45s7e9.java.interactor;
+package com.gmail.l2t45s7e9.java.interactor
 
-import com.gmail.l2t45s7e9.java.entity.Contact;
-import io.reactivex.rxjava3.core.Single;
-import java.util.List;
-public class ContactListModel implements ContactListInteractor {
+import com.gmail.l2t45s7e9.java.interactor.ContactListRepository
+import com.gmail.l2t45s7e9.java.interactor.ContactListInteractor
+import com.gmail.l2t45s7e9.java.entity.Contact
+import kotlinx.coroutines.flow.Flow
 
-    private ContactListRepository contactListRepository;
-
-    public ContactListModel(ContactListRepository contactListRepository) {
-        this.contactListRepository = contactListRepository;
+class ContactListModel(private val contactListRepository: ContactListRepository) :
+    ContactListInteractor {
+    override suspend fun getContactListRepo(filterPattern: String): Flow<List<Contact>>{
+        return contactListRepository.loadShortInformation(filterPattern)
     }
-
-    @Override
-    public Single<List<Contact>> getContactListRepo(String filterPattern) {
-        return contactListRepository.loadShortInformation(filterPattern);
-    }
-
 }

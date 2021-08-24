@@ -5,6 +5,8 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import io.reactivex.rxjava3.core.Single;
+import kotlinx.coroutines.flow.Flow;
+
 import java.util.List;
 @Dao
 public interface ContactDao {
@@ -15,7 +17,7 @@ public interface ContactDao {
     Single<List<ContactData>> loadContactForMap(String arg0);
 
     @Query("SELECT contactAddress FROM contactdata WHERE id LIKE :arg0")
-    Single<String> loadContactById(String arg0);
+    String loadContactById(String arg0);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(ContactData contact);

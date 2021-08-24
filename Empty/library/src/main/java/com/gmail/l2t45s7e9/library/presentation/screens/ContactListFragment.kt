@@ -1,124 +1,105 @@
-package com.gmail.l2t45s7e9.library.presentation.screens;
-
-import android.app.Application;
-import android.content.Context;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.SearchView;
-import android.widget.TextView;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import com.gmail.l2t45s7e9.library.R;
-import com.gmail.l2t45s7e9.library.domain.ContactListViewModel;
-import com.gmail.l2t45s7e9.library.domain.factories.ViewModelListFactory;
-import com.gmail.l2t45s7e9.library.interfaces.ContactListContainer;
-import com.gmail.l2t45s7e9.library.interfaces.HasAppContainer;
-import com.gmail.l2t45s7e9.library.presentation.adapter.ContactItemDecorator;
-import com.gmail.l2t45s7e9.library.presentation.adapter.ContactListAdapter;
-import javax.inject.Inject;
+package com.gmail.l2t45s7e9.library.presentation.screens
 
 
-public class ContactListFragment extends Fragment {
+import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.SearchView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.gmail.l2t45s7e9.java.entity.Contact
+import com.gmail.l2t45s7e9.library.R
+import com.gmail.l2t45s7e9.library.databinding.ContactListFragmentBinding
+import com.gmail.l2t45s7e9.library.domain.ContactListViewModel
+import com.gmail.l2t45s7e9.library.domain.factories.ViewModelListFactory
+import com.gmail.l2t45s7e9.library.interfaces.HasAppContainer
+import com.gmail.l2t45s7e9.library.presentation.adapter.ContactItemDecorator
+import com.gmail.l2t45s7e9.library.presentation.adapter.ContactListAdapter
+import javax.inject.Inject
+
+class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
 
     @Inject
-    ViewModelListFactory viewModelListFactory;
-    private RecyclerView recyclerView;
-    private ContactListAdapter adapter;
-    private ContactListViewModel contactListViewModel;
-    private ProgressBar progressBar;
-
-
-    private ContactListAdapter.OnItemClickListener onItemClickListener = (contact) -> {
-        String id = contact.getId();
-        int color = contact.getContactColor();
-        Bundle bundle = new Bundle();
-        bundle.putString("id", id);
-        bundle.putInt("color", color);
-        Navigation.findNavController(requireView()).navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle);
-    };
-
-    private Button.OnClickListener onClickListener = view -> {
-        Navigation.findNavController(view).navigate(R.id.action_contactListFragment_to_mapFragment);
-    };
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        Application app = requireActivity().getApplication();
-        if (!(app instanceof HasAppContainer)) {
-            throw new IllegalStateException();
-        }
-        ContactListContainer contactListContainer = ((HasAppContainer) app).appContainer()
-                .plusContactListContainer();
-        contactListContainer.inject(this);
-        super.onAttach(context);
+    lateinit var viewModelListFactory: ViewModelListFactory
+    private var binding: ContactListFragmentBinding? = null
+    private val viewBinding get() = binding
+    private val contactListViewModel: ContactListViewModel by lazy {
+        ViewModelProvider(
+            this,
+            viewModelListFactory
+        ).get(ContactListViewModel::class.java)
+    }
+    private val adapter: ContactListAdapter by lazy{
+        ContactListAdapter(onItemClickListener)
+    }
+    private val onItemClickListener = ContactListAdapter.OnItemClickListener { contact: Contact ->
+        val id = contact.id
+        val color = contact.contactColor
+        val bundle = Bundle()
+        bundle.putString("id", id)
+        bundle.putInt("color", color)
+        Navigation.findNavController(requireView())
+            .navigate(R.id.action_contactListFragment_to_contactDetailsFragment, bundle)
+    }
+    private val onClickListener = View.OnClickListener { view: View? ->
+        Navigation.findNavController(
+            requireView()
+        ).navigate(R.id.action_contactListFragment_to_mapFragment)
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.contact_list_fragment, container, false);
+    override fun onAttach(context: Context) {
+        val app = requireActivity().application
+        check(app is HasAppContainer)
+        val contactListContainer = (app as HasAppContainer).appContainer()
+            .plusContactListContainer()
+        contactListContainer.inject(this)
+        super.onAttach(context)
     }
 
-    @Override
-    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ContactItemDecorator contactItemDecorator = new ContactItemDecorator(
-                (int) (8 * getResources().getDisplayMetrics().density)
-        );
-        final TextView count = view.findViewById(R.id.contactCount);
-        Button mapFragmentButton = view.findViewById(R.id.mapButton);
-        progressBar = view.findViewById(R.id.progressBar);
-        adapter = new ContactListAdapter(onItemClickListener);
-        recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(contactItemDecorator);
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = ContactListFragmentBinding.inflate(inflater, container, false)
+        return binding!!.root
+    }
 
-        contactListViewModel = new ViewModelProvider(
-                this,
-                viewModelListFactory
-        ).get(ContactListViewModel.class);
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val contactItemDecorator = ContactItemDecorator(
+            (8 * resources.displayMetrics.density).toInt()
+        )
+        viewBinding?.recyclerView?.adapter = adapter
+        viewBinding?.recyclerView?.layoutManager = LinearLayoutManager(context)
+        viewBinding?.recyclerView?.addItemDecoration(contactItemDecorator)
 
-        contactListViewModel.listLiveData.observe(getViewLifecycleOwner(), result -> {
-            if (adapter != null) {
-                adapter.submitList(result);
-                count.setText(String.valueOf(result.size()));
-                progressBar.setVisibility(View.GONE);
-            }
-        });
-        contactListViewModel.loadContactList("");
-        mapFragmentButton.setOnClickListener(onClickListener);
-        SearchView searchView = view.findViewById(R.id.searchView);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
+        contactListViewModel.listLiveData.observe(viewLifecycleOwner, { result: List<Contact?> ->
+            adapter.submitList(result)
+            viewBinding?.contactCount?.text = result.size.toString()
+            viewBinding?.progressBar?.visibility = View.GONE
+        })
+        contactListViewModel.loadContactList("")
+        viewBinding?.mapButton?.setOnClickListener(onClickListener)
+        val searchView = view.findViewById<SearchView>(R.id.searchView)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(s: String): Boolean {
+                return false
             }
 
-            @Override
-            public boolean onQueryTextChange(String filterPattern) {
-                progressBar.setVisibility(View.VISIBLE);
-                contactListViewModel.loadContactList(filterPattern);
-                return false;
+            override fun onQueryTextChange(filterPattern: String): Boolean {
+                contactListViewModel.loadContactList(filterPattern)
+                return false
             }
-        });
+        })
     }
 
-    @Override
-    public void onDestroyView() {
-        recyclerView.setAdapter(null);
-        recyclerView.setLayoutManager(null);
-        progressBar = null;
-        super.onDestroyView();
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
     }
-
 }
