@@ -20,6 +20,7 @@ public class AddressSearchViewModel extends ViewModel {
     private AddressSearchInteractor addressSearchInteractor;
     private MutableLiveData<List<String>> routeMutableLiveData = new MutableLiveData<>();
     public LiveData<List<String>> listLiveData = routeMutableLiveData;
+
     private SchedulersProvider schedulersProvider;
 
     @Inject

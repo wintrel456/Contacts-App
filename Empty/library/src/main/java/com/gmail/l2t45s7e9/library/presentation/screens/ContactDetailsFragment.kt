@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.gmail.l2t45s7e9.library.databinding.ContactDetailsFragmentBinding
+import com.gmail.l2t45s7e9.library.viewbinding.viewBinding
 import java.util.*
 private const val ID_CONST:String = "id"
 private const val COLOR_CONST:String = "color"
@@ -51,8 +52,7 @@ class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
     }
     private var addressString: String? = null
     private var addressState = false
-    private var binding: ContactDetailsFragmentBinding? = null
-    private val viewBinding get() = binding
+    private val viewBinding: ContactDetailsFragmentBinding by viewBinding()
 
     private val onClickListener = View.OnClickListener { view: View ->
         val bundle = Bundle()
@@ -84,10 +84,9 @@ class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = ContactDetailsFragmentBinding.bind(view)
         contactDetailsViewModel.contactDetailsLiveData.observe(
             viewLifecycleOwner, { result: Contact ->
-                viewBinding?.apply {
+                viewBinding.apply {
                     avatar.setColorFilter(result.contactColor)
                     userName.text = result.name
                     userNumber.text = result.firstNumber
@@ -112,12 +111,12 @@ class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
                         true -> {
                             addressState = false
                             address.text = getString(R.string.empty_address)
-                            viewBinding?.addButton?.text = getString(R.string.button_add)
+                            viewBinding.addButton.text = getString(R.string.button_add)
                         }
                         false ->  {
                             addressState = true
                             address.text = addressString
-                            viewBinding?.addButton?.text = getString(R.string.see_on_map_label)
+                            viewBinding.addButton.text = getString(R.string.see_on_map_label)
                         }
 
                     }
@@ -133,7 +132,7 @@ class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
     }
 
     private fun setSwitchCompat() {
-        viewBinding?.apply{
+        viewBinding.apply{
             notificationSwitch.setOnCheckedChangeListener(this@ContactDetailsFragment)
             notificationSwitch.isChecked = contactDetailsViewModel.status
         }
@@ -141,7 +140,7 @@ class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
 
     override fun onCheckedChanged(compoundButton: CompoundButton, isChecked: Boolean) {
         if (isChecked) {
-            viewBinding?.apply {
+            viewBinding.apply {
                 notificationSwitch.thumbTintList = ColorStateList.valueOf(color)
                 notificationSwitch.trackTintList = ColorStateList.valueOf(color).withAlpha(100)
             }
@@ -154,7 +153,7 @@ class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
                 ).show()
             }
         } else {
-            viewBinding?.apply {
+            viewBinding.apply {
                 notificationSwitch.thumbTintList = ColorStateList.valueOf(resources.getColor(R.color.side_color))
                 notificationSwitch.trackTintList = ColorStateList.valueOf(resources.getColor(R.color.second_side_color))
             }
@@ -169,8 +168,4 @@ class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
         }
     }
 
-    override fun onDestroyView() {
-        binding = null
-        super.onDestroyView()
-    }
 }
