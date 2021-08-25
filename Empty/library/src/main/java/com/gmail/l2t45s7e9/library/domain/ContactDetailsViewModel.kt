@@ -17,18 +17,16 @@ import kotlinx.coroutines.runBlocking
 
 class ContactDetailsViewModel @Inject constructor(
     private val contactDetailsInteractor: ContactDetailsInteractor,
-    private val notificationInteractor: NotificationInteractor,
-    private val schedulersProvider: SchedulersProvider
+    private val notificationInteractor: NotificationInteractor
 ) : ViewModel() {
+
     private val contactDetailsMutableLiveData = MutableLiveData<Contact>()
-    private val disposable = CompositeDisposable()
     val contactDetailsLiveData: LiveData<Contact> get() = contactDetailsMutableLiveData
 
     fun loadContactDetails(id: String?, color: Int) = viewModelScope.launch {
-        contactDetailsInteractor.getContactDetailsRepo(id, color).map {
-            contactDetailsMutableLiveData.value = it
-
-        }.single()
+        contactDetailsInteractor.getContactDetailsRepo(id, color)
+            .map(contactDetailsMutableLiveData::setValue)
+            .collect()
     }
 
     fun setNotification() {
@@ -42,8 +40,4 @@ class ContactDetailsViewModel @Inject constructor(
     val status: Boolean
         get() = notificationInteractor.status(contactDetailsMutableLiveData.value)
 
-    override fun onCleared() {
-        disposable.dispose()
-        super.onCleared()
-    }
 }

@@ -10,6 +10,7 @@ import com.gmail.l2t45s7e9.java.interactor.CurrentDate;
 import com.gmail.l2t45s7e9.java.interactor.NotificationInteractor;
 import com.gmail.l2t45s7e9.java.interactor.NotificationRepository;
 import com.gmail.l2t45s7e9.library.dataBase.ContactAddressDataBase;
+import com.gmail.l2t45s7e9.library.interfaces.DispatchersProvider;
 import com.gmail.l2t45s7e9.library.repository.ContactDetailsRepositoryImpl;
 import com.gmail.l2t45s7e9.library.repository.NotificationRepositoryImpl;
 import dagger.Module;
@@ -21,9 +22,10 @@ public class ContactDetailsRepositoryModule {
     @ContactDetailsFragmentScope
     ContactDetailsRepository provideContactDetailsRepository(
             Context context,
-            ContactAddressDataBase contactAddressDataBase
+            ContactAddressDataBase contactAddressDataBase,
+            DispatchersProvider dispatchersProvider
     ) {
-        return new ContactDetailsRepositoryImpl(context, contactAddressDataBase);
+        return new ContactDetailsRepositoryImpl(context, contactAddressDataBase, dispatchersProvider);
     }
 
     @Provides

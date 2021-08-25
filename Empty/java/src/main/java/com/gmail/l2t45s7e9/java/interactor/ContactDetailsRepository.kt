@@ -4,5 +4,5 @@ import com.gmail.l2t45s7e9.java.entity.Contact
 import kotlinx.coroutines.flow.Flow
 
 interface ContactDetailsRepository {
-    suspend fun loadDetailsInformation(id: String?, color: Int): Flow<Contact>
+    suspend fun loadDetailsInformation(id: String?, color: Int): Flow<Contact?>
 }

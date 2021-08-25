@@ -15,10 +15,18 @@ import com.gmail.l2t45s7e9.library.domain.factories.ViewModelAddressSearchFactor
 import com.gmail.l2t45s7e9.library.interfaces.HasAppContainer
 import com.gmail.l2t45s7e9.library.presentation.adapter.AddressSearchAdapter
 import javax.inject.Inject
-
+private const val ID_CONST:String = "id"
 
 class AddressSearchFragment : DialogFragment(R.layout.address_search_fragment) {
-
+    companion object {
+        fun getInstance(position : String):AddressSearchFragment{
+            val bundle = Bundle()
+            bundle.putString(ID_CONST, position)
+            val address = AddressSearchFragment()
+            address.arguments = bundle
+            return address
+        }
+    }
     @Inject
     lateinit var addressSearchFactory: ViewModelAddressSearchFactory
     private var searchAddressView: SearchView? = null
@@ -27,7 +35,7 @@ class AddressSearchFragment : DialogFragment(R.layout.address_search_fragment) {
         ViewModelProvider(this, addressSearchFactory).get(AddressSearchViewModel::class.java)
     }
     private val id: String by lazy {
-        requireArguments().getString("id").toString()
+        requireArguments().getString(ID_CONST).toString()
     }
 
     interface OnChooseAddress {
