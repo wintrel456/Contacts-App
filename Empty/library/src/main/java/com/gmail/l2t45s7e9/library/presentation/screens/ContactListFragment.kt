@@ -17,6 +17,8 @@ import com.gmail.l2t45s7e9.library.domain.factories.ViewModelListFactory
 import com.gmail.l2t45s7e9.library.interfaces.HasAppContainer
 import com.gmail.l2t45s7e9.library.presentation.adapter.ContactItemDecorator
 import com.gmail.l2t45s7e9.library.presentation.adapter.ContactListAdapter
+
+import com.gmail.l2t45s7e9.library.viewbinding.viewBinding
 import javax.inject.Inject
 private const val ID_CONST:String = "id"
 private const val COLOR_CONST:String = "color"
@@ -24,8 +26,7 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
 
     @Inject
     lateinit var viewModelListFactory: ViewModelListFactory
-    private var binding: ContactListFragmentBinding? = null
-    private val viewBinding get() = binding
+    private val viewBinding: ContactListFragmentBinding by viewBinding()
     private val contactListViewModel: ContactListViewModel by lazy(LazyThreadSafetyMode.NONE) {
         ViewModelProvider(
             this,
@@ -66,8 +67,7 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = ContactListFragmentBinding.bind(view)
-        viewBinding?.apply {
+        viewBinding.apply {
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.addItemDecoration(contactItemDecorator)
@@ -75,13 +75,13 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
 
         contactListViewModel.listLiveData.observe(viewLifecycleOwner, { result: List<Contact?> ->
             adapter.submitList(result)
-            viewBinding?.apply {
+            viewBinding.apply {
                 progressBar.visibility = View.GONE
                 contactCount.text = result.size.toString()
             }
         })
         contactListViewModel.loadContactList("")
-        viewBinding?.apply {
+        viewBinding.apply {
             mapButton.setOnClickListener(onClickListener)
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(s: String): Boolean {
@@ -96,8 +96,5 @@ class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
         }
     }
 
-    override fun onDestroyView() {
-        binding = null
-        super.onDestroyView()
-    }
 }
+

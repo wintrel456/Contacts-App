@@ -61,6 +61,7 @@ class MapRepositoryImpl(
                     }
                     RouteFromGMapsData(list)
                 }
+
     }
 
     override fun getRoute(routeFromGMapsData: RouteFromGMapsData): List<LatLngData> {

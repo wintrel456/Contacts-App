@@ -3,6 +3,7 @@ package com.gmail.l2t45s7e9.library;
 import androidx.annotation.NonNull;
 import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.arch.core.executor.TaskExecutor;
+
 import com.gmail.l2t45s7e9.java.entity.BirthDateNotificationModel;
 import com.gmail.l2t45s7e9.java.entity.Contact;
 import com.gmail.l2t45s7e9.java.interactor.ContactDetailsInteractor;
@@ -12,17 +13,21 @@ import com.gmail.l2t45s7e9.java.interactor.CurrentDate;
 import com.gmail.l2t45s7e9.java.interactor.NotificationInteractor;
 import com.gmail.l2t45s7e9.java.interactor.NotificationRepository;
 import com.gmail.l2t45s7e9.library.domain.ContactDetailsViewModel;
+import com.gmail.l2t45s7e9.library.interfaces.DispatchersProvider;
 import com.gmail.l2t45s7e9.library.interfaces.SchedulersProvider;
-import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -39,6 +44,8 @@ public class IntegrativeTest {
     ContactDetailsRepository contactDetailsRepository;
     @Mock
     SchedulersProvider schedulersProvider;
+    @Mock
+    DispatchersProvider dispatchersProvider;
 
     @Before
     public void installDelegate() {
@@ -82,11 +89,11 @@ public class IntegrativeTest {
                 0
         );
         Single<Contact> single = Single.fromCallable(() -> contact);
-        Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor())).thenReturn(single);
+        //Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor()).thenReturn(single);
         Mockito.when(dateModel.getCurrentDate()).thenReturn(currentDate);
         ContactDetailsInteractor contactDetailsInteractor = new ContactDetilsModel(contactDetailsRepository);
         NotificationInteractor notificationInteractor = new BirthDateNotificationModel(dateModel, notificationRepository);
-        ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor, schedulersProvider);
+        ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor);
         contactDetailsViewModel.loadContactDetails(contact.getId(), contact.getContactColor());
         contactDetailsViewModel.setNotification();
         Mockito.verify(notificationRepository).setManager(contact, addNotificationDate);
@@ -112,11 +119,11 @@ public class IntegrativeTest {
                 0
         );
         Single<Contact> single = Single.fromCallable(() -> contact);
-        Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor())).thenReturn(single);
+        //Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor())).thenReturn(single);
         Mockito.when(dateModel.getCurrentDate()).thenReturn(currentDate);
         ContactDetailsInteractor contactDetailsInteractor = new ContactDetilsModel(contactDetailsRepository);
         NotificationInteractor notificationInteractor = new BirthDateNotificationModel(dateModel, notificationRepository);
-        ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor, schedulersProvider);
+        ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor);
         contactDetailsViewModel.loadContactDetails(contact.getId(), contact.getContactColor());
         contactDetailsViewModel.setNotification();
         Mockito.verify(notificationRepository).setManager(contact, addNotificationDate);
@@ -142,11 +149,11 @@ public class IntegrativeTest {
                 0
         );
         Single<Contact> single = Single.fromCallable(() -> contact);
-        Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor())).thenReturn(single);
+        //Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor())).thenReturn(single);
         Mockito.when(dateModel.getCurrentDate()).thenReturn(currentDate);
         ContactDetailsInteractor contactDetailsInteractor = new ContactDetilsModel(contactDetailsRepository);
         NotificationInteractor notificationInteractor = new BirthDateNotificationModel(dateModel, notificationRepository);
-        ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor, schedulersProvider);
+        ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor);
         contactDetailsViewModel.loadContactDetails(contact.getId(), contact.getContactColor());
         contactDetailsViewModel.cancelNotification();
         Mockito.verify(notificationRepository).cancelManager(contact);
@@ -172,11 +179,11 @@ public class IntegrativeTest {
                 0
         );
         Single<Contact> single = Single.fromCallable(() -> contact);
-        Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor())).thenReturn(single);
+        //Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor())).thenReturn(single);
         Mockito.when(dateModel.getCurrentDate()).thenReturn(currentDate);
         ContactDetailsInteractor contactDetailsInteractor = new ContactDetilsModel(contactDetailsRepository);
         NotificationInteractor notificationInteractor = new BirthDateNotificationModel(dateModel, notificationRepository);
-        ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor, schedulersProvider);
+        ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor);
         contactDetailsViewModel.loadContactDetails(contact.getId(), contact.getContactColor());
         contactDetailsViewModel.setNotification();
         Mockito.verify(notificationRepository).setManager(contact, addNotificationDate);
@@ -202,11 +209,11 @@ public class IntegrativeTest {
                 0
         );
         Single<Contact> single = Single.fromCallable(() -> contact);
-        Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor())).thenReturn(single);
+//        Mockito.when(contactDetailsRepository.loadDetailsInformation(contact.getId(), contact.getContactColor(), )).thenReturn(single);
         Mockito.when(dateModel.getCurrentDate()).thenReturn(currentDate);
         ContactDetailsInteractor contactDetailsInteractor = new ContactDetilsModel(contactDetailsRepository);
         NotificationInteractor notificationInteractor = new BirthDateNotificationModel(dateModel, notificationRepository);
-        ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor, schedulersProvider);
+        ContactDetailsViewModel contactDetailsViewModel = new ContactDetailsViewModel(contactDetailsInteractor, notificationInteractor);
         contactDetailsViewModel.loadContactDetails(contact.getId(), contact.getContactColor());
         contactDetailsViewModel.setNotification();
         Mockito.verify(notificationRepository).setManager(contact, addNotificationDate);
