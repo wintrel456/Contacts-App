@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:appDelegate="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient">
@@ -175,16 +176,17 @@
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="48dp"
                 android:background="@drawable/button"
+                android:clickable="true"
+                android:focusable="true"
                 android:fontFamily="@font/segoe"
                 android:text="@string/button_add"
                 android:textAlignment="center"
                 android:textColor="@color/side_font"
                 android:textSize="12sp"
-                android:clickable="true"
-                android:focusable="true"
                 appDelegate:layout_constraintBottom_toBottomOf="parent"
                 appDelegate:layout_constraintEnd_toEndOf="parent"
-                appDelegate:layout_constraintTop_toTopOf="parent" />
+                appDelegate:layout_constraintTop_toTopOf="parent"
+                tools:ignore="TouchTargetSizeCheck" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

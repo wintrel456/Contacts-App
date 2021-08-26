@@ -12,7 +12,7 @@ class DispatcherProviderModel:DispatchersProvider {
         return Dispatchers.Main
     }
 
-    override fun computation(): CoroutineDispatcher {
+    override fun default(): CoroutineDispatcher {
         return Dispatchers.Default
     }
 }

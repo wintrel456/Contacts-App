@@ -9,5 +9,5 @@ import javax.inject.Qualifier
 interface DispatchersProvider {
     fun io():CoroutineDispatcher
     fun ui():CoroutineDispatcher
-    fun computation():CoroutineDispatcher
+    fun default():CoroutineDispatcher
 }
