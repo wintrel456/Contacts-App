@@ -2,15 +2,14 @@ package com.gmail.l2t45s7e9.library.domain
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import javax.inject.Inject
+import com.gmail.l2t45s7e9.java.entity.Contact
 import com.gmail.l2t45s7e9.java.interactor.ContactDetailsInteractor
 import com.gmail.l2t45s7e9.java.interactor.NotificationInteractor
-import com.gmail.l2t45s7e9.java.entity.Contact
 import com.gmail.l2t45s7e9.library.fragmentsState.ContactDetailsMapper
 import com.gmail.l2t45s7e9.library.interfaces.DispatchersProvider
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class ContactDetailsViewModel @Inject constructor(
     private val contactDetailsInteractor: ContactDetailsInteractor,

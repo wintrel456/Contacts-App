@@ -6,13 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.l2t45s7e9.java.entity.Contact
 import com.gmail.l2t45s7e9.java.interactor.ContactListInteractor
-import com.gmail.l2t45s7e9.library.interfaces.SchedulersProvider
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ContactListViewModel @Inject constructor(

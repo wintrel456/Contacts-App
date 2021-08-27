@@ -20,8 +20,10 @@ import com.gmail.l2t45s7e9.library.presentation.adapter.ContactListAdapter
 
 import com.gmail.l2t45s7e9.library.viewbinding.viewBinding
 import javax.inject.Inject
-private const val ID_CONST:String = "id"
-private const val COLOR_CONST:String = "color"
+
+private const val ID_CONST: String = "id"
+private const val COLOR_CONST: String = "color"
+
 class ContactListFragment : Fragment(R.layout.contact_list_fragment) {
 
     @Inject

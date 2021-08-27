@@ -1,6 +1,5 @@
 package com.gmail.l2t45s7e9.library.viewbinding
 
-import android.view.View
 import androidx.annotation.MainThread
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding

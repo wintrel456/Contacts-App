@@ -3,17 +3,22 @@ package com.gmail.l2t45s7e9.library.domain;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
 import com.gmail.l2t45s7e9.java.interactor.AddressSearchInteractor;
 import com.gmail.l2t45s7e9.library.interfaces.SchedulersProvider;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.functions.Function;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import javax.inject.Inject;
+
 public class AddressSearchViewModel extends ViewModel {
 
     private CompositeDisposable disposable = new CompositeDisposable();

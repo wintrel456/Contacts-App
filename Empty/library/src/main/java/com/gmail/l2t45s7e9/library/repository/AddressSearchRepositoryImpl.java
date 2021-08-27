@@ -2,12 +2,16 @@ package com.gmail.l2t45s7e9.library.repository;
 
 import android.location.Address;
 import android.location.Geocoder;
+
 import com.gmail.l2t45s7e9.java.interactor.AddressSearchRepository;
 import com.gmail.l2t45s7e9.library.dataBase.ContactAddressDataBase;
 import com.gmail.l2t45s7e9.library.dataBase.ContactData;
-import io.reactivex.rxjava3.core.Single;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Single;
+
 public class AddressSearchRepositoryImpl implements AddressSearchRepository {
 
     private Geocoder geocoder;

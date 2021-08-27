@@ -14,8 +14,8 @@ import javax.inject.Inject
 
 class MapViewModel
 @Inject constructor(
-        private val mapInteractor: MapInteractor,
-        private val schedulersProvider: SchedulersProvider
+    private val mapInteractor: MapInteractor,
+    private val schedulersProvider: SchedulersProvider
 ) : ViewModel() {
     private var mutableLiveData = MutableLiveData<List<Contact>>()
     private var routeMutableLiveData = MutableLiveData<List<LatLng>>()
@@ -27,35 +27,35 @@ class MapViewModel
 
     fun getContactMarkers() {
         disposable.add(
-                mapInteractor.contactMarkers
-                        .subscribeOn(schedulersProvider.io())
-                        .observeOn(schedulersProvider.ui())
-                        .subscribe { markers: List<Contact> -> mutableLiveData.setValue(markers) }
+            mapInteractor.contactMarkers
+                .subscribeOn(schedulersProvider.io())
+                .observeOn(schedulersProvider.ui())
+                .subscribe { markers: List<Contact> -> mutableLiveData.setValue(markers) }
         )
     }
 
     fun getContactMarker(id: String) {
         disposable.add(
-                mapInteractor.getContactMarker(id)
-                        .subscribeOn(schedulersProvider.io())
-                        .observeOn(schedulersProvider.ui())
-                        .subscribe { markers: List<Contact> -> mutableLiveData.setValue(markers) }
+            mapInteractor.getContactMarker(id)
+                .subscribeOn(schedulersProvider.io())
+                .observeOn(schedulersProvider.ui())
+                .subscribe { markers: List<Contact> -> mutableLiveData.setValue(markers) }
         )
     }
 
     fun getRoute(firstMarker: LatLng, secondMarker: LatLng) {
         disposable.add(
-                mapInteractor.getResponce(
-                        LatLngData(firstMarker.latitude, firstMarker.longitude),
-                        LatLngData(secondMarker.latitude, secondMarker.longitude)
-                )
-                        .subscribeOn(schedulersProvider.io())
-                        .map(mapInteractor::getRoute)
-                        .subscribeOn(schedulersProvider.computation())
-                        .observeOn(schedulersProvider.ui())
-                        .subscribe { points: List<LatLngData> ->
-                            routeMutableLiveData.value = points.map { LatLng(it.latitude, it.longitude) }
-                        }
+            mapInteractor.getResponce(
+                LatLngData(firstMarker.latitude, firstMarker.longitude),
+                LatLngData(secondMarker.latitude, secondMarker.longitude)
+            )
+                .subscribeOn(schedulersProvider.io())
+                .map(mapInteractor::getRoute)
+                .subscribeOn(schedulersProvider.computation())
+                .observeOn(schedulersProvider.ui())
+                .subscribe { points: List<LatLngData> ->
+                    routeMutableLiveData.value = points.map { LatLng(it.latitude, it.longitude) }
+                }
         )
     }
 

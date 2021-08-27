@@ -1,6 +1,7 @@
 package com.gmail.l2t45s7e9.empty;
 
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 /**

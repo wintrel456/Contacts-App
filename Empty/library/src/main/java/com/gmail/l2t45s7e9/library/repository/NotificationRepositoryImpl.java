@@ -4,10 +4,13 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+
 import com.gmail.l2t45s7e9.java.entity.Contact;
 import com.gmail.l2t45s7e9.java.interactor.NotificationRepository;
 import com.gmail.l2t45s7e9.library.presentation.reciever.ContactNotificationsReceiver;
+
 import java.util.GregorianCalendar;
+
 public class NotificationRepositoryImpl implements NotificationRepository {
 
     private AlarmManager alarmManager;

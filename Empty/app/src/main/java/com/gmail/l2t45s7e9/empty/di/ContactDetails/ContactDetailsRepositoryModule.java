@@ -1,9 +1,9 @@
 package com.gmail.l2t45s7e9.empty.di.ContactDetails;
 
 import android.content.Context;
+
 import com.gmail.l2t45s7e9.empty.di.scopes.ContactDetailsFragmentScope;
 import com.gmail.l2t45s7e9.java.entity.BirthDateNotificationModel;
-import com.gmail.l2t45s7e9.java.entity.Contact;
 import com.gmail.l2t45s7e9.java.interactor.ContactDetailsInteractor;
 import com.gmail.l2t45s7e9.java.interactor.ContactDetailsRepository;
 import com.gmail.l2t45s7e9.java.interactor.ContactDetilsModel;
@@ -15,8 +15,10 @@ import com.gmail.l2t45s7e9.library.fragmentsState.ContactDetailsMapper;
 import com.gmail.l2t45s7e9.library.interfaces.DispatchersProvider;
 import com.gmail.l2t45s7e9.library.repository.ContactDetailsRepositoryImpl;
 import com.gmail.l2t45s7e9.library.repository.NotificationRepositoryImpl;
+
 import dagger.Module;
 import dagger.Provides;
+
 @Module
 public class ContactDetailsRepositoryModule {
 
@@ -48,9 +50,10 @@ public class ContactDetailsRepositoryModule {
     NotificationInteractor provideNotificationInteractor(CurrentDate currentDate, NotificationRepository notificationRepository) {
         return new BirthDateNotificationModel(currentDate, notificationRepository);
     }
+
     @Provides
     @ContactDetailsFragmentScope
-    ContactDetailsMapper provideContactDetailsMapper(Context context){
+    ContactDetailsMapper provideContactDetailsMapper(Context context) {
         return new ContactDetailsMapper(context);
     }
 

@@ -14,11 +14,11 @@ abstract class AddressSearchModule {
     @IntoMap
     @AddressSearchViewModelKey(AddressSearchViewModel::class)
     abstract fun bindAddressSearchViewModel(
-            addressSearchViewModel: AddressSearchViewModel
+        addressSearchViewModel: AddressSearchViewModel
     ): ViewModel
 
     @Binds
     abstract fun bindAddressSearchViewModelFactory(
-            viewModelAddressSearchFactory: ViewModelAddressSearchFactory
+        viewModelAddressSearchFactory: ViewModelAddressSearchFactory
     ): ViewModelProvider.Factory
 }

@@ -6,18 +6,19 @@ import com.google.gson.annotations.SerializedName
 
 
 class RouteFromGMaps(
-        @SerializedName("routes")
-        @Expose
-        val routes: List<Route>
+    @SerializedName("routes")
+    @Expose
+    val routes: List<Route>
 ) {
     class Route(
-            @SerializedName("overview_polyline")
-            @Expose
-            val overviewPolyline: OverviewPolyline? = null)
+        @SerializedName("overview_polyline")
+        @Expose
+        val overviewPolyline: OverviewPolyline? = null
+    )
 
     class OverviewPolyline(
-            @SerializedName("points")
-            @Expose
-            val points: String
+        @SerializedName("points")
+        @Expose
+        val points: String
     )
 }

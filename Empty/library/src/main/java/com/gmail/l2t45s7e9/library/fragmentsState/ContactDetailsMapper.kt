@@ -13,15 +13,15 @@ class ContactDetailsMapper(
         context.getString(R.string.date_format_for_contact_details)
     }
 
-    fun create(contact:Contact?, state:Boolean): ContactDetailsViewState {
+    fun create(contact: Contact?, state: Boolean): ContactDetailsViewState {
         val date = contact?.birthDate
-        val addressState:Boolean
-        val addButtonText:String
-        val dateState:Boolean
-        val birthDate:String
-        val address:String
+        val addressState: Boolean
+        val addButtonText: String
+        val dateState: Boolean
+        val birthDate: String
+        val address: String
         when (date) {
-            null ->{
+            null -> {
                 birthDate = context.getString(R.string.empty_date)
                 dateState = false
             }
@@ -38,11 +38,11 @@ class ContactDetailsMapper(
                 dateState = true
             }
         }
-        if (!contact?.contactAddress.isNullOrEmpty()){
+        if (!contact?.contactAddress.isNullOrEmpty()) {
             addressState = true
             addButtonText = context.getString(R.string.see_on_map_label)
-            address  = contact?.contactAddress.toString()
-        }else{
+            address = contact?.contactAddress.toString()
+        } else {
             addressState = false
             addButtonText = context.getString(R.string.button_add)
             address = context.getString(R.string.empty_address)

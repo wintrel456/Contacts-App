@@ -20,13 +20,13 @@ class ResponseModule {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         val client = OkHttpClient.Builder()
-                .addInterceptor(interceptor)
+            .addInterceptor(interceptor)
         return Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client.build())
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                .build()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client.build())
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+            .build()
     }
 
     @Singleton
