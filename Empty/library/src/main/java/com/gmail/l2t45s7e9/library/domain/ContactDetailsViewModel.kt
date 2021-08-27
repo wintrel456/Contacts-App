@@ -1,31 +1,32 @@
 package com.gmail.l2t45s7e9.library.domain
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import javax.inject.Inject
 import com.gmail.l2t45s7e9.java.interactor.ContactDetailsInteractor
 import com.gmail.l2t45s7e9.java.interactor.NotificationInteractor
-import com.gmail.l2t45s7e9.library.interfaces.SchedulersProvider
 import com.gmail.l2t45s7e9.java.entity.Contact
-import io.reactivex.rxjava3.disposables.CompositeDisposable
+import com.gmail.l2t45s7e9.library.fragmentsState.ContactDetailsMapper
+import com.gmail.l2t45s7e9.library.interfaces.DispatchersProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class ContactDetailsViewModel @Inject constructor(
     private val contactDetailsInteractor: ContactDetailsInteractor,
-    private val notificationInteractor: NotificationInteractor
+    private val notificationInteractor: NotificationInteractor,
+    private val contactDetailsMapper: ContactDetailsMapper,
+    dispatchersProvider: DispatchersProvider
 ) : ViewModel() {
 
-    private val contactDetailsMutableLiveData = MutableLiveData<Contact>()
-    val contactDetailsLiveData: LiveData<Contact> get() = contactDetailsMutableLiveData
+    private val contactDetailsMutableLiveData = MutableStateFlow<Contact?>(null)
+    val contactDetailsLiveData = contactDetailsMutableLiveData.asStateFlow().map {
+        contactDetailsMapper.create(it, status)
+    }.flowOn(dispatchersProvider.default())
 
     fun loadContactDetails(id: String?, color: Int) = viewModelScope.launch {
         contactDetailsInteractor.getContactDetailsRepo(id, color)
-            .map(contactDetailsMutableLiveData::setValue)
+            .map(contactDetailsMutableLiveData::emit)
             .collect()
     }
 
@@ -37,7 +38,7 @@ class ContactDetailsViewModel @Inject constructor(
         notificationInteractor.cancelNotification(contactDetailsMutableLiveData.value)
     }
 
-    val status: Boolean
+    private val status: Boolean
         get() = notificationInteractor.status(contactDetailsMutableLiveData.value)
 
 }

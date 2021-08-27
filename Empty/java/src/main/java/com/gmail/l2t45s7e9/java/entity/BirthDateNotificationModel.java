@@ -7,8 +7,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 public class BirthDateNotificationModel implements NotificationInteractor {
 
-    private CurrentDate currentDate;
-    private NotificationRepository notificationRepository;
+    private final CurrentDate currentDate;
+    private final NotificationRepository notificationRepository;
 
     public BirthDateNotificationModel(CurrentDate currentDate, NotificationRepository notificationRepository) {
         this.currentDate = currentDate;
@@ -42,7 +42,11 @@ public class BirthDateNotificationModel implements NotificationInteractor {
 
     @Override
     public boolean status(Contact contact) {
-        return notificationRepository.status(contact.getId());
+        boolean contactNotificationStatus = false;
+        if(contact!=null){
+            contactNotificationStatus = notificationRepository.status(contact.getId());
+        }
+        return contactNotificationStatus;
     }
 
 }

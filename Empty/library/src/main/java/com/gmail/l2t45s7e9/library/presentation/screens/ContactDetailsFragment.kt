@@ -1,28 +1,33 @@
 package com.gmail.l2t45s7e9.library.presentation.screens
 
-import android.widget.CompoundButton
-import com.gmail.l2t45s7e9.library.presentation.screens.AddressSearchFragment.OnChooseAddress
-import javax.inject.Inject
-import com.gmail.l2t45s7e9.library.domain.factories.ViewModelDetailsFactory
-import com.gmail.l2t45s7e9.library.domain.ContactDetailsViewModel
-import android.os.Bundle
-import com.gmail.l2t45s7e9.library.R
-import com.google.android.material.snackbar.Snackbar
 import android.content.Context
-import com.gmail.l2t45s7e9.library.interfaces.HasAppContainer
-import com.gmail.l2t45s7e9.java.entity.Contact
-import android.graphics.drawable.GradientDrawable
 import android.content.res.ColorStateList
+import android.graphics.drawable.GradientDrawable
+import android.os.Bundle
 import android.view.View
+import android.widget.CompoundButton
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import androidx.navigation.Navigation
+import com.gmail.l2t45s7e9.library.R
 import com.gmail.l2t45s7e9.library.databinding.ContactDetailsFragmentBinding
+import com.gmail.l2t45s7e9.library.domain.ContactDetailsViewModel
+import com.gmail.l2t45s7e9.library.domain.factories.ViewModelDetailsFactory
+import com.gmail.l2t45s7e9.library.fragmentsState.ContactDetailsViewState
+import com.gmail.l2t45s7e9.library.interfaces.HasAppContainer
+import com.gmail.l2t45s7e9.library.presentation.screens.AddressSearchFragment.OnChooseAddress
 import com.gmail.l2t45s7e9.library.viewbinding.viewBinding
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.util.*
-private const val ID_CONST:String = "id"
-private const val COLOR_CONST:String = "color"
+import javax.inject.Inject
+import kotlin.properties.Delegates
+
+private const val ID_CONST: String = "id"
+private const val COLOR_CONST: String = "color"
+
 class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
     CompoundButton.OnCheckedChangeListener, OnChooseAddress {
 
@@ -33,25 +38,22 @@ class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
             this, viewModelDetailsFactory
         ).get(ContactDetailsViewModel::class.java)
     }
-    private val color:Int by lazy(LazyThreadSafetyMode.NONE) {
+    private val color: Int by lazy(LazyThreadSafetyMode.NONE) {
         requireArguments().getInt(COLOR_CONST)
     }
-    private val position: String by lazy(LazyThreadSafetyMode.NONE){
+    private val position: String by lazy(LazyThreadSafetyMode.NONE) {
         requireArguments()[ID_CONST].toString()
     }
-    private var date: GregorianCalendar? = null
-    private val formatDate: String  by lazy(LazyThreadSafetyMode.NONE){
-        resources.getString(R.string.date_format_for_contact_details)
-    }
-    private val drawable:GradientDrawable by lazy(LazyThreadSafetyMode.NONE) {
+
+    private val drawable: GradientDrawable by lazy(LazyThreadSafetyMode.NONE) {
         ResourcesCompat.getDrawable(
             resources,
             R.drawable.button,
             null
         ) as GradientDrawable
     }
-    private var addressString: String? = null
     private var addressState = false
+    private var notificationState = false
     private val viewBinding: ContactDetailsFragmentBinding by viewBinding()
 
     private val onClickListener = View.OnClickListener { view: View ->
@@ -67,6 +69,7 @@ class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
         }
     }
 
+
     override fun onChoose() {
         contactDetailsViewModel.loadContactDetails(position, color)
         Snackbar.make(requireView(), R.string.address_added, Snackbar.LENGTH_SHORT).show()
@@ -81,60 +84,53 @@ class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
         super.onAttach(context)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        contactDetailsViewModel.contactDetailsLiveData.observe(
-            viewLifecycleOwner, { result: Contact ->
-                viewBinding.apply {
-                    avatar.setColorFilter(result.contactColor)
-                    userName.text = result.name
-                    userNumber.text = result.firstNumber
-                    secondUserNumber.text = result.secondNumber
-                    firstEmail.text = result.firstEmail
-                    secondEmail.text = result.secondEmail
-                    addressString = result.contactAddress
-                    date = result.birthDate
-                    date?.apply {
-                        birhDate.text = String.format(
-                            Locale.getDefault(),
-                            formatDate,
-                            this[Calendar.DATE],
-                            this.getDisplayName(
-                                Calendar.MONTH, Calendar.LONG,
-                                Locale.getDefault()
-                            )
-                        ).toUpperCase(Locale.ROOT)
-                    }?:birhDate.setText(R.string.empty_date)
-
-                    when(addressString.isNullOrEmpty()){
-                        true -> {
-                            addressState = false
-                            address.text = getString(R.string.empty_address)
-                            viewBinding.addButton.text = getString(R.string.button_add)
-                        }
-                        false ->  {
-                            addressState = true
-                            address.text = addressString
-                            viewBinding.addButton.text = getString(R.string.see_on_map_label)
-                        }
-
-                    }
-                    setSwitchCompat()
-                    addButton.setOnClickListener(onClickListener)
-                    drawable.setStroke(2, color)
-                    userName.isSelected = true
-                    addButton.background = drawable
+        contactDetailsViewModel.loadContactDetails(position, color)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                contactDetailsViewModel.contactDetailsLiveData.collect{
+                    setContactDetails(it)
                 }
             }
-        )
-        contactDetailsViewModel.loadContactDetails(position, color)
+        }
+
+
+        viewBinding.apply {
+            addButton.setOnClickListener(onClickListener)
+            drawable.setStroke(2, color)
+            userName.isSelected = true
+            addButton.background = drawable
+        }
     }
 
-    private fun setSwitchCompat() {
-        viewBinding.apply{
-            notificationSwitch.setOnCheckedChangeListener(this@ContactDetailsFragment)
-            notificationSwitch.isChecked = contactDetailsViewModel.status
+    private fun setContactDetails(state: ContactDetailsViewState) {
+        val result = state.contact
+        result?.apply {
+            viewBinding.apply {
+                avatar.setColorFilter(result.contactColor)
+                userName.text = result.name
+                userNumber.text = result.firstNumber
+                secondUserNumber.text = result.secondNumber
+                firstEmail.text = result.firstEmail
+                secondEmail.text = result.secondEmail
+                birhDate.text = state.birthDate
+                address.text = state.address
+                addressState = state.addressState
+                addButton.text = state.addButtonText
+                notificationState = state.state
+                setSwitchCompat(state.dateState)
+            }
+        }
+
+    }
+
+    private fun setSwitchCompat(dateState:Boolean) {
+        viewBinding.apply {
+            if(dateState){
+                notificationSwitch.setOnCheckedChangeListener(this@ContactDetailsFragment)
+                notificationSwitch.isChecked = notificationState
+            }
         }
     }
 
@@ -144,7 +140,7 @@ class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
                 notificationSwitch.thumbTintList = ColorStateList.valueOf(color)
                 notificationSwitch.trackTintList = ColorStateList.valueOf(color).withAlpha(100)
             }
-            if (!contactDetailsViewModel.status) {
+            if (!notificationState) {
                 contactDetailsViewModel.setNotification()
                 Snackbar.make(
                     requireView(),
@@ -154,10 +150,12 @@ class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
             }
         } else {
             viewBinding.apply {
-                notificationSwitch.thumbTintList = ColorStateList.valueOf(resources.getColor(R.color.side_color))
-                notificationSwitch.trackTintList = ColorStateList.valueOf(resources.getColor(R.color.second_side_color))
+                notificationSwitch.thumbTintList =
+                    ColorStateList.valueOf(resources.getColor(R.color.side_color))
+                notificationSwitch.trackTintList =
+                    ColorStateList.valueOf(resources.getColor(R.color.second_side_color))
             }
-            if (contactDetailsViewModel.status) {
+            if (notificationState) {
                 contactDetailsViewModel.cancelNotification()
                 Snackbar.make(
                     requireView(),
