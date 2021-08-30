@@ -21,7 +21,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
-private const val ID_CONST:String = "id"
+
+private const val ID_CONST: String = "id"
 
 class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
 
@@ -99,8 +100,10 @@ class MapFragment : Fragment(R.layout.map_fragment), OnMapReadyCallback {
             moveCamera(CameraUpdateFactory.newLatLng(LatLng(0.0, 0.0)))
             uiSettings.setAllGesturesEnabled(true)
             markers.forEach {
-                addMarker(MarkerOptions()
-                        .position(LatLng(it.latitude, it.longitude)))
+                addMarker(
+                    MarkerOptions()
+                        .position(LatLng(it.latitude, it.longitude))
+                )
             }
             setOnMarkerClickListener(onMarkerClick)
         }

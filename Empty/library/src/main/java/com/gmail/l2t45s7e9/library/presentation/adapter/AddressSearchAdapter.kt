@@ -11,7 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gmail.l2t45s7e9.library.R
 
 
-class AddressSearchAdapter(private val onItemClick: OnItemClickListener) : ListAdapter<String, AddressSearchAdapter.ItemViewHolder>(DiffCallback()) {
+class AddressSearchAdapter(private val onItemClick: OnItemClickListener) :
+    ListAdapter<String, AddressSearchAdapter.ItemViewHolder>(DiffCallback()) {
 
     interface OnItemClickListener {
         fun onItemClicked(string: String?)
@@ -19,7 +20,8 @@ class AddressSearchAdapter(private val onItemClick: OnItemClickListener) : ListA
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val context: Context = parent.context
-        val view: View = LayoutInflater.from(context).inflate(R.layout.address_search_item, parent, false)
+        val view: View =
+            LayoutInflater.from(context).inflate(R.layout.address_search_item, parent, false)
         return ItemViewHolder(view)
     }
 

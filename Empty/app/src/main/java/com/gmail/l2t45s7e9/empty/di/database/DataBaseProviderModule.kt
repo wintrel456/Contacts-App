@@ -14,9 +14,9 @@ class DataBaseProviderModule {
     @Singleton
     fun provideDataBase(context: Context): ContactAddressDataBase {
         return Room.databaseBuilder(
-                context,
-                ContactAddressDataBase::class.java,
-                "contact-map"
+            context,
+            ContactAddressDataBase::class.java,
+            "contact-map"
         ).build()
     }
 

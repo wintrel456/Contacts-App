@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 private const val ID_CONST: String = "id"
 private const val COLOR_CONST: String = "color"
@@ -89,7 +88,7 @@ class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
         contactDetailsViewModel.loadContactDetails(position, color)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                contactDetailsViewModel.contactDetailsLiveData.collect{
+                contactDetailsViewModel.contactDetailsLiveData.collect {
                     setContactDetails(it)
                 }
             }
@@ -125,9 +124,9 @@ class ContactDetailsFragment : Fragment(R.layout.contact_details_fragment),
 
     }
 
-    private fun setSwitchCompat(dateState:Boolean) {
+    private fun setSwitchCompat(dateState: Boolean) {
         viewBinding.apply {
-            if(dateState){
+            if (dateState) {
                 notificationSwitch.setOnCheckedChangeListener(this@ContactDetailsFragment)
                 notificationSwitch.isChecked = notificationState
             }

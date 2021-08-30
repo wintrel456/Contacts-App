@@ -7,19 +7,10 @@ buildscript {
         jcenter()
     }
     dependencies {
-        /*classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "de.mannodermaus.gradle.plugins:android-junit5:1.5.2.0"
-        classpath "com.android.tools.build:gradle:4.0.2"
-        classpath "org.jetbrains.spek:spek-api:1.1.5"
-        classpath 'org.spekframework.spek2:spek-dsl-jvm:2.0.6'*/
-        //classpath 'com.android.tools.build:gradle:3.6.4'
-        //classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "de.mannodermaus.gradle.plugins:android-junit5:1.5.2.0"
+        classpath "de.mannodermaus.gradle.plugins:android-junit5:1.7.1.1"
         def nav_version = "2.3.5"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 
 

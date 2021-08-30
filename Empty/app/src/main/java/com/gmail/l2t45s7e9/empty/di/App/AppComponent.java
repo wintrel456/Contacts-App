@@ -10,8 +10,10 @@ import com.gmail.l2t45s7e9.empty.di.database.DataBaseProviderModule;
 import com.gmail.l2t45s7e9.empty.di.geocoder.GeocoderProviderModule;
 import com.gmail.l2t45s7e9.empty.di.response.ResponseModule;
 import com.gmail.l2t45s7e9.library.interfaces.AppContainer;
-import dagger.Component;
+
 import javax.inject.Singleton;
+
+import dagger.Component;
 
 @Singleton
 @Component(modules = {

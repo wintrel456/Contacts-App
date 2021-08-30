@@ -1,11 +1,14 @@
 package com.gmail.l2t45s7e9.empty.di.App;
 
 import android.content.Context;
+
 import com.gmail.l2t45s7e9.java.interactor.CurrentDate;
 import com.gmail.l2t45s7e9.java.interactor.DateModel;
+
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
-import javax.inject.Singleton;
 
 @Module
 public class AppModule {

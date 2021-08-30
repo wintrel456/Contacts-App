@@ -3,8 +3,10 @@ package com.gmail.l2t45s7e9.java.entity;
 import com.gmail.l2t45s7e9.java.interactor.CurrentDate;
 import com.gmail.l2t45s7e9.java.interactor.NotificationInteractor;
 import com.gmail.l2t45s7e9.java.interactor.NotificationRepository;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
 public class BirthDateNotificationModel implements NotificationInteractor {
 
     private final CurrentDate currentDate;
@@ -43,7 +45,7 @@ public class BirthDateNotificationModel implements NotificationInteractor {
     @Override
     public boolean status(Contact contact) {
         boolean contactNotificationStatus = false;
-        if(contact!=null){
+        if (contact != null) {
             contactNotificationStatus = notificationRepository.status(contact.getId());
         }
         return contactNotificationStatus;

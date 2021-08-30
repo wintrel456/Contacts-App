@@ -4,10 +4,13 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.gmail.l2t45s7e9.library.R;
+
 public class ContactItemDecorator extends RecyclerView.ItemDecoration {
 
     private final int verticalSpaceHeight;

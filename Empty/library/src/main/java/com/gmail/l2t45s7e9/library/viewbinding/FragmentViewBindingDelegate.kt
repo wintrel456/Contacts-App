@@ -7,9 +7,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.viewbinding.ViewBinding
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.flow
-import java.util.logging.Handler
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -28,7 +25,12 @@ class FragmentViewBindingDelegate<T : ViewBinding>(
         }
 
         bind = viewBindingBind ?: run {
-            val method by lazy(LazyThreadSafetyMode.NONE) { viewBindingClazz?.getMethod("bind", View::class.java) }
+            val method by lazy(LazyThreadSafetyMode.NONE) {
+                viewBindingClazz?.getMethod(
+                    "bind",
+                    View::class.java
+                )
+            }
 
             @Suppress("UNCHECKED_CAST")
             fun(view: View): T = method?.invoke(null, view) as T

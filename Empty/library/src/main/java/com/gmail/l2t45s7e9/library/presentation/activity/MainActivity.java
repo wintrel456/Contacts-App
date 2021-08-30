@@ -3,10 +3,12 @@ package com.gmail.l2t45s7e9.library.presentation.activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+
 import com.gmail.l2t45s7e9.library.R;
 
 public class MainActivity extends AppCompatActivity {

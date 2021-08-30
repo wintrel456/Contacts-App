@@ -3,25 +3,17 @@ package com.gmail.l2t45s7e9.library.presentation.screens
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.SearchView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gmail.l2t45s7e9.library.R
 import com.gmail.l2t45s7e9.library.domain.AddressSearchViewModel
 import com.gmail.l2t45s7e9.library.domain.factories.ViewModelAddressSearchFactory
 import com.gmail.l2t45s7e9.library.interfaces.HasAppContainer
-import com.gmail.l2t45s7e9.library.presentation.activity.MainActivity
 import com.gmail.l2t45s7e9.library.presentation.adapter.AddressSearchAdapter
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 private const val ID_CONST: String = "id"

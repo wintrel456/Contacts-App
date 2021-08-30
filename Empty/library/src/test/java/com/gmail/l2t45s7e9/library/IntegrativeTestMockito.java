@@ -1,41 +1,13 @@
 package com.gmail.l2t45s7e9.library;
 
-import androidx.annotation.NonNull;
-import androidx.arch.core.executor.ArchTaskExecutor;
-import androidx.arch.core.executor.TaskExecutor;
-
-import com.gmail.l2t45s7e9.java.entity.BirthDateNotificationModel;
-import com.gmail.l2t45s7e9.java.entity.Contact;
-import com.gmail.l2t45s7e9.java.interactor.ContactDetailsInteractor;
-import com.gmail.l2t45s7e9.java.interactor.ContactDetailsRepository;
-import com.gmail.l2t45s7e9.java.interactor.ContactDetilsModel;
-import com.gmail.l2t45s7e9.java.interactor.CurrentDate;
-import com.gmail.l2t45s7e9.java.interactor.NotificationInteractor;
-import com.gmail.l2t45s7e9.java.interactor.NotificationRepository;
-import com.gmail.l2t45s7e9.library.domain.ContactDetailsViewModel;
-import com.gmail.l2t45s7e9.library.interfaces.DispatchersProvider;
-import com.gmail.l2t45s7e9.library.interfaces.SchedulersProvider;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
+/*
 @RunWith(MockitoJUnitRunner.class)
-public class IntegrativeTest {
+public class IntegrativeTestMockito {
     @Mock
     CurrentDate dateModel;
     @Mock
@@ -218,4 +190,4 @@ public class IntegrativeTest {
         contactDetailsViewModel.setNotification();
         Mockito.verify(notificationRepository).setManager(contact, addNotificationDate);
     }
-}
+}*/

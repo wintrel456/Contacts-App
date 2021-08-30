@@ -16,9 +16,9 @@ class MapRepositoryModule {
     @Provides
     @MapFragmentScope
     fun provideMapRepository(
-            contactAddressDataBase: ContactAddressDataBase,
-            context: Context,
-            routeApi: RouteApi
+        contactAddressDataBase: ContactAddressDataBase,
+        context: Context,
+        routeApi: RouteApi
     ): MapRepository {
         return MapRepositoryImpl(contactAddressDataBase, context, routeApi)
     }

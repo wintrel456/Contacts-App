@@ -15,8 +15,8 @@ class AddressSearchRepositoryModule {
     @Provides
     @AddressSearchFragmentScope
     fun provideAddressSearchRepository(
-            contactAddressDataBase: ContactAddressDataBase,
-            geocoder: Geocoder
+        contactAddressDataBase: ContactAddressDataBase,
+        geocoder: Geocoder
     ): AddressSearchRepository {
         return AddressSearchRepositoryImpl(contactAddressDataBase, geocoder)
     }

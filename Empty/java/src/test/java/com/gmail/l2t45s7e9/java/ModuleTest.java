@@ -1,24 +1,11 @@
 package com.gmail.l2t45s7e9.java;
 
-import com.gmail.l2t45s7e9.java.entity.BirthDateNotificationModel;
-import com.gmail.l2t45s7e9.java.entity.Contact;
-import com.gmail.l2t45s7e9.java.interactor.CurrentDate;
-import com.gmail.l2t45s7e9.java.interactor.NotificationInteractor;
-import com.gmail.l2t45s7e9.java.interactor.NotificationRepository;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(MockitoJUnitRunner.class)
+/*@RunWith(MockitoJUnitRunner.class)
 public class ModuleTest {
 
     @Mock
@@ -145,4 +132,4 @@ public class ModuleTest {
         notificationInteractor.setNotification(contact);
         Mockito.verify(notificationRepository).setManager(contact, addNotificationDate);
     }
-}
+}*/

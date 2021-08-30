@@ -16,12 +16,12 @@ abstract class MapModule {
     @MapFragmentScope
     @MapViewModelKey(MapViewModel::class)
     abstract fun bindMapViewModel(
-            mapViewModel: MapViewModel
+        mapViewModel: MapViewModel
     ): ViewModel
 
     @MapFragmentScope
     @Binds
     abstract fun bindMapViewModelFactory(
-            viewModelMapFactory: ViewModelMapFactory
+        viewModelMapFactory: ViewModelMapFactory
     ): ViewModelProvider.Factory
 }
