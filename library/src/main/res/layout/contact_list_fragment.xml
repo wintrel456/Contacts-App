@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:appDelegate="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient">
+
+
+    <Button
+        android:id="@+id/mapButton"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/ic_map"
+        android:text=""
+        appDelegate:layout_constraintBottom_toBottomOf="@+id/searchView"
+        appDelegate:layout_constraintEnd_toEndOf="parent"
+        appDelegate:layout_constraintTop_toTopOf="@+id/searchView" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/logo_image"
+        appDelegate:layout_constraintEnd_toEndOf="parent"
+        appDelegate:layout_constraintStart_toStartOf="parent"
+        appDelegate:layout_constraintTop_toTopOf="parent"
+        appDelegate:srcCompat="@drawable/ic_inscription_red" />
+
+    <TextView
+        android:id="@+id/contactCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="32dp"
+        android:fontFamily="@font/segoe"
+        android:text="@string/contact_count"
+        android:textColor="@color/Font"
+        android:textSize="26sp"
+        appDelegate:layout_constraintEnd_toEndOf="parent"
+        appDelegate:layout_constraintHorizontal_bias="0.0"
+        appDelegate:layout_constraintStart_toEndOf="@+id/logo"
+        appDelegate:layout_constraintTop_toTopOf="@+id/logo" />
+
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:queryBackground="@color/back_white"
+        android:searchIcon="@drawable/ic_search"
+        appDelegate:layout_constraintEnd_toStartOf="@+id/mapButton"
+        appDelegate:layout_constraintStart_toStartOf="parent"
+        appDelegate:layout_constraintTop_toBottomOf="@+id/logo" />
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/cardView"
+        appDelegate:layout_constraintBottom_toBottomOf="parent"
+        appDelegate:layout_constraintEnd_toEndOf="parent"
+        appDelegate:layout_constraintStart_toStartOf="parent"
+        appDelegate:layout_constraintTop_toBottomOf="@+id/searchView"
+        android:layout_marginBottom="24dp"
+        appDelegate:cardCornerRadius="26dp">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/fields" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible" />
+
+    </androidx.cardview.widget.CardView>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
